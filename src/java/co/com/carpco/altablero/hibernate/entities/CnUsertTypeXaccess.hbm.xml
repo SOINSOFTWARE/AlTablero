@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 24-sep-2014 23:08:09 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="co.com.carpco.altablero.hibernate.entities.CnUsertTypeXaccess" table="cnUsertTypeXAccess" catalog="schoolManagement" optimistic-lock="version">
+        <composite-id name="id" class="co.com.carpco.altablero.hibernate.entities.CnUsertTypeXaccessId">
+            <key-property name="idUserType" type="int">
+                <column name="idUserType" />
+            </key-property>
+            <key-property name="idAccess" type="int">
+                <column name="idAccess" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="cnAccess" class="co.com.carpco.altablero.hibernate.entities.CnAccess" update="false" insert="false" fetch="select">
+            <column name="idAccess" not-null="true" />
+        </many-to-one>
+        <many-to-one name="cnUserType" class="co.com.carpco.altablero.hibernate.entities.CnUserType" update="false" insert="false" fetch="select">
+            <column name="idUserType" not-null="true" />
+        </many-to-one>
+        <property name="creation" type="timestamp">
+            <column name="creation" length="19" not-null="true" />
+        </property>
+        <property name="updated" type="timestamp">
+            <column name="updated" length="19" not-null="true" />
+        </property>
+        <property name="enabled" type="boolean">
+            <column name="enabled" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

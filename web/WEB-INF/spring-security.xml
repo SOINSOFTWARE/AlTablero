@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/security
+    http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+ 
+    <!-- enable use-expressions -->
+    <http auto-config="true" use-expressions="true">
+
+        <intercept-url pattern="/admin/*" access="hasRole('RCTOR') || hasRole('COORD') || hasRole('PROFE') || hasRole('ESTUD')" />
+
+        <!-- access denied page -->
+        <access-denied-handler error-page="/403" />
+
+        <form-login 
+            login-page="/login" 
+            default-target-url="/admin/general" 
+                authentication-failure-url="/login?error" 
+                username-parameter="username"
+                password-parameter="password" />
+        <logout logout-success-url="/login?logout"  />
+        <!-- enable csrf protection -->
+        <csrf/>
+    </http>
+ 
+    <!-- Select users and user_roles from database -->
+    <authentication-manager>
+      <authentication-provider>
+        <jdbc-user-service data-source-ref="dataSource"
+          users-by-username-query=
+            "SELECT documentNumber,password, enabled FROM bzUser WHERE documentNumber=?"
+          authorities-by-username-query=
+            "SELECT documentNumber, ut.code FROM cnUserType ut JOIN bzUserXUserType uxut ON ut.id = uxut.idUserType JOIN bzUser us ON uxut.idUser = us.id WHERE documentNumber=?" />
+      </authentication-provider>
+    </authentication-manager>
+ 
+</beans:beans>

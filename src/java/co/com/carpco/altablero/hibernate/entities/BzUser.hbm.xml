@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 24-sep-2014 23:08:09 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="co.com.carpco.altablero.hibernate.entities.BzUser" table="bzUser" catalog="schoolManagement" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="documentNumber" type="string">
+            <column name="documentNumber" length="12" not-null="true" />
+        </property>
+        <property name="documentType" type="string">
+            <column name="documentType" length="50" not-null="true" />
+        </property>
+        <property name="name" type="string">
+            <column name="name" length="30" not-null="true" />
+        </property>
+        <property name="lastName" type="string">
+            <column name="lastName" length="30" not-null="true" />
+        </property>
+        <property name="born" type="date">
+            <column name="born" length="10" not-null="true" />
+        </property>
+        <property name="address" type="string">
+            <column name="address" length="60" not-null="true" />
+        </property>
+        <property name="phone1" type="long">
+            <column name="phone1" not-null="true" />
+        </property>
+        <property name="phone2" type="java.lang.Long">
+            <column name="phone2" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="8" />
+        </property>
+        <property name="gender" type="string">
+            <column name="gender" length="10" not-null="true" />
+        </property>
+        <property name="creation" type="timestamp">
+            <column name="creation" length="19" not-null="true" />
+        </property>
+        <property name="updated" type="timestamp">
+            <column name="updated" length="19" not-null="true" />
+        </property>
+        <property name="enabled" type="boolean">
+            <column name="enabled" not-null="true" />
+        </property>
+        <set name="bzClasses" table="bzClass" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idUser" not-null="true" />
+            </key>
+            <one-to-many class="co.com.carpco.altablero.hibernate.entities.BzClass" />
+        </set>
+        <set name="bzUserXuserTypes" table="bzUserXUserType" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idUser" not-null="true" />
+            </key>
+            <one-to-many class="co.com.carpco.altablero.hibernate.entities.BzUserXuserType" />
+        </set>
+    </class>
+</hibernate-mapping>
