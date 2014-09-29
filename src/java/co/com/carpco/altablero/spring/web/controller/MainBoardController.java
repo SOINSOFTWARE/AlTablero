@@ -6,11 +6,15 @@
 
 package co.com.carpco.altablero.spring.web.controller;
 
-import co.com.carpco.altablero.hibernate.bo.BzUserBO;
+import co.com.carpco.altablero.hibernate.bll.BzUserBll;
 import co.com.carpco.altablero.hibernate.entities.BzUser;
+import co.com.carpco.altablero.hibernate.entities.BzUserXuserType;
+import co.com.carpco.altablero.hibernate.entities.CnUserType;
+import co.com.carpco.altablero.hibernate.entities.CnUsertTypeXaccess;
+import co.com.carpco.altablero.utils.RoleUtils;
 import java.util.HashSet;
 import java.util.Set;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,8 +31,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class MainBoardController {
     
-    @Inject
-    BzUserBO bzUserBO;
+    @Autowired
+    BzUserBll bzUserBO;
     
     @RequestMapping(value = { "/", "/admin/general" }, method = RequestMethod.GET)
     public ModelAndView generalPage() {
@@ -37,48 +41,10 @@ public class MainBoardController {
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             
             BzUser bzUser = bzUserBO.getUserByDocumentNumber(auth.getName());
-            
-            ModelAndView model = new ModelAndView();
-            
-            model.addObject("username", bzUser.getName() + " " + bzUser.getLastName());
-            model.addObject("usernameRole", "Carlos Rodriguez - Rector");
-            model.addObject("avatar", "avatar5");
-            
-            model.addObject("canViewGradeMenu", true);
-            model.addObject("canViewSubjectMenu", true);
-            model.addObject("canViewTeacherMenu", true);
-            model.addObject("canViewStudentMenu", true);
-            
-            
-            
-            Set<String> accessList = new HashSet();
-            accessList.add("CURVE");
-            accessList.add("CURCE");
-            accessList.add("CURMA");
-            accessList.add("CURES");
-            
-            accessList.add("MATVE");
-            accessList.add("MATCE");
-            accessList.add("MATCU");
-            
-            accessList.add("PROVE");
-            accessList.add("PROCE");
-            accessList.add("PROMA");
-            accessList.add("PROCC");
-            accessList.add("PROCA");
-            accessList.add("PRODE");
-            
-            accessList.add("ESTVE");
-            accessList.add("ESTCE");
-            accessList.add("ESTCU");
-            accessList.add("ESTCA");
-            accessList.add("ESTEX");
-            model.addObject("accessList", accessList);
-            
+            ModelAndView model = RoleUtils.getInstance().createModelWithUserDetails(bzUser);            
             model.setViewName("admin/general");
             return model;
-        } else 
-        {
+        } else {
             return new ModelAndView("redirect:/login");
         }
     }

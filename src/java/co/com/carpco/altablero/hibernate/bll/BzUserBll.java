@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package co.com.carpco.altablero.hibernate.bo;
+package co.com.carpco.altablero.hibernate.bll;
 
 import co.com.carpco.altablero.hibernate.dao.BzUserDao;
+import co.com.carpco.altablero.hibernate.dao.IBzUserDao;
 import co.com.carpco.altablero.hibernate.entities.BzUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +16,12 @@ import org.springframework.stereotype.Service;
  * @author Carlos
  */
 @Service
-public class BzUserBO {
+public class BzUserBll implements IBzUserDao{
     
     @Autowired
     private BzUserDao bzUserDao;
     
+    @Override
     public BzUser getUserByDocumentNumber(String documentNumber) {
         return bzUserDao.getUserByDocumentNumber(documentNumber);
     }

@@ -5,8 +5,10 @@
  */
 package co.com.carpco.altablero.hibernate.dao;
 
-import co.com.carpco.altablero.hibernate.util.HibernateUtil;
+import co.com.carpco.altablero.hibernate.utils.HibernateUtil;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -14,12 +16,11 @@ import org.hibernate.Session;
  */
 public abstract class DaoAbstract {
     
-    private Session session;
-
+    Logger EXCEPTION_LOGGER = LoggerFactory.getLogger("exception");
+    
+    Logger DAO_LOGGER = LoggerFactory.getLogger("dao");
+    
     public Session getSession() {
-        if (this.session == null) {
-            this.session = HibernateUtil.getSessionFactory().getCurrentSession();
-        }
-        return session;
+        return HibernateUtil.getSessionFactory().getCurrentSession();
     }
 }
