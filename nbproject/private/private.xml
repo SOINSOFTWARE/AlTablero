@@ -5,12 +5,13 @@
         <group>
             <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/dao/BzUserDao.java</file>
             <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/bll/BzUserBll.java</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/hibernate.cfg.xml</file>
             <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/dao/IBzUserDao.java</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/ehcache.xml</file>
             <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/entities/BzUserXuserType.java</file>
             <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/spring/web/controller/MainBoardController.java</file>
             <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/utils/RoleUtils.java</file>
-            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/dao/ICnUserTypeDao.java</file>
-            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/dao/CnUserTypeDao.java</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/entities/BzUser.hbm.xml</file>
         </group>
     </open-files>
 </project-private>

@@ -25,9 +25,10 @@ public class BzUserDao extends DaoAbstract implements IBzUserDao{
         
         try {
             this.getSession().beginTransaction();
-            Query q = this.getSession().createQuery ("from BzUser as u where u.documentNumber = :documentNumber");
-            q.setParameter("documentNumber", documentNumber);
-            bzUser = (BzUser)q.list().get(0);
+            Query query = this.getSession().createQuery ("from BzUser as u where u.documentNumber = :documentNumber");
+            query.setParameter("documentNumber", documentNumber);
+            query.setCacheable(true);
+            bzUser = (BzUser)query.list().get(0);
         } catch (Exception ex) {
             EXCEPTION_LOGGER.error(ex.getMessage());
         } finally {
