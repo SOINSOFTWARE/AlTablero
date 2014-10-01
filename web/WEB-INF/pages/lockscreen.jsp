@@ -14,7 +14,7 @@
         <div class="center">            
             <div class="headline text-center" id="time"></div>
             
-            <div class="lockscreen-name">${username}</div>
+            <div class="lockscreen-name">${user}</div>
             
             <div class="lockscreen-item">
                 <div class="lockscreen-image">
@@ -23,16 +23,20 @@
 
                 <div class="lockscreen-credentials">
                     <div class="input-group">
-                        <input type="password" class="form-control" placeholder="password" />
-                        <div class="input-group-btn">
-                            <button class="btn btn-flat"><i class="fa fa-arrow-right text-muted"></i></button>
-                        </div>
+                        <form name="loginForm" action="<c:url value='/j_spring_security_check' />" method='POST'>
+                            <input type='hidden' name='username' value="${username}" ></input>
+                            <input type='password' name='password' class="form-control" required="true" placeholder="Contrase&ntilde;a" autocomplete="off" ></input>
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                            <div class="input-group-btn">
+                                <div class="btn btn-flat"><input name="submit" type="submit" class="fa fa-arrow-right text-muted" /></div>
+                            </div>
+                        </form>                        
                     </div>
                 </div>
             </div>
 
             <div class="lockscreen-link">
-                <a href="login.html">Or sign in as a different user</a>
+                <a href="login.html">O inicia sesión con un usuario distinto</a>
             </div>
         </div>
 

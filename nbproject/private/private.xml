@@ -3,15 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/dao/BzUserDao.java</file>
-            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/bll/BzUserBll.java</file>
-            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/hibernate.cfg.xml</file>
-            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/dao/IBzUserDao.java</file>
-            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/ehcache.xml</file>
-            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/entities/BzUserXuserType.java</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/web/WEB-INF/pages/lockscreen.jsp</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/web/WEB-INF/pages/login.jsp</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/spring/web/controller/LoginController.java</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/web/WEB-INF/pages/admin/include_body_header.jsp</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/web/WEB-INF/pages/admin/general.jsp</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/web/WEB-INF/pages/admin/include_body_menu.jsp</file>
             <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/spring/web/controller/MainBoardController.java</file>
             <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/utils/RoleUtils.java</file>
-            <file>file:/C:/Users/Carlos/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/entities/BzUser.hbm.xml</file>
         </group>
     </open-files>
 </project-private>
