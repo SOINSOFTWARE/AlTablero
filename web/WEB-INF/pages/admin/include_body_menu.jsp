@@ -65,7 +65,7 @@
                             <li><a href="pages/charts/morris.html"><i class="fa fa-angle-double-right"></i> Ver</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('PROCE')}">
-                            <li><a href="pages/charts/morris.html"><i class="fa fa-angle-double-right"></i> Crear o editar</a></li>
+                            <li><a href="<c:url value="/admin/profesor" />"><i class="fa fa-angle-double-right"></i> Crear o editar</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('PROMA')}">
                             <li><a href="pages/charts/flot.html"><i class="fa fa-angle-double-right"></i> Asociar a materia</a></li>
