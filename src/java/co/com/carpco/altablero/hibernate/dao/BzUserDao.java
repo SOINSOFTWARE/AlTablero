@@ -8,6 +8,7 @@ package co.com.carpco.altablero.hibernate.dao;
 import co.com.carpco.altablero.hibernate.entities.BzUser;
 import co.com.carpco.altablero.utils.Chronometer;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -24,8 +25,9 @@ public class BzUserDao extends DaoAbstract implements IBzUserDao{
         chrono.start();
         
         try {
-            this.getSession().beginTransaction();
-            Query query = this.getSession().createQuery ("from BzUser as u where u.documentNumber = :documentNumber");
+            Session session = this.getSession();
+            session.beginTransaction();
+            Query query = session.createQuery ("from BzUser as u where u.documentNumber = :documentNumber");
             query.setParameter("documentNumber", documentNumber);
             query.setCacheable(true);
             bzUser = (BzUser)query.list().get(0);
