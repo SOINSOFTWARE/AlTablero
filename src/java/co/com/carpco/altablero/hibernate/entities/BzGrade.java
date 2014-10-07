@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 24-sep-2014 23:08:01 by Hibernate Tools 4.3.1
+// Generated 07-oct-2014 8:22:25 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -18,7 +18,7 @@ public class BzGrade  implements java.io.Serializable {
      private Date creation;
      private Date updated;
      private boolean enabled;
-     private Set<BzClass> bzClasses = new HashSet<BzClass>(0);
+     private Set<BzClassRoom> bzClassRooms = new HashSet<BzClassRoom>(0);
 
     public BzGrade() {
     }
@@ -31,13 +31,13 @@ public class BzGrade  implements java.io.Serializable {
         this.updated = updated;
         this.enabled = enabled;
     }
-    public BzGrade(String code, String name, Date creation, Date updated, boolean enabled, Set<BzClass> bzClasses) {
+    public BzGrade(String code, String name, Date creation, Date updated, boolean enabled, Set<BzClassRoom> bzClassRooms) {
        this.code = code;
        this.name = name;
        this.creation = creation;
        this.updated = updated;
        this.enabled = enabled;
-       this.bzClasses = bzClasses;
+       this.bzClassRooms = bzClassRooms;
     }
    
     public Integer getId() {
@@ -82,12 +82,12 @@ public class BzGrade  implements java.io.Serializable {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    public Set<BzClass> getBzClasses() {
-        return this.bzClasses;
+    public Set<BzClassRoom> getBzClassRooms() {
+        return this.bzClassRooms;
     }
     
-    public void setBzClasses(Set<BzClass> bzClasses) {
-        this.bzClasses = bzClasses;
+    public void setBzClassRooms(Set<BzClassRoom> bzClassRooms) {
+        this.bzClassRooms = bzClassRooms;
     }
 
 

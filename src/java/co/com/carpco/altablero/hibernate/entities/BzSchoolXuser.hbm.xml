@@ -2,20 +2,20 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 07-oct-2014 8:22:32 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-  <class catalog="schoolManagement" name="co.com.carpco.altablero.hibernate.entities.BzUserXuserType" optimistic-lock="version" table="bzUserXUserType">
-    <composite-id class="co.com.carpco.altablero.hibernate.entities.BzUserXuserTypeId" name="id">
+  <class catalog="schoolManagement" name="co.com.carpco.altablero.hibernate.entities.BzSchoolXuser" optimistic-lock="version" table="bzSchoolXUser">
+    <composite-id class="co.com.carpco.altablero.hibernate.entities.BzSchoolXuserId" name="id">
+      <key-property name="idSchool" type="int">
+        <column name="idSchool"/>
+      </key-property>
       <key-property name="idUser" type="int">
         <column name="idUser"/>
       </key-property>
-      <key-property name="idUserType" type="int">
-        <column name="idUserType"/>
-      </key-property>
     </composite-id>
+    <many-to-one class="co.com.carpco.altablero.hibernate.entities.BzSchool" fetch="select" insert="false" name="bzSchool" update="false">
+      <column name="idSchool" not-null="true"/>
+    </many-to-one>
     <many-to-one class="co.com.carpco.altablero.hibernate.entities.BzUser" fetch="select" insert="false" name="bzUser" update="false">
       <column name="idUser" not-null="true"/>
-    </many-to-one>
-    <many-to-one class="co.com.carpco.altablero.hibernate.entities.CnUserType" fetch="select" insert="false" name="cnUserType" update="false">
-      <column name="idUserType" not-null="true"/>
     </many-to-one>
     <property name="creation" type="timestamp">
       <column length="19" name="creation" not-null="true"/>

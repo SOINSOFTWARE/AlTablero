@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 24-sep-2014 23:08:01 by Hibernate Tools 4.3.1
+// Generated 07-oct-2014 8:22:25 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -26,7 +26,9 @@ public class BzUser  implements java.io.Serializable {
      private Date creation;
      private Date updated;
      private boolean enabled;
+     private Set<BzSchoolXuser> bzSchoolXusers = new HashSet<BzSchoolXuser>(0);
      private Set<BzClass> bzClasses = new HashSet<BzClass>(0);
+     private Set<BzClassRoom> bzClassRooms = new HashSet<BzClassRoom>(0);
      private Set<BzUserXuserType> bzUserXuserTypes = new HashSet<BzUserXuserType>(0);
 
     public BzUser() {
@@ -46,7 +48,7 @@ public class BzUser  implements java.io.Serializable {
         this.updated = updated;
         this.enabled = enabled;
     }
-    public BzUser(String documentNumber, String documentType, String name, String lastName, Date born, String address, long phone1, Long phone2, String password, String gender, Date creation, Date updated, boolean enabled, Set<BzClass> bzClasses, Set<BzUserXuserType> bzUserXuserTypes) {
+    public BzUser(String documentNumber, String documentType, String name, String lastName, Date born, String address, long phone1, Long phone2, String password, String gender, Date creation, Date updated, boolean enabled, Set<BzSchoolXuser> bzSchoolXusers, Set<BzClass> bzClasses, Set<BzClassRoom> bzClassRooms, Set<BzUserXuserType> bzUserXuserTypes) {
        this.documentNumber = documentNumber;
        this.documentType = documentType;
        this.name = name;
@@ -60,7 +62,9 @@ public class BzUser  implements java.io.Serializable {
        this.creation = creation;
        this.updated = updated;
        this.enabled = enabled;
+       this.bzSchoolXusers = bzSchoolXusers;
        this.bzClasses = bzClasses;
+       this.bzClassRooms = bzClassRooms;
        this.bzUserXuserTypes = bzUserXuserTypes;
     }
    
@@ -162,12 +166,26 @@ public class BzUser  implements java.io.Serializable {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+    public Set<BzSchoolXuser> getBzSchoolXusers() {
+        return this.bzSchoolXusers;
+    }
+    
+    public void setBzSchoolXusers(Set<BzSchoolXuser> bzSchoolXusers) {
+        this.bzSchoolXusers = bzSchoolXusers;
+    }
     public Set<BzClass> getBzClasses() {
         return this.bzClasses;
     }
     
     public void setBzClasses(Set<BzClass> bzClasses) {
         this.bzClasses = bzClasses;
+    }
+    public Set<BzClassRoom> getBzClassRooms() {
+        return this.bzClassRooms;
+    }
+    
+    public void setBzClassRooms(Set<BzClassRoom> bzClassRooms) {
+        this.bzClassRooms = bzClassRooms;
     }
     public Set<BzUserXuserType> getBzUserXuserTypes() {
         return this.bzUserXuserTypes;

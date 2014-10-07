@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 24-sep-2014 23:08:01 by Hibernate Tools 4.3.1
+// Generated 07-oct-2014 8:22:25 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;

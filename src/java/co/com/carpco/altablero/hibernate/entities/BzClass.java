@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 24-sep-2014 23:08:01 by Hibernate Tools 4.3.1
+// Generated 07-oct-2014 8:22:25 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -13,7 +13,7 @@ public class BzClass  implements java.io.Serializable {
 
 
      private Integer id;
-     private BzGrade bzGrade;
+     private BzClassRoom bzClassRoom;
      private BzSubject bzSubject;
      private BzUser bzUser;
      private String name;
@@ -26,8 +26,8 @@ public class BzClass  implements java.io.Serializable {
     }
 
 	
-    public BzClass(BzGrade bzGrade, BzSubject bzSubject, BzUser bzUser, String name, Date creation, Date updated, String enabled) {
-        this.bzGrade = bzGrade;
+    public BzClass(BzClassRoom bzClassRoom, BzSubject bzSubject, BzUser bzUser, String name, Date creation, Date updated, String enabled) {
+        this.bzClassRoom = bzClassRoom;
         this.bzSubject = bzSubject;
         this.bzUser = bzUser;
         this.name = name;
@@ -35,8 +35,8 @@ public class BzClass  implements java.io.Serializable {
         this.updated = updated;
         this.enabled = enabled;
     }
-    public BzClass(BzGrade bzGrade, BzSubject bzSubject, BzUser bzUser, String name, Date creation, Date updated, String enabled, Set<BzNoteDefinition> bzNoteDefinitions) {
-       this.bzGrade = bzGrade;
+    public BzClass(BzClassRoom bzClassRoom, BzSubject bzSubject, BzUser bzUser, String name, Date creation, Date updated, String enabled, Set<BzNoteDefinition> bzNoteDefinitions) {
+       this.bzClassRoom = bzClassRoom;
        this.bzSubject = bzSubject;
        this.bzUser = bzUser;
        this.name = name;
@@ -53,12 +53,12 @@ public class BzClass  implements java.io.Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    public BzGrade getBzGrade() {
-        return this.bzGrade;
+    public BzClassRoom getBzClassRoom() {
+        return this.bzClassRoom;
     }
     
-    public void setBzGrade(BzGrade bzGrade) {
-        this.bzGrade = bzGrade;
+    public void setBzClassRoom(BzClassRoom bzClassRoom) {
+        this.bzClassRoom = bzClassRoom;
     }
     public BzSubject getBzSubject() {
         return this.bzSubject;
