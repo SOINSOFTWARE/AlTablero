@@ -6,14 +6,9 @@
 
 package co.com.carpco.altablero.spring.web.controller;
 
+import co.com.carpco.altablero.bo.User;
 import co.com.carpco.altablero.hibernate.bll.BzUserBll;
-import co.com.carpco.altablero.hibernate.entities.BzUser;
-import co.com.carpco.altablero.hibernate.entities.BzUserXuserType;
-import co.com.carpco.altablero.hibernate.entities.CnUserType;
-import co.com.carpco.altablero.hibernate.entities.CnUsertTypeXaccess;
 import co.com.carpco.altablero.utils.RoleUtils;
-import java.util.HashSet;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,8 +35,8 @@ public class MainBoardController {
         
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             
-            BzUser bzUser = bzUserBO.getUserByDocumentNumber(auth.getName());
-            ModelAndView model = RoleUtils.getInstance().createModelWithUserDetails(bzUser);            
+            User user = bzUserBO.getUserByDocumentNumber(auth.getName());
+            ModelAndView model = RoleUtils.getInstance().createModelWithUserDetails(user);            
             model.setViewName("admin/general");
             return model;
         } else {

@@ -5,8 +5,8 @@
  */
 package co.com.carpco.altablero.spring.web.controller;
 
+import co.com.carpco.altablero.bo.User;
 import co.com.carpco.altablero.hibernate.bll.BzUserBll;
-import co.com.carpco.altablero.hibernate.entities.BzUser;
 import co.com.carpco.altablero.utils.RoleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -33,8 +33,8 @@ public class TeacherController {
         
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             
-            BzUser bzUser = bzUserBO.getUserByDocumentNumber(auth.getName());
-            ModelAndView model = RoleUtils.getInstance().createModelWithUserDetails(bzUser);            
+            User user = bzUserBO.getUserByDocumentNumber(auth.getName());
+            ModelAndView model = RoleUtils.getInstance().createModelWithUserDetails(user);            
             model.setViewName("admin/user_createEdit");
             return model;
         } else {

@@ -1,7 +1,8 @@
 package co.com.carpco.altablero.spring.web.controller;
 
+import co.com.carpco.altablero.bo.User;
 import co.com.carpco.altablero.hibernate.bll.BzUserBll;
-import co.com.carpco.altablero.hibernate.entities.BzUser;
+import co.com.carpco.altablero.utils.RoleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -42,17 +43,8 @@ public class LoginController {
     public ModelAndView loockscreen() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            BzUser bzUser = bzUserBO.getUserByDocumentNumber(auth.getName());
-            
-            ModelAndView model = new ModelAndView();
-            model.addObject("user", bzUser.getName() + " " + bzUser.getLastName());
-            model.addObject("username", bzUser.getDocumentNumber());
-            
-            if (bzUser.getGender().equals("Masculino")) {
-                model.addObject("avatar", "avatar5");
-            } else {
-                model.addObject("avatar", "avatar2");
-            }
+            User user = bzUserBO.getUserByDocumentNumber(auth.getName());
+            ModelAndView model = RoleUtils.getInstance().createModelWithUserDetails(user);
             
             SecurityContextHolder.getContext().setAuthentication(null);
             SecurityContextHolder.clearContext();

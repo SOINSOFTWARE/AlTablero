@@ -5,9 +5,8 @@
  */
 package co.com.carpco.altablero.hibernate.bll;
 
+import co.com.carpco.altablero.bo.User;
 import co.com.carpco.altablero.hibernate.dao.BzUserDao;
-import co.com.carpco.altablero.hibernate.dao.IBzUserDao;
-import co.com.carpco.altablero.hibernate.entities.BzUser;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +18,7 @@ import javax.cache.Caching;
 import javax.cache.configuration.Factory;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.AccessedExpiryPolicy;
-import static javax.cache.expiry.Duration.ONE_HOUR;
+import static javax.cache.expiry.Duration.ONE_DAY;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 import javax.cache.integration.CacheWriter;
@@ -30,9 +29,9 @@ import javax.cache.spi.CachingProvider;
  * @author Carlos
  */
 @Service
-public class BzUserBll implements IBzUserDao{
+public class BzUserBll {
     
-    static Cache<String, BzUser> cache;
+    static Cache<String, User> cache;
     
     @Autowired
     private BzUserDao bzUserDao;
@@ -41,26 +40,26 @@ public class BzUserBll implements IBzUserDao{
         CachingProvider cachingProvider = Caching.getCachingProvider();
         CacheManager cacheManager = cachingProvider.getCacheManager();
         
-        MutableConfiguration<String, BzUser> config
-                = new MutableConfiguration<String, BzUser>()
-                .setTypes(String.class, BzUser.class)
-                .setExpiryPolicyFactory(AccessedExpiryPolicy.factoryOf(ONE_HOUR))
+        MutableConfiguration<String, User> config
+                = new MutableConfiguration<String, User>()
+                .setTypes(String.class, User.class)
+                .setExpiryPolicyFactory(AccessedExpiryPolicy.factoryOf(ONE_DAY))
                 .setWriteThrough(true)
                 .setReadThrough(true)
-                .setCacheLoaderFactory(new Factory<CacheLoader<String, BzUser>>() {
+                .setCacheLoaderFactory(new Factory<CacheLoader<String, User>>() {
 
                     @Override
-                    public CacheLoader<String, BzUser> create() {
-                        return new CacheLoader<String, BzUser>() {
+                    public CacheLoader<String, User> create() {
+                        return new CacheLoader<String, User>() {
 
                             @Override
-                            public BzUser load(String k) throws CacheLoaderException {
-                                return bzUserDao.getUserByDocumentNumber(k);
+                            public User load(String k) throws CacheLoaderException {
+                                return new User(bzUserDao.getUserByDocumentNumber(k));
                             }
 
                             @Override
-                            public Map<String, BzUser> loadAll(Iterable<? extends String> itrbl) throws CacheLoaderException {
-                                Map<String, BzUser> answer = new HashMap<>();
+                            public Map<String, User> loadAll(Iterable<? extends String> itrbl) throws CacheLoaderException {
+                                Map<String, User> answer = new HashMap<>();
                                 itrbl.forEach((String k) -> answer.put(k, load(k)));
 
                                 return answer;
@@ -68,18 +67,18 @@ public class BzUserBll implements IBzUserDao{
                         };
                     }
                 })
-                .setCacheWriterFactory(new Factory<CacheWriter<String, BzUser>>() {
+                .setCacheWriterFactory(new Factory<CacheWriter<String, User>>() {
                     @Override
-                    public CacheWriter<String, BzUser> create() {
-                        CacheWriter<String, BzUser> writer = new CacheWriter<String, BzUser>() {
+                    public CacheWriter<String, User> create() {
+                        CacheWriter<String, User> writer = new CacheWriter<String, User>() {
 
                             @Override
-                            public void write(Cache.Entry<? extends String, ? extends BzUser> entry) throws CacheWriterException {
+                            public void write(Cache.Entry<? extends String, ? extends User> entry) throws CacheWriterException {
                                 
                             }
 
                             @Override
-                            public void writeAll(Collection<Cache.Entry<? extends String, ? extends BzUser>> clctn) throws CacheWriterException {
+                            public void writeAll(Collection<Cache.Entry<? extends String, ? extends User>> clctn) throws CacheWriterException {
                                 
                             }
 
@@ -103,15 +102,14 @@ public class BzUserBll implements IBzUserDao{
         config.isReadThrough();
     }
     
-    @Override
-    public BzUser getUserByDocumentNumber(String documentNumber) {
+    public User getUserByDocumentNumber(String documentNumber) {
         if (cache == null) {
             this.initializeCache();
         }
         
-        BzUser cached = cache.get(documentNumber);
+        User cached = cache.get(documentNumber);
         if (cached == null) {
-            cached = bzUserDao.getUserByDocumentNumber(documentNumber);
+            cached = new User(bzUserDao.getUserByDocumentNumber(documentNumber));
         }
         return cached;
     }

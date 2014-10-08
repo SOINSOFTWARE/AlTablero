@@ -5,10 +5,9 @@
  */
 package co.com.carpco.altablero.utils;
 
-import co.com.carpco.altablero.hibernate.entities.BzUser;
-import co.com.carpco.altablero.hibernate.entities.BzUserXuserType;
-import co.com.carpco.altablero.hibernate.entities.CnUserType;
-import co.com.carpco.altablero.hibernate.entities.CnUsertTypeXaccess;
+import co.com.carpco.altablero.bo.Access;
+import co.com.carpco.altablero.bo.User;
+import co.com.carpco.altablero.bo.UserType;
 import java.util.HashSet;
 import java.util.Set;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,15 +31,13 @@ public class RoleUtils {
         return instance;
     }
     
-    public ModelAndView createModelWithUserDetails(BzUser bzUser) {
-        Set<BzUserXuserType> bzUserXUserTypeSet = bzUser.getBzUserXuserTypes();
-            
+    public ModelAndView createModelWithUserDetails(User user) {
         ModelAndView model = new ModelAndView();
 
-        model.addObject("userFirstName", bzUser.getName());
-        model.addObject("username", bzUser.getName() + " " + bzUser.getLastName());
+        model.addObject("userFirstName", user.getName());
+        model.addObject("username", user.getName() + " " + user.getLastName());
 
-        if (bzUser.getGender().equals("Masculino")) {
+        if (user.getGender().equals("Masculino")) {
             model.addObject("avatar", "avatar5");
         } else {
             model.addObject("avatar", "avatar2");
@@ -52,10 +49,9 @@ public class RoleUtils {
         boolean viewStudentMenu = false;
         Set<String> accessList = new HashSet();
 
-        for (BzUserXuserType bzUserXUserType : bzUserXUserTypeSet) {
+        for (UserType userType : user.getUserTypeSet()) {
 
-            CnUserType cnUserType = bzUserXUserType.getCnUserType();
-            switch (cnUserType.getCode()) {
+            switch (userType.getCode()) {
                 case "RCTOR":
                     viewGradeMenu = true;
                     viewSubjectMenu = true;
@@ -76,8 +72,8 @@ public class RoleUtils {
                     break;
             }
 
-            for (CnUsertTypeXaccess cnUserTypeXAccess : cnUserType.getCnUsertTypeXaccesses()) {
-                accessList.add(cnUserTypeXAccess.getCnAccess().getCode());
+            for (Access access : userType.getAccessSet()) {
+                accessList.add(access.getCode());
             }
         }
         model.addObject("canViewGradeMenu", viewGradeMenu);
