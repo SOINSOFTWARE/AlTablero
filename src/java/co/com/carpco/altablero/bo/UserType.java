@@ -5,9 +5,9 @@
  */
 package co.com.carpco.altablero.bo;
 
-import co.com.carpco.altablero.hibernate.entities.CnAccess;
 import co.com.carpco.altablero.hibernate.entities.CnUserType;
 import co.com.carpco.altablero.hibernate.entities.CnUsertTypeXaccess;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
@@ -17,7 +17,7 @@ import java.util.Set;
  *
  * @author Carlos Rodriguez
  */
-public class UserType {
+public class UserType implements Serializable{
 
     private Integer id;
     

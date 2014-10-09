@@ -7,9 +7,8 @@ package co.com.carpco.altablero.bo;
 
 import co.com.carpco.altablero.hibernate.entities.BzUser;
 import co.com.carpco.altablero.hibernate.entities.BzUserXuserType;
-import co.com.carpco.altablero.hibernate.entities.CnUserType;
+import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -18,7 +17,7 @@ import java.util.Set;
  *
  * @author Carlos Rodriguez
  */
-public class User {
+public class User implements Serializable{
 
     private Integer id;
 

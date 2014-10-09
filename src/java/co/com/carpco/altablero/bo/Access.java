@@ -6,6 +6,7 @@
 package co.com.carpco.altablero.bo;
 
 import co.com.carpco.altablero.hibernate.entities.CnAccess;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
@@ -13,7 +14,7 @@ import java.util.Objects;
  *
  * @author Carlos Rodriguez
  */
-public class Access {
+public class Access implements Serializable{
 
     private Integer id;
     
