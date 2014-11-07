@@ -1,7 +1,5 @@
 package co.com.carpco.altablero.spring.web.controller;
 
-import co.com.carpco.altablero.bo.User;
-import co.com.carpco.altablero.hibernate.bll.BzUserBll;
 import co.com.carpco.altablero.utils.RoleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -18,8 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class LoginController {
     
     @Autowired
-    BzUserBll bzUserBO;
-
+    RoleUtils roleUtils;
+    
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(@RequestParam(value = "error", required = false) String error, 
             @RequestParam(value = "logout", required = false) String logout) {
@@ -43,8 +41,8 @@ public class LoginController {
     public ModelAndView loockscreen() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            User user = bzUserBO.getUserByDocumentNumber(auth.getName());
-            ModelAndView model = RoleUtils.getInstance().createModelWithUserDetails(user);
+            
+            ModelAndView model = roleUtils.createModelWithUserDetails(auth.getName());
             
             SecurityContextHolder.getContext().setAuthentication(null);
             SecurityContextHolder.clearContext();

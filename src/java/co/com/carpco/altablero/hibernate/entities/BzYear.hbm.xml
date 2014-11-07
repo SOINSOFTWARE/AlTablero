@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 07-oct-2014 8:22:32 by Hibernate Tools 4.3.1 -->
+<!-- Generated 30-oct-2014 21:20:23 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
   <class catalog="schoolManagement" name="co.com.carpco.altablero.hibernate.entities.BzYear" optimistic-lock="version" table="bzYear">
     <id name="id" type="java.lang.Integer">
       <column name="id"/>
       <generator class="identity"/>
     </id>
-    <many-to-one class="co.com.carpco.altablero.hibernate.entities.BzSchool" fetch="select" name="bzSchool">
-      <column name="idSchool" not-null="true"/>
-    </many-to-one>
     <property name="name" type="string">
       <column length="45" name="name" not-null="true"/>
     </property>
@@ -22,6 +19,12 @@
     <property name="enabled" type="boolean">
       <column name="enabled" not-null="true"/>
     </property>
+    <set fetch="select" inverse="true" lazy="true" name="bzClassRooms" table="bzClassRoom">
+      <key>
+        <column name="idYear" not-null="true"/>
+      </key>
+      <one-to-many class="co.com.carpco.altablero.hibernate.entities.BzClassRoom"/>
+    </set>
     <set fetch="select" inverse="true" lazy="true" name="bzPeriods" table="bzPeriod">
       <key>
         <column name="idBzYear" not-null="true"/>

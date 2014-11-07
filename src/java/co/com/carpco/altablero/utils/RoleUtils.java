@@ -8,30 +8,25 @@ package co.com.carpco.altablero.utils;
 import co.com.carpco.altablero.bo.Access;
 import co.com.carpco.altablero.bo.User;
 import co.com.carpco.altablero.bo.UserType;
+import co.com.carpco.altablero.hibernate.bll.BzUserBll;
 import java.util.HashSet;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
  * @author Carlos Rodriguez
  */
+@Service
 public class RoleUtils {
     
-    private static RoleUtils instance;
+    @Autowired
+    BzUserBll bzUserBll;
     
-    private RoleUtils() {
-        super();
-    }
-    
-    public static RoleUtils getInstance() {
-        if (instance == null) {
-            instance = new RoleUtils();
-        }
-        return instance;
-    }
-    
-    public ModelAndView createModelWithUserDetails(User user) {
+    public ModelAndView createModelWithUserDetails(String documentNumber) {
+        User user = bzUserBll.getUserByDocumentNumber(documentNumber);
         ModelAndView model = new ModelAndView();
 
         model.addObject("userFirstName", user.getName());

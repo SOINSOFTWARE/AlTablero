@@ -26,5 +26,6 @@
     <mapping resource="co/com/carpco/altablero/hibernate/entities/BzUser.hbm.xml"/>
     <mapping resource="co/com/carpco/altablero/hibernate/entities/BzClassRoom.hbm.xml"/>
     <mapping resource="co/com/carpco/altablero/hibernate/entities/BzSchoolXuser.hbm.xml"/>
+    <mapping resource="co/com/carpco/altablero/hibernate/entities/BzClassRoomXuser.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

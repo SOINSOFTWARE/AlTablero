@@ -21,7 +21,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <c:if test="${accessList.contains('CURVE')}">
-                            <li><a href="pages/forms/advanced.html"><i class="fa fa-angle-double-right"></i> Ver</a></li>
+                            <li><a href="<c:url value="/admin/cursos" />"><i class="fa fa-angle-double-right"></i> Ver</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('CURCE')}">
                             <li><a href="pages/forms/general.html"><i class="fa fa-angle-double-right"></i> Crear o editar</a></li>

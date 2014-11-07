@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 07-oct-2014 8:22:25 by Hibernate Tools 4.3.1
+// Generated 30-oct-2014 21:20:19 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -13,30 +13,29 @@ public class BzYear  implements java.io.Serializable {
 
 
      private Integer id;
-     private BzSchool bzSchool;
      private String name;
      private Date creation;
      private Date updated;
      private boolean enabled;
-     private Set<BzPeriod> bzPeriods = new HashSet<BzPeriod>(0);
+     private Set bzClassRooms = new HashSet(0);
+     private Set bzPeriods = new HashSet(0);
 
     public BzYear() {
     }
 
 	
-    public BzYear(BzSchool bzSchool, String name, Date creation, Date updated, boolean enabled) {
-        this.bzSchool = bzSchool;
+    public BzYear(String name, Date creation, Date updated, boolean enabled) {
         this.name = name;
         this.creation = creation;
         this.updated = updated;
         this.enabled = enabled;
     }
-    public BzYear(BzSchool bzSchool, String name, Date creation, Date updated, boolean enabled, Set<BzPeriod> bzPeriods) {
-       this.bzSchool = bzSchool;
+    public BzYear(String name, Date creation, Date updated, boolean enabled, Set bzClassRooms, Set bzPeriods) {
        this.name = name;
        this.creation = creation;
        this.updated = updated;
        this.enabled = enabled;
+       this.bzClassRooms = bzClassRooms;
        this.bzPeriods = bzPeriods;
     }
    
@@ -46,13 +45,6 @@ public class BzYear  implements java.io.Serializable {
     
     public void setId(Integer id) {
         this.id = id;
-    }
-    public BzSchool getBzSchool() {
-        return this.bzSchool;
-    }
-    
-    public void setBzSchool(BzSchool bzSchool) {
-        this.bzSchool = bzSchool;
     }
     public String getName() {
         return this.name;
@@ -82,11 +74,18 @@ public class BzYear  implements java.io.Serializable {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    public Set<BzPeriod> getBzPeriods() {
+    public Set getBzClassRooms() {
+        return this.bzClassRooms;
+    }
+    
+    public void setBzClassRooms(Set bzClassRooms) {
+        this.bzClassRooms = bzClassRooms;
+    }
+    public Set getBzPeriods() {
         return this.bzPeriods;
     }
     
-    public void setBzPeriods(Set<BzPeriod> bzPeriods) {
+    public void setBzPeriods(Set bzPeriods) {
         this.bzPeriods = bzPeriods;
     }
 

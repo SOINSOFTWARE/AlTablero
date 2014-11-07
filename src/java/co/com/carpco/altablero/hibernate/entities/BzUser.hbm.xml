@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 07-oct-2014 8:22:32 by Hibernate Tools 4.3.1 -->
+<!-- Generated 30-oct-2014 21:20:23 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
   <class catalog="schoolManagement" name="co.com.carpco.altablero.hibernate.entities.BzUser" optimistic-lock="version" table="bzUser">
     <id name="id" type="java.lang.Integer">
@@ -37,6 +37,9 @@
     <property name="gender" type="string">
       <column length="10" name="gender" not-null="true"/>
     </property>
+    <property name="photo" type="binary">
+      <column name="photo"/>
+    </property>
     <property name="creation" type="timestamp">
       <column length="19" name="creation" not-null="true"/>
     </property>
@@ -52,17 +55,17 @@
       </key>
       <one-to-many class="co.com.carpco.altablero.hibernate.entities.BzSchoolXuser"/>
     </set>
+    <set fetch="select" inverse="true" lazy="true" name="bzClassRoomXusers" table="bzClassRoomXUser">
+      <key>
+        <column name="idUser" not-null="true"/>
+      </key>
+      <one-to-many class="co.com.carpco.altablero.hibernate.entities.BzClassRoomXuser"/>
+    </set>
     <set fetch="select" inverse="true" lazy="true" name="bzClasses" table="bzClass">
       <key>
         <column name="idUser" not-null="true"/>
       </key>
       <one-to-many class="co.com.carpco.altablero.hibernate.entities.BzClass"/>
-    </set>
-    <set fetch="select" inverse="true" lazy="true" name="bzClassRooms" table="bzClassRoom">
-      <key>
-        <column name="idUser" not-null="true"/>
-      </key>
-      <one-to-many class="co.com.carpco.altablero.hibernate.entities.BzClassRoom"/>
     </set>
     <set fetch="select" inverse="true" lazy="true" name="bzUserXuserTypes" table="bzUserXUserType">
       <key>

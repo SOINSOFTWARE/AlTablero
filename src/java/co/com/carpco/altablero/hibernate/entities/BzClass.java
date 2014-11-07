@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 07-oct-2014 8:22:25 by Hibernate Tools 4.3.1
+// Generated 30-oct-2014 21:20:19 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -19,14 +19,14 @@ public class BzClass  implements java.io.Serializable {
      private String name;
      private Date creation;
      private Date updated;
-     private String enabled;
-     private Set<BzNoteDefinition> bzNoteDefinitions = new HashSet<BzNoteDefinition>(0);
+     private boolean enabled;
+     private Set bzNoteDefinitions = new HashSet(0);
 
     public BzClass() {
     }
 
 	
-    public BzClass(BzClassRoom bzClassRoom, BzSubject bzSubject, BzUser bzUser, String name, Date creation, Date updated, String enabled) {
+    public BzClass(BzClassRoom bzClassRoom, BzSubject bzSubject, BzUser bzUser, String name, Date creation, Date updated, boolean enabled) {
         this.bzClassRoom = bzClassRoom;
         this.bzSubject = bzSubject;
         this.bzUser = bzUser;
@@ -35,7 +35,7 @@ public class BzClass  implements java.io.Serializable {
         this.updated = updated;
         this.enabled = enabled;
     }
-    public BzClass(BzClassRoom bzClassRoom, BzSubject bzSubject, BzUser bzUser, String name, Date creation, Date updated, String enabled, Set<BzNoteDefinition> bzNoteDefinitions) {
+    public BzClass(BzClassRoom bzClassRoom, BzSubject bzSubject, BzUser bzUser, String name, Date creation, Date updated, boolean enabled, Set bzNoteDefinitions) {
        this.bzClassRoom = bzClassRoom;
        this.bzSubject = bzSubject;
        this.bzUser = bzUser;
@@ -95,18 +95,18 @@ public class BzClass  implements java.io.Serializable {
     public void setUpdated(Date updated) {
         this.updated = updated;
     }
-    public String getEnabled() {
+    public boolean isEnabled() {
         return this.enabled;
     }
     
-    public void setEnabled(String enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    public Set<BzNoteDefinition> getBzNoteDefinitions() {
+    public Set getBzNoteDefinitions() {
         return this.bzNoteDefinitions;
     }
     
-    public void setBzNoteDefinitions(Set<BzNoteDefinition> bzNoteDefinitions) {
+    public void setBzNoteDefinitions(Set bzNoteDefinitions) {
         this.bzNoteDefinitions = bzNoteDefinitions;
     }
 

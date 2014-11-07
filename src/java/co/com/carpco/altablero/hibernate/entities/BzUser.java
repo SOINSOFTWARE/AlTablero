@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 07-oct-2014 8:22:25 by Hibernate Tools 4.3.1
+// Generated 30-oct-2014 21:20:19 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -23,13 +23,14 @@ public class BzUser  implements java.io.Serializable {
      private Long phone2;
      private String password;
      private String gender;
+     private byte[] photo;
      private Date creation;
      private Date updated;
      private boolean enabled;
-     private Set<BzSchoolXuser> bzSchoolXusers = new HashSet<BzSchoolXuser>(0);
-     private Set<BzClass> bzClasses = new HashSet<BzClass>(0);
-     private Set<BzClassRoom> bzClassRooms = new HashSet<BzClassRoom>(0);
-     private Set<BzUserXuserType> bzUserXuserTypes = new HashSet<BzUserXuserType>(0);
+     private Set bzSchoolXusers = new HashSet(0);
+     private Set bzClassRoomXusers = new HashSet(0);
+     private Set bzClasses = new HashSet(0);
+     private Set bzUserXuserTypes = new HashSet(0);
 
     public BzUser() {
     }
@@ -48,7 +49,7 @@ public class BzUser  implements java.io.Serializable {
         this.updated = updated;
         this.enabled = enabled;
     }
-    public BzUser(String documentNumber, String documentType, String name, String lastName, Date born, String address, long phone1, Long phone2, String password, String gender, Date creation, Date updated, boolean enabled, Set<BzSchoolXuser> bzSchoolXusers, Set<BzClass> bzClasses, Set<BzClassRoom> bzClassRooms, Set<BzUserXuserType> bzUserXuserTypes) {
+    public BzUser(String documentNumber, String documentType, String name, String lastName, Date born, String address, long phone1, Long phone2, String password, String gender, byte[] photo, Date creation, Date updated, boolean enabled, Set bzSchoolXusers, Set bzClassRoomXusers, Set bzClasses, Set bzUserXuserTypes) {
        this.documentNumber = documentNumber;
        this.documentType = documentType;
        this.name = name;
@@ -59,12 +60,13 @@ public class BzUser  implements java.io.Serializable {
        this.phone2 = phone2;
        this.password = password;
        this.gender = gender;
+       this.photo = photo;
        this.creation = creation;
        this.updated = updated;
        this.enabled = enabled;
        this.bzSchoolXusers = bzSchoolXusers;
+       this.bzClassRoomXusers = bzClassRoomXusers;
        this.bzClasses = bzClasses;
-       this.bzClassRooms = bzClassRooms;
        this.bzUserXuserTypes = bzUserXuserTypes;
     }
    
@@ -145,6 +147,13 @@ public class BzUser  implements java.io.Serializable {
     public void setGender(String gender) {
         this.gender = gender;
     }
+    public byte[] getPhoto() {
+        return this.photo;
+    }
+    
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
     public Date getCreation() {
         return this.creation;
     }
@@ -166,32 +175,32 @@ public class BzUser  implements java.io.Serializable {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    public Set<BzSchoolXuser> getBzSchoolXusers() {
+    public Set getBzSchoolXusers() {
         return this.bzSchoolXusers;
     }
     
-    public void setBzSchoolXusers(Set<BzSchoolXuser> bzSchoolXusers) {
+    public void setBzSchoolXusers(Set bzSchoolXusers) {
         this.bzSchoolXusers = bzSchoolXusers;
     }
-    public Set<BzClass> getBzClasses() {
+    public Set getBzClassRoomXusers() {
+        return this.bzClassRoomXusers;
+    }
+    
+    public void setBzClassRoomXusers(Set bzClassRoomXusers) {
+        this.bzClassRoomXusers = bzClassRoomXusers;
+    }
+    public Set getBzClasses() {
         return this.bzClasses;
     }
     
-    public void setBzClasses(Set<BzClass> bzClasses) {
+    public void setBzClasses(Set bzClasses) {
         this.bzClasses = bzClasses;
     }
-    public Set<BzClassRoom> getBzClassRooms() {
-        return this.bzClassRooms;
-    }
-    
-    public void setBzClassRooms(Set<BzClassRoom> bzClassRooms) {
-        this.bzClassRooms = bzClassRooms;
-    }
-    public Set<BzUserXuserType> getBzUserXuserTypes() {
+    public Set getBzUserXuserTypes() {
         return this.bzUserXuserTypes;
     }
     
-    public void setBzUserXuserTypes(Set<BzUserXuserType> bzUserXuserTypes) {
+    public void setBzUserXuserTypes(Set bzUserXuserTypes) {
         this.bzUserXuserTypes = bzUserXuserTypes;
     }
 

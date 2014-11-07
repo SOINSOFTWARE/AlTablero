@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 07-oct-2014 8:22:25 by Hibernate Tools 4.3.1
+// Generated 30-oct-2014 21:20:19 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -14,36 +14,38 @@ public class BzClassRoom  implements java.io.Serializable {
 
      private Integer id;
      private BzGrade bzGrade;
-     private BzUser bzUser;
+     private BzYear bzYear;
      private String code;
      private String name;
      private Date creation;
      private Date updated;
      private boolean enabled;
-     private Set<BzClass> bzClasses = new HashSet<BzClass>(0);
+     private Set bzClasses = new HashSet(0);
+     private Set bzClassRoomXusers = new HashSet(0);
 
     public BzClassRoom() {
     }
 
 	
-    public BzClassRoom(BzGrade bzGrade, BzUser bzUser, String code, String name, Date creation, Date updated, boolean enabled) {
+    public BzClassRoom(BzGrade bzGrade, BzYear bzYear, String code, String name, Date creation, Date updated, boolean enabled) {
         this.bzGrade = bzGrade;
-        this.bzUser = bzUser;
+        this.bzYear = bzYear;
         this.code = code;
         this.name = name;
         this.creation = creation;
         this.updated = updated;
         this.enabled = enabled;
     }
-    public BzClassRoom(BzGrade bzGrade, BzUser bzUser, String code, String name, Date creation, Date updated, boolean enabled, Set<BzClass> bzClasses) {
+    public BzClassRoom(BzGrade bzGrade, BzYear bzYear, String code, String name, Date creation, Date updated, boolean enabled, Set bzClasses, Set bzClassRoomXusers) {
        this.bzGrade = bzGrade;
-       this.bzUser = bzUser;
+       this.bzYear = bzYear;
        this.code = code;
        this.name = name;
        this.creation = creation;
        this.updated = updated;
        this.enabled = enabled;
        this.bzClasses = bzClasses;
+       this.bzClassRoomXusers = bzClassRoomXusers;
     }
    
     public Integer getId() {
@@ -60,12 +62,12 @@ public class BzClassRoom  implements java.io.Serializable {
     public void setBzGrade(BzGrade bzGrade) {
         this.bzGrade = bzGrade;
     }
-    public BzUser getBzUser() {
-        return this.bzUser;
+    public BzYear getBzYear() {
+        return this.bzYear;
     }
     
-    public void setBzUser(BzUser bzUser) {
-        this.bzUser = bzUser;
+    public void setBzYear(BzYear bzYear) {
+        this.bzYear = bzYear;
     }
     public String getCode() {
         return this.code;
@@ -102,12 +104,19 @@ public class BzClassRoom  implements java.io.Serializable {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    public Set<BzClass> getBzClasses() {
+    public Set getBzClasses() {
         return this.bzClasses;
     }
     
-    public void setBzClasses(Set<BzClass> bzClasses) {
+    public void setBzClasses(Set bzClasses) {
         this.bzClasses = bzClasses;
+    }
+    public Set getBzClassRoomXusers() {
+        return this.bzClassRoomXusers;
+    }
+    
+    public void setBzClassRoomXusers(Set bzClassRoomXusers) {
+        this.bzClassRoomXusers = bzClassRoomXusers;
     }
 
 

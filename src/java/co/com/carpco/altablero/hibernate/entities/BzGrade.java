@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 07-oct-2014 8:22:25 by Hibernate Tools 4.3.1
+// Generated 30-oct-2014 21:20:19 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -18,7 +18,7 @@ public class BzGrade  implements java.io.Serializable {
      private Date creation;
      private Date updated;
      private boolean enabled;
-     private Set<BzClassRoom> bzClassRooms = new HashSet<BzClassRoom>(0);
+     private Set bzClassRooms = new HashSet(0);
 
     public BzGrade() {
     }
@@ -31,7 +31,7 @@ public class BzGrade  implements java.io.Serializable {
         this.updated = updated;
         this.enabled = enabled;
     }
-    public BzGrade(String code, String name, Date creation, Date updated, boolean enabled, Set<BzClassRoom> bzClassRooms) {
+    public BzGrade(String code, String name, Date creation, Date updated, boolean enabled, Set bzClassRooms) {
        this.code = code;
        this.name = name;
        this.creation = creation;
@@ -82,11 +82,11 @@ public class BzGrade  implements java.io.Serializable {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    public Set<BzClassRoom> getBzClassRooms() {
+    public Set getBzClassRooms() {
         return this.bzClassRooms;
     }
     
-    public void setBzClassRooms(Set<BzClassRoom> bzClassRooms) {
+    public void setBzClassRooms(Set bzClassRooms) {
         this.bzClassRooms = bzClassRooms;
     }
 

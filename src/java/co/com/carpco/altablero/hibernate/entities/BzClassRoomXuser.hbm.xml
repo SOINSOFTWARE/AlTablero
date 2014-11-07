@@ -2,17 +2,17 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 30-oct-2014 21:20:23 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-  <class catalog="schoolManagement" name="co.com.carpco.altablero.hibernate.entities.BzSchoolXuser" optimistic-lock="version" table="bzSchoolXUser">
-    <composite-id class="co.com.carpco.altablero.hibernate.entities.BzSchoolXuserId" name="id">
-      <key-property name="idSchool" type="int">
-        <column name="idSchool"/>
+  <class catalog="schoolManagement" name="co.com.carpco.altablero.hibernate.entities.BzClassRoomXuser" optimistic-lock="version" table="bzClassRoomXUser">
+    <composite-id class="co.com.carpco.altablero.hibernate.entities.BzClassRoomXuserId" name="id">
+      <key-property name="idClassRoom" type="int">
+        <column name="idClassRoom"/>
       </key-property>
       <key-property name="idUser" type="int">
         <column name="idUser"/>
       </key-property>
     </composite-id>
-    <many-to-one class="co.com.carpco.altablero.hibernate.entities.BzSchool" fetch="select" insert="false" name="bzSchool" update="false">
-      <column name="idSchool" not-null="true"/>
+    <many-to-one class="co.com.carpco.altablero.hibernate.entities.BzClassRoom" fetch="select" insert="false" name="bzClassRoom" update="false">
+      <column name="idClassRoom" not-null="true"/>
     </many-to-one>
     <many-to-one class="co.com.carpco.altablero.hibernate.entities.BzUser" fetch="select" insert="false" name="bzUser" update="false">
       <column name="idUser" not-null="true"/>
