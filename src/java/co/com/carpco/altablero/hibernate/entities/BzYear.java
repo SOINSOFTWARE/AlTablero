@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 30-oct-2014 21:20:19 by Hibernate Tools 4.3.1
+// Generated 11-nov-2014 9:05:20 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -17,8 +17,8 @@ public class BzYear  implements java.io.Serializable {
      private Date creation;
      private Date updated;
      private boolean enabled;
-     private Set bzClassRooms = new HashSet(0);
-     private Set bzPeriods = new HashSet(0);
+     private Set<BzClassRoom> bzClassRooms = new HashSet<BzClassRoom>(0);
+     private Set<BzPeriod> bzPeriods = new HashSet<BzPeriod>(0);
 
     public BzYear() {
     }
@@ -30,7 +30,7 @@ public class BzYear  implements java.io.Serializable {
         this.updated = updated;
         this.enabled = enabled;
     }
-    public BzYear(String name, Date creation, Date updated, boolean enabled, Set bzClassRooms, Set bzPeriods) {
+    public BzYear(String name, Date creation, Date updated, boolean enabled, Set<BzClassRoom> bzClassRooms, Set<BzPeriod> bzPeriods) {
        this.name = name;
        this.creation = creation;
        this.updated = updated;
@@ -74,18 +74,18 @@ public class BzYear  implements java.io.Serializable {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    public Set getBzClassRooms() {
+    public Set<BzClassRoom> getBzClassRooms() {
         return this.bzClassRooms;
     }
     
-    public void setBzClassRooms(Set bzClassRooms) {
+    public void setBzClassRooms(Set<BzClassRoom> bzClassRooms) {
         this.bzClassRooms = bzClassRooms;
     }
-    public Set getBzPeriods() {
+    public Set<BzPeriod> getBzPeriods() {
         return this.bzPeriods;
     }
     
-    public void setBzPeriods(Set bzPeriods) {
+    public void setBzPeriods(Set<BzPeriod> bzPeriods) {
         this.bzPeriods = bzPeriods;
     }
 

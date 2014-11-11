@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 30-oct-2014 21:20:19 by Hibernate Tools 4.3.1
+// Generated 11-nov-2014 9:05:20 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -20,7 +20,7 @@ public class BzClass  implements java.io.Serializable {
      private Date creation;
      private Date updated;
      private boolean enabled;
-     private Set bzNoteDefinitions = new HashSet(0);
+     private Set<BzNoteDefinition> bzNoteDefinitions = new HashSet<BzNoteDefinition>(0);
 
     public BzClass() {
     }
@@ -35,7 +35,7 @@ public class BzClass  implements java.io.Serializable {
         this.updated = updated;
         this.enabled = enabled;
     }
-    public BzClass(BzClassRoom bzClassRoom, BzSubject bzSubject, BzUser bzUser, String name, Date creation, Date updated, boolean enabled, Set bzNoteDefinitions) {
+    public BzClass(BzClassRoom bzClassRoom, BzSubject bzSubject, BzUser bzUser, String name, Date creation, Date updated, boolean enabled, Set<BzNoteDefinition> bzNoteDefinitions) {
        this.bzClassRoom = bzClassRoom;
        this.bzSubject = bzSubject;
        this.bzUser = bzUser;
@@ -102,11 +102,11 @@ public class BzClass  implements java.io.Serializable {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    public Set getBzNoteDefinitions() {
+    public Set<BzNoteDefinition> getBzNoteDefinitions() {
         return this.bzNoteDefinitions;
     }
     
-    public void setBzNoteDefinitions(Set bzNoteDefinitions) {
+    public void setBzNoteDefinitions(Set<BzNoteDefinition> bzNoteDefinitions) {
         this.bzNoteDefinitions = bzNoteDefinitions;
     }
 

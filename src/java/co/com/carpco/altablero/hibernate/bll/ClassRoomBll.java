@@ -6,11 +6,8 @@
 package co.com.carpco.altablero.hibernate.bll;
 
 import co.com.carpco.altablero.bo.ClassRoomBO;
-import co.com.carpco.altablero.bo.User;
-import static co.com.carpco.altablero.hibernate.bll.BzUserBll.cache;
 import co.com.carpco.altablero.hibernate.dao.ClassRoomDao;
 import co.com.carpco.altablero.hibernate.entities.BzClassRoom;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +35,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClassRoomBll {
     
-    static Cache<Integer, ClassRoomBO> cache;
+    static Cache<String, Set> cache;
     
     @Autowired
     private ClassRoomDao classRoomDao;
@@ -47,51 +44,51 @@ public class ClassRoomBll {
         CachingProvider cachingProvider = Caching.getCachingProvider();
         CacheManager cacheManager = cachingProvider.getCacheManager();
         
-        MutableConfiguration<Integer, ClassRoomBO> config
-                = new MutableConfiguration<Integer, ClassRoomBO>()
-                .setTypes(Integer.class, ClassRoomBO.class)
+        MutableConfiguration<String, Set> config
+                = new MutableConfiguration<String, Set>()
+                .setTypes(String.class, Set.class)
                 .setExpiryPolicyFactory(AccessedExpiryPolicy.factoryOf(ONE_DAY))
                 .setWriteThrough(true)
                 .setReadThrough(true)
-                .setCacheLoaderFactory(new Factory<CacheLoader<Integer, ClassRoomBO>>() {
+                .setCacheLoaderFactory(new Factory<CacheLoader<String, Set>>() {
 
                     @Override
-                    public CacheLoader<Integer, ClassRoomBO> create() {
-                        return new CacheLoader<Integer, ClassRoomBO>() {
+                    public CacheLoader<String, Set> create() {
+                        return new CacheLoader<String, Set>() {
 
                             @Override
-                            public ClassRoomBO load(Integer key) throws CacheLoaderException {
-                                return new ClassRoomBO(classRoomDao.getClassRoom(key));
+                            public Set load(String key) throws CacheLoaderException {
+                                final Set<ClassRoomBO> classRoomBOSet = new ArraySet<>();
+                                Set<BzClassRoom> bzClassRoomSet = classRoomDao.getClassRoomSet(key, "");
+                                if (bzClassRoomSet != null && bzClassRoomSet.size() > 0) {
+                                    bzClassRoomSet.forEach((BzClassRoom bzClassRoom) -> 
+                                            classRoomBOSet.add(new ClassRoomBO(bzClassRoom)));
+                                }
+                                return classRoomBOSet;
                             }
 
                             @Override
-                            public Map<Integer, ClassRoomBO> loadAll(Iterable<? extends Integer> itrbl) throws CacheLoaderException {
-                                Map<Integer, ClassRoomBO> answer = new HashMap<>();
-                                if (itrbl != null && itrbl.iterator().hasNext())
-                                {
-                                    itrbl.forEach((Integer key) -> answer.put(key, load(key)));
-                                } else 
-                                {
-                                    
-                                }
+                            public Map<String, Set> loadAll(Iterable<? extends String> itrbl) throws CacheLoaderException {
+                                Map<String, Set> answer = new HashMap<>();
+                                itrbl.forEach((String k) -> answer.put(k, load(k)));
 
                                 return answer;
                             }
                         };
                     }
                 })
-                .setCacheWriterFactory(new Factory<CacheWriter<Integer, ClassRoomBO>>() {
+                .setCacheWriterFactory(new Factory<CacheWriter<String, Set>>() {
                     @Override
-                    public CacheWriter<Integer, ClassRoomBO> create() {
-                        CacheWriter<Integer, ClassRoomBO> writer = new CacheWriter<Integer, ClassRoomBO>() {
+                    public CacheWriter<String, Set> create() {
+                        CacheWriter<String, Set> writer = new CacheWriter<String, Set>() {
 
                             @Override
-                            public void write(Cache.Entry<? extends Integer, ? extends ClassRoomBO> entry) throws CacheWriterException {
+                            public void write(Cache.Entry<? extends String, ? extends Set> entry) throws CacheWriterException {
                                 
                             }
 
                             @Override
-                            public void writeAll(Collection<Cache.Entry<? extends Integer, ? extends ClassRoomBO>> clctn) throws CacheWriterException {
+                            public void writeAll(Collection<Cache.Entry<? extends String, ? extends Set>> clctn) throws CacheWriterException {
                                 
                             }
 
@@ -111,7 +108,7 @@ public class ClassRoomBll {
                 })
                 .setStatisticsEnabled(true);
         
-        cache = cacheManager.createCache("classRoomCache", config);
+        cache = cacheManager.createCache("classRoomXYearCache", config);
         config.isReadThrough();
     }
     
@@ -120,13 +117,6 @@ public class ClassRoomBll {
             this.initializeCache();
         }
         
-        final Set<ClassRoomBO> classRoomBOSet = new ArraySet<>();
-        Set<BzClassRoom> bzClassRoomSet = classRoomDao.getClassRoomSet(year, grade);
-        if (bzClassRoomSet != null && bzClassRoomSet.size() > 0) {
-            bzClassRoomSet.forEach((BzClassRoom bzClassRoom) -> 
-                    classRoomBOSet.add(new ClassRoomBO(bzClassRoom)));
-        }
-        
-        return classRoomBOSet;
+        return cache.get(year);
     }
 }

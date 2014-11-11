@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30-oct-2014 21:20:23 by Hibernate Tools 4.3.1 -->
+<!-- Generated 11-nov-2014 9:05:27 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
   <class catalog="schoolManagement" name="co.com.carpco.altablero.hibernate.entities.CnUsertTypeXaccess" optimistic-lock="version" table="cnUsertTypeXAccess">
     <composite-id class="co.com.carpco.altablero.hibernate.entities.CnUsertTypeXaccessId" name="id">

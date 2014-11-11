@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 30-oct-2014 21:20:19 by Hibernate Tools 4.3.1
+// Generated 11-nov-2014 9:05:20 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -13,6 +13,8 @@ public class BzUser  implements java.io.Serializable {
 
 
      private Integer id;
+     private BzUser bzUserByIdGuardian2;
+     private BzUser bzUserByIdGuardian1;
      private String documentNumber;
      private String documentType;
      private String name;
@@ -27,10 +29,13 @@ public class BzUser  implements java.io.Serializable {
      private Date creation;
      private Date updated;
      private boolean enabled;
-     private Set bzSchoolXusers = new HashSet(0);
-     private Set bzClassRoomXusers = new HashSet(0);
-     private Set bzClasses = new HashSet(0);
-     private Set bzUserXuserTypes = new HashSet(0);
+     private Set<BzSchoolXuser> bzSchoolXusers = new HashSet<BzSchoolXuser>(0);
+     private Set<BzClassRoomXuser> bzClassRoomXusers = new HashSet<BzClassRoomXuser>(0);
+     private Set<BzClass> bzClasses = new HashSet<BzClass>(0);
+     private Set<BzUser> bzUsersForIdGuardian2 = new HashSet<BzUser>(0);
+     private Set<BzClassRoom> bzClassRooms = new HashSet<BzClassRoom>(0);
+     private Set<BzUser> bzUsersForIdGuardian1 = new HashSet<BzUser>(0);
+     private Set<BzUserXuserType> bzUserXuserTypes = new HashSet<BzUserXuserType>(0);
 
     public BzUser() {
     }
@@ -49,7 +54,9 @@ public class BzUser  implements java.io.Serializable {
         this.updated = updated;
         this.enabled = enabled;
     }
-    public BzUser(String documentNumber, String documentType, String name, String lastName, Date born, String address, long phone1, Long phone2, String password, String gender, byte[] photo, Date creation, Date updated, boolean enabled, Set bzSchoolXusers, Set bzClassRoomXusers, Set bzClasses, Set bzUserXuserTypes) {
+    public BzUser(BzUser bzUserByIdGuardian2, BzUser bzUserByIdGuardian1, String documentNumber, String documentType, String name, String lastName, Date born, String address, long phone1, Long phone2, String password, String gender, byte[] photo, Date creation, Date updated, boolean enabled, Set<BzSchoolXuser> bzSchoolXusers, Set<BzClassRoomXuser> bzClassRoomXusers, Set<BzClass> bzClasses, Set<BzUser> bzUsersForIdGuardian2, Set<BzClassRoom> bzClassRooms, Set<BzUser> bzUsersForIdGuardian1, Set<BzUserXuserType> bzUserXuserTypes) {
+       this.bzUserByIdGuardian2 = bzUserByIdGuardian2;
+       this.bzUserByIdGuardian1 = bzUserByIdGuardian1;
        this.documentNumber = documentNumber;
        this.documentType = documentType;
        this.name = name;
@@ -67,6 +74,9 @@ public class BzUser  implements java.io.Serializable {
        this.bzSchoolXusers = bzSchoolXusers;
        this.bzClassRoomXusers = bzClassRoomXusers;
        this.bzClasses = bzClasses;
+       this.bzUsersForIdGuardian2 = bzUsersForIdGuardian2;
+       this.bzClassRooms = bzClassRooms;
+       this.bzUsersForIdGuardian1 = bzUsersForIdGuardian1;
        this.bzUserXuserTypes = bzUserXuserTypes;
     }
    
@@ -76,6 +86,20 @@ public class BzUser  implements java.io.Serializable {
     
     public void setId(Integer id) {
         this.id = id;
+    }
+    public BzUser getBzUserByIdGuardian2() {
+        return this.bzUserByIdGuardian2;
+    }
+    
+    public void setBzUserByIdGuardian2(BzUser bzUserByIdGuardian2) {
+        this.bzUserByIdGuardian2 = bzUserByIdGuardian2;
+    }
+    public BzUser getBzUserByIdGuardian1() {
+        return this.bzUserByIdGuardian1;
+    }
+    
+    public void setBzUserByIdGuardian1(BzUser bzUserByIdGuardian1) {
+        this.bzUserByIdGuardian1 = bzUserByIdGuardian1;
     }
     public String getDocumentNumber() {
         return this.documentNumber;
@@ -175,32 +199,53 @@ public class BzUser  implements java.io.Serializable {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    public Set getBzSchoolXusers() {
+    public Set<BzSchoolXuser> getBzSchoolXusers() {
         return this.bzSchoolXusers;
     }
     
-    public void setBzSchoolXusers(Set bzSchoolXusers) {
+    public void setBzSchoolXusers(Set<BzSchoolXuser> bzSchoolXusers) {
         this.bzSchoolXusers = bzSchoolXusers;
     }
-    public Set getBzClassRoomXusers() {
+    public Set<BzClassRoomXuser> getBzClassRoomXusers() {
         return this.bzClassRoomXusers;
     }
     
-    public void setBzClassRoomXusers(Set bzClassRoomXusers) {
+    public void setBzClassRoomXusers(Set<BzClassRoomXuser> bzClassRoomXusers) {
         this.bzClassRoomXusers = bzClassRoomXusers;
     }
-    public Set getBzClasses() {
+    public Set<BzClass> getBzClasses() {
         return this.bzClasses;
     }
     
-    public void setBzClasses(Set bzClasses) {
+    public void setBzClasses(Set<BzClass> bzClasses) {
         this.bzClasses = bzClasses;
     }
-    public Set getBzUserXuserTypes() {
+    public Set<BzUser> getBzUsersForIdGuardian2() {
+        return this.bzUsersForIdGuardian2;
+    }
+    
+    public void setBzUsersForIdGuardian2(Set<BzUser> bzUsersForIdGuardian2) {
+        this.bzUsersForIdGuardian2 = bzUsersForIdGuardian2;
+    }
+    public Set<BzClassRoom> getBzClassRooms() {
+        return this.bzClassRooms;
+    }
+    
+    public void setBzClassRooms(Set<BzClassRoom> bzClassRooms) {
+        this.bzClassRooms = bzClassRooms;
+    }
+    public Set<BzUser> getBzUsersForIdGuardian1() {
+        return this.bzUsersForIdGuardian1;
+    }
+    
+    public void setBzUsersForIdGuardian1(Set<BzUser> bzUsersForIdGuardian1) {
+        this.bzUsersForIdGuardian1 = bzUsersForIdGuardian1;
+    }
+    public Set<BzUserXuserType> getBzUserXuserTypes() {
         return this.bzUserXuserTypes;
     }
     
-    public void setBzUserXuserTypes(Set bzUserXuserTypes) {
+    public void setBzUserXuserTypes(Set<BzUserXuserType> bzUserXuserTypes) {
         this.bzUserXuserTypes = bzUserXuserTypes;
     }
 

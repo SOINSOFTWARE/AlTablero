@@ -5,8 +5,8 @@
  */
 package co.com.carpco.altablero.hibernate.bll;
 
-import co.com.carpco.altablero.bo.User;
-import co.com.carpco.altablero.hibernate.dao.BzUserDao;
+import co.com.carpco.altablero.bo.UserBO;
+import co.com.carpco.altablero.hibernate.dao.UserDao;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,37 +29,37 @@ import javax.cache.spi.CachingProvider;
  * @author Carlos
  */
 @Service
-public class BzUserBll {
+public class UserBll {
     
-    static Cache<String, User> cache;
+    static Cache<String, UserBO> cache;
     
     @Autowired
-    private BzUserDao bzUserDao;
+    private UserDao userDao;
 
     private void initializeCache() {
         CachingProvider cachingProvider = Caching.getCachingProvider();
         CacheManager cacheManager = cachingProvider.getCacheManager();
         
-        MutableConfiguration<String, User> config
-                = new MutableConfiguration<String, User>()
-                .setTypes(String.class, User.class)
+        MutableConfiguration<String, UserBO> config
+                = new MutableConfiguration<String, UserBO>()
+                .setTypes(String.class, UserBO.class)
                 .setExpiryPolicyFactory(AccessedExpiryPolicy.factoryOf(ONE_DAY))
                 .setWriteThrough(true)
                 .setReadThrough(true)
-                .setCacheLoaderFactory(new Factory<CacheLoader<String, User>>() {
+                .setCacheLoaderFactory(new Factory<CacheLoader<String, UserBO>>() {
 
                     @Override
-                    public CacheLoader<String, User> create() {
-                        return new CacheLoader<String, User>() {
+                    public CacheLoader<String, UserBO> create() {
+                        return new CacheLoader<String, UserBO>() {
 
                             @Override
-                            public User load(String k) throws CacheLoaderException {
-                                return new User(bzUserDao.getUserByDocumentNumber(k));
+                            public UserBO load(String k) throws CacheLoaderException {
+                                return new UserBO(userDao.getUserByDocumentNumber(k));
                             }
 
                             @Override
-                            public Map<String, User> loadAll(Iterable<? extends String> itrbl) throws CacheLoaderException {
-                                Map<String, User> answer = new HashMap<>();
+                            public Map<String, UserBO> loadAll(Iterable<? extends String> itrbl) throws CacheLoaderException {
+                                Map<String, UserBO> answer = new HashMap<>();
                                 itrbl.forEach((String k) -> answer.put(k, load(k)));
 
                                 return answer;
@@ -67,18 +67,18 @@ public class BzUserBll {
                         };
                     }
                 })
-                .setCacheWriterFactory(new Factory<CacheWriter<String, User>>() {
+                .setCacheWriterFactory(new Factory<CacheWriter<String, UserBO>>() {
                     @Override
-                    public CacheWriter<String, User> create() {
-                        CacheWriter<String, User> writer = new CacheWriter<String, User>() {
+                    public CacheWriter<String, UserBO> create() {
+                        CacheWriter<String, UserBO> writer = new CacheWriter<String, UserBO>() {
 
                             @Override
-                            public void write(Cache.Entry<? extends String, ? extends User> entry) throws CacheWriterException {
+                            public void write(Cache.Entry<? extends String, ? extends UserBO> entry) throws CacheWriterException {
                                 
                             }
 
                             @Override
-                            public void writeAll(Collection<Cache.Entry<? extends String, ? extends User>> clctn) throws CacheWriterException {
+                            public void writeAll(Collection<Cache.Entry<? extends String, ? extends UserBO>> clctn) throws CacheWriterException {
                                 
                             }
 
@@ -102,15 +102,11 @@ public class BzUserBll {
         config.isReadThrough();
     }
     
-    public User getUserByDocumentNumber(String documentNumber) {
+    public UserBO getUserByDocumentNumber(String documentNumber) {
         if (cache == null) {
             this.initializeCache();
         }
         
-        User cached = cache.get(documentNumber);
-        if (cached == null) {
-            cached = new User(bzUserDao.getUserByDocumentNumber(documentNumber));
-        }
-        return cached;
+        return cache.get(documentNumber);
     }
 }

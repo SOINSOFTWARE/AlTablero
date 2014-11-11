@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
  * @author Carlos Rodriguez
  */
 @Repository
-public class BzUserDao extends DaoAbstract{
+public class UserDao extends DaoAbstract{
     
     public BzUser getUserByDocumentNumber(String documentNumber) {
         Chronometer chrono = new Chronometer();

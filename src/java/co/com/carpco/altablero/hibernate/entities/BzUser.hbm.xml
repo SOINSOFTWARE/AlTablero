@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30-oct-2014 21:20:23 by Hibernate Tools 4.3.1 -->
+<!-- Generated 11-nov-2014 9:05:27 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
   <class catalog="schoolManagement" name="co.com.carpco.altablero.hibernate.entities.BzUser" optimistic-lock="version" table="bzUser">
     <id name="id" type="java.lang.Integer">
       <column name="id"/>
       <generator class="identity"/>
     </id>
+    <many-to-one class="co.com.carpco.altablero.hibernate.entities.BzUser" fetch="select" name="bzUserByIdGuardian2">
+      <column name="idGuardian2"/>
+    </many-to-one>
+    <many-to-one class="co.com.carpco.altablero.hibernate.entities.BzUser" fetch="select" name="bzUserByIdGuardian1">
+      <column name="idGuardian1"/>
+    </many-to-one>
     <property name="documentNumber" type="string">
       <column length="12" name="documentNumber" not-null="true"/>
     </property>
@@ -66,6 +72,24 @@
         <column name="idUser" not-null="true"/>
       </key>
       <one-to-many class="co.com.carpco.altablero.hibernate.entities.BzClass"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="bzUsersForIdGuardian2" table="bzUser">
+      <key>
+        <column name="idGuardian2"/>
+      </key>
+      <one-to-many class="co.com.carpco.altablero.hibernate.entities.BzUser"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="bzClassRooms" table="bzClassRoom">
+      <key>
+        <column name="idUser" not-null="true"/>
+      </key>
+      <one-to-many class="co.com.carpco.altablero.hibernate.entities.BzClassRoom"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="bzUsersForIdGuardian1" table="bzUser">
+      <key>
+        <column name="idGuardian1"/>
+      </key>
+      <one-to-many class="co.com.carpco.altablero.hibernate.entities.BzUser"/>
     </set>
     <set fetch="select" inverse="true" lazy="true" name="bzUserXuserTypes" table="bzUserXUserType">
       <key>

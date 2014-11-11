@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 30-oct-2014 21:20:19 by Hibernate Tools 4.3.1
+// Generated 11-nov-2014 9:05:20 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -18,8 +18,8 @@ public class CnUserType  implements java.io.Serializable {
      private Date creation;
      private Date updated;
      private boolean enabled;
-     private Set cnUsertTypeXaccesses = new HashSet(0);
-     private Set bzUserXuserTypes = new HashSet(0);
+     private Set<CnUsertTypeXaccess> cnUsertTypeXaccesses = new HashSet<CnUsertTypeXaccess>(0);
+     private Set<BzUserXuserType> bzUserXuserTypes = new HashSet<BzUserXuserType>(0);
 
     public CnUserType() {
     }
@@ -32,7 +32,7 @@ public class CnUserType  implements java.io.Serializable {
         this.updated = updated;
         this.enabled = enabled;
     }
-    public CnUserType(String code, String name, Date creation, Date updated, boolean enabled, Set cnUsertTypeXaccesses, Set bzUserXuserTypes) {
+    public CnUserType(String code, String name, Date creation, Date updated, boolean enabled, Set<CnUsertTypeXaccess> cnUsertTypeXaccesses, Set<BzUserXuserType> bzUserXuserTypes) {
        this.code = code;
        this.name = name;
        this.creation = creation;
@@ -84,18 +84,18 @@ public class CnUserType  implements java.io.Serializable {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    public Set getCnUsertTypeXaccesses() {
+    public Set<CnUsertTypeXaccess> getCnUsertTypeXaccesses() {
         return this.cnUsertTypeXaccesses;
     }
     
-    public void setCnUsertTypeXaccesses(Set cnUsertTypeXaccesses) {
+    public void setCnUsertTypeXaccesses(Set<CnUsertTypeXaccess> cnUsertTypeXaccesses) {
         this.cnUsertTypeXaccesses = cnUsertTypeXaccesses;
     }
-    public Set getBzUserXuserTypes() {
+    public Set<BzUserXuserType> getBzUserXuserTypes() {
         return this.bzUserXuserTypes;
     }
     
-    public void setBzUserXuserTypes(Set bzUserXuserTypes) {
+    public void setBzUserXuserTypes(Set<BzUserXuserType> bzUserXuserTypes) {
         this.bzUserXuserTypes = bzUserXuserTypes;
     }
 

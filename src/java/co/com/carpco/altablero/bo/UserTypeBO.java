@@ -17,7 +17,7 @@ import java.util.Set;
  *
  * @author Carlos Rodriguez
  */
-public class UserType implements Serializable{
+public class UserTypeBO implements Serializable{
 
     private Integer id;
     
@@ -31,9 +31,9 @@ public class UserType implements Serializable{
     
     private boolean enabled;
     
-    private Set<Access> accessSet;
+    private Set<AccessBO> accessSet;
 
-    public UserType(CnUserType cnUserType) {
+    public UserTypeBO(CnUserType cnUserType) {
         super();
         this.id = cnUserType.getId();
         this.code = cnUserType.getCode();
@@ -45,7 +45,7 @@ public class UserType implements Serializable{
         
         Set<CnUsertTypeXaccess> cnUserTypeXAccessSet = cnUserType.getCnUsertTypeXaccesses();
         cnUserTypeXAccessSet.stream().forEach((cnUserTypeXAccess) -> {
-            accessSet.add(new Access(cnUserTypeXAccess.getCnAccess()));
+            accessSet.add(new AccessBO(cnUserTypeXAccess.getCnAccess()));
         });
     }
 
@@ -136,14 +136,14 @@ public class UserType implements Serializable{
     /**
      * @return the accessSet
      */
-    public Set<Access> getAccessSet() {
+    public Set<AccessBO> getAccessSet() {
         return accessSet;
     }
 
     /**
      * @param accessSet the accessSet to set
      */
-    public void setAccessSet(Set<Access> accessSet) {
+    public void setAccessSet(Set<AccessBO> accessSet) {
         this.accessSet = accessSet;
     }
 
@@ -162,7 +162,7 @@ public class UserType implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final UserType other = (UserType) obj;
+        final UserTypeBO other = (UserTypeBO) obj;
         if (!Objects.equals(this.code, other.code)) {
             return false;
         }

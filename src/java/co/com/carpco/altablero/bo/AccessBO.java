@@ -14,7 +14,7 @@ import java.util.Objects;
  *
  * @author Carlos Rodriguez
  */
-public class Access implements Serializable{
+public class AccessBO implements Serializable{
 
     private Integer id;
     
@@ -28,7 +28,7 @@ public class Access implements Serializable{
     
     private boolean enabled;
 
-    public Access(CnAccess cnAccess) {
+    public AccessBO(CnAccess cnAccess) {
         super();
         this.id = cnAccess.getId();
         this.code = cnAccess.getCode();
@@ -137,7 +137,7 @@ public class Access implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Access other = (Access) obj;
+        final AccessBO other = (AccessBO) obj;
         if (!Objects.equals(this.code, other.code)) {
             return false;
         }

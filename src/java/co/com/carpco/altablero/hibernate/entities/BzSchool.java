@@ -1,5 +1,5 @@
 package co.com.carpco.altablero.hibernate.entities;
-// Generated 30-oct-2014 21:20:19 by Hibernate Tools 4.3.1
+// Generated 11-nov-2014 9:05:20 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -18,7 +18,8 @@ public class BzSchool  implements java.io.Serializable {
      private Date creation;
      private Date updated;
      private boolean enabled;
-     private Set bzSchoolXusers = new HashSet(0);
+     private Set<BzSchoolXuser> bzSchoolXusers = new HashSet<BzSchoolXuser>(0);
+     private Set<BzClassRoom> bzClassRooms = new HashSet<BzClassRoom>(0);
 
     public BzSchool() {
     }
@@ -31,13 +32,14 @@ public class BzSchool  implements java.io.Serializable {
         this.updated = updated;
         this.enabled = enabled;
     }
-    public BzSchool(String code, String name, Date creation, Date updated, boolean enabled, Set bzSchoolXusers) {
+    public BzSchool(String code, String name, Date creation, Date updated, boolean enabled, Set<BzSchoolXuser> bzSchoolXusers, Set<BzClassRoom> bzClassRooms) {
        this.code = code;
        this.name = name;
        this.creation = creation;
        this.updated = updated;
        this.enabled = enabled;
        this.bzSchoolXusers = bzSchoolXusers;
+       this.bzClassRooms = bzClassRooms;
     }
    
     public Integer getId() {
@@ -82,12 +84,19 @@ public class BzSchool  implements java.io.Serializable {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    public Set getBzSchoolXusers() {
+    public Set<BzSchoolXuser> getBzSchoolXusers() {
         return this.bzSchoolXusers;
     }
     
-    public void setBzSchoolXusers(Set bzSchoolXusers) {
+    public void setBzSchoolXusers(Set<BzSchoolXuser> bzSchoolXusers) {
         this.bzSchoolXusers = bzSchoolXusers;
+    }
+    public Set<BzClassRoom> getBzClassRooms() {
+        return this.bzClassRooms;
+    }
+    
+    public void setBzClassRooms(Set<BzClassRoom> bzClassRooms) {
+        this.bzClassRooms = bzClassRooms;
     }
 
 

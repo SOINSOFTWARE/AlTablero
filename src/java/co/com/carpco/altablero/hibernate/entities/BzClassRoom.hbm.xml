@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30-oct-2014 21:20:23 by Hibernate Tools 4.3.1 -->
+<!-- Generated 11-nov-2014 9:05:27 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
   <class catalog="schoolManagement" name="co.com.carpco.altablero.hibernate.entities.BzClassRoom" optimistic-lock="version" table="bzClassRoom">
     <id name="id" type="java.lang.Integer">
@@ -9,6 +9,12 @@
     </id>
     <many-to-one class="co.com.carpco.altablero.hibernate.entities.BzGrade" fetch="select" name="bzGrade">
       <column name="idGrade" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="co.com.carpco.altablero.hibernate.entities.BzSchool" fetch="select" name="bzSchool">
+      <column name="idSchool" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="co.com.carpco.altablero.hibernate.entities.BzUser" fetch="select" name="bzUser">
+      <column name="idUser" not-null="true"/>
     </many-to-one>
     <many-to-one class="co.com.carpco.altablero.hibernate.entities.BzYear" fetch="select" name="bzYear">
       <column name="idYear" not-null="true"/>

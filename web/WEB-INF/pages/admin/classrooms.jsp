@@ -46,13 +46,6 @@
                                                 </tr>
                                             </c:forEach>                                            
                                         </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th>Curso</th>
-                                                <th>C&oacute;digo</th>
-                                                <th>Salon</th>
-                                            </tr>
-                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
@@ -62,13 +55,14 @@
             </aside>
         </div>
         
-            <%@include file="include_body_jscript.jsp" %>
-            <script src="<c:url value="/res/javascript/plugins/datatables/jquery.dataTables.js" />" type="text/javascript"></script>
-            <script src="<c:url value="/res/javascript/plugins/datatables/dataTables.bootstrap.js" />" type="text/javascript"></script>
-            <script type="text/javascript">
-                $(function() {
-                    $("#tblClassRoom").dataTable();
-                });
-            </script>
+        <%@include file="include_body_jscript.jsp" %>
+        <script src="<c:url value="/res/javascript/plugins/datatables/jquery.dataTables.js" />" type="text/javascript"></script>
+        <script src="<c:url value="/res/javascript/plugins/datatables/dataTables.bootstrap.js" />" type="text/javascript"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#refClassRoom').trigger("click");
+                $('#tblClassRoom').dataTable();
+            } );
+        </script>
     </body>
 </html>

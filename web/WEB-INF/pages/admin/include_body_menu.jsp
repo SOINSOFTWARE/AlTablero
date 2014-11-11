@@ -8,14 +8,14 @@
         </div>
 
         <ul class="sidebar-menu">
-            <li class="active">
-                <a href="#">
+            <li id="liGeneral">
+                <a href="<c:url value="/admin/general" />">
                     <i class="fa fa-dashboard"></i> <span>Tablero general</span>
                 </a>
             </li>
             <c:if test="${canViewGradeMenu}">
                 <li class="treeview">                            
-                    <a href="#">
+                    <a id="refClassRoom" href="#">
                         <i class="fa fa-edit"></i> <span>Cursos</span>
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
@@ -36,7 +36,7 @@
                 </li>
             </c:if>
             <c:if test="${canViewSubjectMenu}">
-                <li class="treeview">
+                <li id="liSubject" class="treeview">
                     <a href="#">
                         <i class="fa fa-book"></i> <span>Materias</span>
                         <i class="fa fa-angle-left pull-right"></i>
@@ -55,7 +55,7 @@
                 </li>
             </c:if>
             <c:if test="${canViewTeacherMenu}">
-                <li class="treeview">
+                <li id="liTeacher" class="treeview">
                     <a href="#">
                         <i class="fa fa-laptop"></i> <span>Profesores</span>
                         <i class="fa fa-angle-left pull-right"></i>
@@ -83,7 +83,7 @@
                 </li>
             </c:if>
             <c:if test="${canViewStudentMenu}">
-                <li class="treeview">
+                <li id="liStudent" class="treeview">
                     <a href="#">
                         <i class="fa fa-male"></i> <span>Estudiantes</span>
                         <i class="fa fa-angle-left pull-right"></i>

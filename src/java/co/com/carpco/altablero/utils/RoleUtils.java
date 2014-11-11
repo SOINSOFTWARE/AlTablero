@@ -5,10 +5,10 @@
  */
 package co.com.carpco.altablero.utils;
 
-import co.com.carpco.altablero.bo.Access;
-import co.com.carpco.altablero.bo.User;
-import co.com.carpco.altablero.bo.UserType;
-import co.com.carpco.altablero.hibernate.bll.BzUserBll;
+import co.com.carpco.altablero.bo.AccessBO;
+import co.com.carpco.altablero.bo.UserBO;
+import co.com.carpco.altablero.bo.UserTypeBO;
+import co.com.carpco.altablero.hibernate.bll.UserBll;
 import java.util.HashSet;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,10 @@ import org.springframework.web.servlet.ModelAndView;
 public class RoleUtils {
     
     @Autowired
-    BzUserBll bzUserBll;
+    UserBll bzUserBll;
     
     public ModelAndView createModelWithUserDetails(String documentNumber) {
-        User user = bzUserBll.getUserByDocumentNumber(documentNumber);
+        UserBO user = bzUserBll.getUserByDocumentNumber(documentNumber);
         ModelAndView model = new ModelAndView();
 
         model.addObject("userFirstName", user.getName());
@@ -44,7 +44,7 @@ public class RoleUtils {
         boolean viewStudentMenu = false;
         Set<String> accessList = new HashSet();
 
-        for (UserType userType : user.getUserTypeSet()) {
+        for (UserTypeBO userType : user.getUserTypeSet()) {
 
             switch (userType.getCode()) {
                 case "RCTOR":
@@ -67,7 +67,7 @@ public class RoleUtils {
                     break;
             }
 
-            for (Access access : userType.getAccessSet()) {
+            for (AccessBO access : userType.getAccessSet()) {
                 accessList.add(access.getCode());
             }
         }

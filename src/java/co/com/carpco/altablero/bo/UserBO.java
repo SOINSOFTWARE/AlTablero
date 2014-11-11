@@ -17,7 +17,7 @@ import java.util.Set;
  *
  * @author Carlos Rodriguez
  */
-public class User implements Serializable{
+public class UserBO implements Serializable{
 
     private Integer id;
 
@@ -47,9 +47,9 @@ public class User implements Serializable{
     
     private boolean enabled;
     
-    private Set<UserType> userTypeSet;
+    private Set<UserTypeBO> userTypeSet;
 
-    public User(BzUser bzUser) {
+    public UserBO(BzUser bzUser) {
         super();
         this.id = bzUser.getId();
         this.documentNumber = bzUser.getDocumentNumber();
@@ -69,7 +69,7 @@ public class User implements Serializable{
         
         Set<BzUserXuserType> bzUserXUserTypeSet = bzUser.getBzUserXuserTypes();
         bzUserXUserTypeSet.stream().forEach((bzUserXUserType) -> {
-            userTypeSet.add(new UserType(bzUserXUserType.getCnUserType()));
+            userTypeSet.add(new UserTypeBO(bzUserXUserType.getCnUserType()));
         });
     }
 
@@ -272,14 +272,14 @@ public class User implements Serializable{
     /**
      * @return the userTypeSet
      */
-    public Set<UserType> getUserTypeSet() {
+    public Set<UserTypeBO> getUserTypeSet() {
         return userTypeSet;
     }
 
     /**
      * @param userTypeSet the userTypeSet to set
      */
-    public void setUserTypeSet(Set<UserType> userTypeSet) {
+    public void setUserTypeSet(Set<UserTypeBO> userTypeSet) {
         this.userTypeSet = userTypeSet;
     }
 
@@ -299,7 +299,7 @@ public class User implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final User other = (User) obj;
+        final UserBO other = (UserBO) obj;
         if (!Objects.equals(this.documentNumber, other.documentNumber)) {
             return false;
         }
