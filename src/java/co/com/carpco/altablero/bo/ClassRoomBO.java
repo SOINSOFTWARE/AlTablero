@@ -22,6 +22,8 @@ public class ClassRoomBO implements Serializable {
     
     private YearBO yearBO;
     
+    private UserBO userBO;
+    
     private String code;
     
     private String name;
@@ -42,6 +44,7 @@ public class ClassRoomBO implements Serializable {
         this.enabled = bzClassRoom.isEnabled();
         this.gradeBO = new GradeBO(bzClassRoom.getBzGrade());
         this.yearBO = new YearBO(bzClassRoom.getBzYear());
+        this.userBO = new UserBO(bzClassRoom.getBzUser());
     }
 
     public Integer getId() {
@@ -68,6 +71,14 @@ public class ClassRoomBO implements Serializable {
         this.yearBO = yearBO;
     }
 
+    public UserBO getUserBO() {
+        return userBO;
+    }
+
+    public void setUserBO(UserBO userBO) {
+        this.userBO = userBO;
+    }
+    
     public String getCode() {
         return code;
     }
@@ -110,15 +121,16 @@ public class ClassRoomBO implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 11 * hash + Objects.hashCode(this.id);
-        hash = 11 * hash + Objects.hashCode(this.gradeBO);
-        hash = 11 * hash + Objects.hashCode(this.yearBO);
-        hash = 11 * hash + Objects.hashCode(this.code);
-        hash = 11 * hash + Objects.hashCode(this.name);
-        hash = 11 * hash + Objects.hashCode(this.creation);
-        hash = 11 * hash + Objects.hashCode(this.updated);
-        hash = 11 * hash + (this.enabled ? 1 : 0);
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.id);
+        hash = 97 * hash + Objects.hashCode(this.gradeBO);
+        hash = 97 * hash + Objects.hashCode(this.yearBO);
+        hash = 97 * hash + Objects.hashCode(this.userBO);
+        hash = 97 * hash + Objects.hashCode(this.code);
+        hash = 97 * hash + Objects.hashCode(this.name);
+        hash = 97 * hash + Objects.hashCode(this.creation);
+        hash = 97 * hash + Objects.hashCode(this.updated);
+        hash = 97 * hash + (this.enabled ? 1 : 0);
         return hash;
     }
 
@@ -137,10 +149,15 @@ public class ClassRoomBO implements Serializable {
         if (!Objects.equals(this.yearBO, other.yearBO)) {
             return false;
         }
+        if (!Objects.equals(this.userBO, other.userBO)) {
+            return false;
+        }
         if (!Objects.equals(this.code, other.code)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
             return false;
         }
         return true;
     }
-     
 }

@@ -14,7 +14,7 @@ import java.util.Objects;
  *
  * @author Carlos Rodriguez
  */
-public class YearBO implements Serializable {
+public class YearBO implements Serializable, Comparable<YearBO> {
     
     private Integer id;
     
@@ -95,10 +95,14 @@ public class YearBO implements Serializable {
             return false;
         }
         final YearBO other = (YearBO) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.name, other.name);
+    }
+
+    @Override
+    public int compareTo(YearBO o) {
+        Integer thisName = Integer.parseInt(this.name);
+        Integer otherName = Integer.parseInt(o.getName());
+        return thisName.compareTo(otherName) * -1;
     }
     
 }

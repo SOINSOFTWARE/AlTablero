@@ -5,7 +5,7 @@
  */
 package co.com.carpco.altablero.bo;
 
-import co.com.carpco.altablero.hibernate.entities.BzGrade;
+import co.com.carpco.altablero.hibernate.entities.BzSchool;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -14,8 +14,8 @@ import java.util.Objects;
  *
  * @author Carlos Rodriguez
  */
-public class GradeBO implements Serializable, Comparable<GradeBO> {
-    
+public class SchoolBO implements Serializable {
+
     private Integer id;
     
     private String code;
@@ -28,14 +28,14 @@ public class GradeBO implements Serializable, Comparable<GradeBO> {
     
     private boolean enabled;
     
-    public GradeBO(BzGrade bzGrade) {
+    public SchoolBO(BzSchool bzSchool) {
         super();
-        this.id = bzGrade.getId();
-        this.code = bzGrade.getCode();
-        this.name = bzGrade.getName();
-        this.creation = bzGrade.getCreation();
-        this.updated = bzGrade.getUpdated();
-        this.enabled = bzGrade.isEnabled();
+        this.id = bzSchool.getId();
+        this.code = bzSchool.getCode();
+        this.name = bzSchool.getName();
+        this.creation = bzSchool.getCreation();
+        this.updated = bzSchool.getUpdated();
+        this.enabled = bzSchool.isEnabled();
     }
 
     public Integer getId() {
@@ -88,13 +88,13 @@ public class GradeBO implements Serializable, Comparable<GradeBO> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 41 * hash + Objects.hashCode(this.id);
-        hash = 41 * hash + Objects.hashCode(this.code);
-        hash = 41 * hash + Objects.hashCode(this.name);
-        hash = 41 * hash + Objects.hashCode(this.creation);
-        hash = 41 * hash + Objects.hashCode(this.updated);
-        hash = 41 * hash + (this.enabled ? 1 : 0);
+        int hash = 5;
+        hash = 89 * hash + Objects.hashCode(this.id);
+        hash = 89 * hash + Objects.hashCode(this.code);
+        hash = 89 * hash + Objects.hashCode(this.name);
+        hash = 89 * hash + Objects.hashCode(this.creation);
+        hash = 89 * hash + Objects.hashCode(this.updated);
+        hash = 89 * hash + (this.enabled ? 1 : 0);
         return hash;
     }
 
@@ -106,15 +106,10 @@ public class GradeBO implements Serializable, Comparable<GradeBO> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final GradeBO other = (GradeBO) obj;
-        return Objects.equals(this.code, other.code);
+        final SchoolBO other = (SchoolBO) obj;
+        if (!Objects.equals(this.code, other.code)) {
+            return false;
+        }
+        return Objects.equals(this.name, other.name);
     }
-
-    @Override
-    public int compareTo(GradeBO o) {
-        Integer thisCode = Integer.parseInt(this.code);
-        Integer otherCode = Integer.parseInt(o.getCode());
-        return thisCode.compareTo(otherCode);
-    }
-     
 }

@@ -24,7 +24,7 @@
                             <li><a href="<c:url value="/admin/cursos" />"><i class="fa fa-angle-double-right"></i> Ver</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('CURCE')}">
-                            <li><a href="pages/forms/general.html"><i class="fa fa-angle-double-right"></i> Crear o editar</a></li>
+                            <li><a href="pages/forms/general.html"><i class="fa fa-angle-double-right"></i> Crear</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('CURMA')}">
                             <li><a href="pages/forms/editors.html"><i class="fa fa-angle-double-right"></i> Asociar materias</a></li>

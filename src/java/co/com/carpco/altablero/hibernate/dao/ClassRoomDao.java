@@ -6,13 +6,12 @@
 package co.com.carpco.altablero.hibernate.dao;
 
 import co.com.carpco.altablero.hibernate.entities.BzClassRoom;
-import co.com.carpco.altablero.hibernate.entities.BzUser;
 import co.com.carpco.altablero.utils.Chronometer;
+import java.util.HashSet;
 import java.util.Set;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.jboss.weld.util.collections.ArraySet;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -22,7 +21,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ClassRoomDao extends DaoAbstract {
     
-    public Set<BzClassRoom> getClassRoomSet(String year, String grade)
+    public Set<BzClassRoom> getClassRoomSet(int idSchool)
     {
         Chronometer chrono = new Chronometer();
         Set<BzClassRoom> classRoomSet = null;
@@ -35,15 +34,12 @@ public class ClassRoomDao extends DaoAbstract {
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.append("select classroom ");
             queryBuilder.append("from BzClassRoom as classroom ");
-            queryBuilder.append("inner join classroom.bzGrade as grade ");
-            queryBuilder.append("inner join classroom.bzYear as year ");
-            queryBuilder.append("where year.name = :year and (grade.code = :grade or '' = :grade)");
+            queryBuilder.append("inner join classroom.bzSchool as school ");
+            queryBuilder.append("where school.id = :idSchool and classroom.enabled = 1 and school.enabled = 1");
             
             Query query = session.createQuery (queryBuilder.toString());
-            query.setParameter("year", year);
-            query.setParameter("grade", grade);
-            query.setCacheable(true);
-            classRoomSet = new ArraySet<>(query.list());
+            query.setParameter("idSchool", idSchool);
+            classRoomSet = new HashSet<>(query.list());
         } catch (HibernateException ex) {
             EXCEPTION_LOGGER.error(ex.getMessage());
         } finally {

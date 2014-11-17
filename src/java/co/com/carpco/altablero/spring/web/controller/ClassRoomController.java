@@ -6,9 +6,18 @@
 package co.com.carpco.altablero.spring.web.controller;
 
 import co.com.carpco.altablero.bo.ClassRoomBO;
+import co.com.carpco.altablero.bo.GradeBO;
+import co.com.carpco.altablero.bo.UserBO;
+import co.com.carpco.altablero.bo.YearBO;
 import co.com.carpco.altablero.hibernate.bll.ClassRoomBll;
+import co.com.carpco.altablero.hibernate.bll.GradeBll;
+import co.com.carpco.altablero.hibernate.bll.UserBll;
+import co.com.carpco.altablero.hibernate.bll.YearBll;
 import co.com.carpco.altablero.utils.RoleUtils;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -31,9 +40,18 @@ public class ClassRoomController {
     ClassRoomBll classRoomBll;
     
     @Autowired
-    RoleUtils roleUtils;
+    UserBll userBll;
     
-    @RequestMapping(value = "/admin/cursos", method = RequestMethod.GET)
+    @Autowired
+    YearBll yearBll;
+    
+    @Autowired
+    GradeBll gradeBll;
+    
+    @Autowired
+    RoleUtils roleUtils;    
+    
+    @RequestMapping(value = "/admin/cursos", method = { RequestMethod.GET, RequestMethod.POST })
     public ModelAndView classRoomPage(@RequestParam(value = "year", required = false) String year, 
             @RequestParam(value = "grade", required = false) String grade) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -46,13 +64,21 @@ public class ClassRoomController {
             }
             
             if (grade == null) {
-                grade = "";
+                grade = "Todos";
             }
             
             ModelAndView model = roleUtils.createModelWithUserDetails(auth.getName());
-            Set<ClassRoomBO> classRoomBOSet = classRoomBll.getClassRoomSet(year, grade);
+            UserBO user = userBll.getUserByDocumentNumber(auth.getName());
+            Set<ClassRoomBO> classRoomBOSet = classRoomBll.getClassRoomSet(user.getSchool().getId(), year, grade);
+            List<GradeBO> gradeList = new ArrayList<>(gradeBll.getGradeSet());
+            List<YearBO> yearList = new ArrayList<>(yearBll.getYearSet());
+            Collections.sort(gradeList);
+            Collections.sort(yearList);
+            
             model.addObject("classrooms", classRoomBOSet);
-            model.setViewName("admin/classrooms");
+            model.addObject("years", yearList);
+            model.addObject("grades", gradeList);
+            model.setViewName("admin/classroom/list");
             return model;
         } else {
             return new ModelAndView("redirect:/login");

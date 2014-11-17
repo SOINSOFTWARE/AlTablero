@@ -5,8 +5,10 @@
  */
 package co.com.carpco.altablero.hibernate.dao;
 
-import co.com.carpco.altablero.hibernate.entities.BzUser;
+import co.com.carpco.altablero.hibernate.entities.BzYear;
 import co.com.carpco.altablero.utils.Chronometer;
+import java.util.HashSet;
+import java.util.Set;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -17,26 +19,31 @@ import org.springframework.stereotype.Repository;
  * @author Carlos Rodriguez
  */
 @Repository
-public class UserDao extends DaoAbstract{
+public class YearDao extends DaoAbstract {
     
-    public BzUser getUserByDocumentNumber(String documentNumber) {
+    public Set<BzYear> getYearSet()
+    {
         Chronometer chrono = new Chronometer();
-        BzUser bzUser = null;
+        Set<BzYear> yearSet = null;
         chrono.start();
         
         try {
             Session session = this.getSession();
             session.beginTransaction();
-            Query query = session.createQuery ("from BzUser as u where u.documentNumber = :documentNumber");
-            query.setParameter("documentNumber", documentNumber);
-            bzUser = (BzUser)query.list().get(0);
+            
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.append("from BzYear as year ");
+            
+            Query query = session.createQuery (queryBuilder.toString());
+            yearSet = new HashSet<>(query.list());
         } catch (HibernateException ex) {
             EXCEPTION_LOGGER.error(ex.getMessage());
         } finally {
             chrono.stop();
-            DAO_LOGGER.info("Class: BzUserDao, Method: getUserByDocumentNumber, Executed in: " + chrono.getTime());
+            DAO_LOGGER.info("Class: YearDao, Method: getYearSet, Executed in: " + chrono.getTime());
         }
         
-        return bzUser;
+        return yearSet;
     }
+    
 }

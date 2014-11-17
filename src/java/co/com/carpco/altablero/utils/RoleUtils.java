@@ -23,10 +23,10 @@ import org.springframework.web.servlet.ModelAndView;
 public class RoleUtils {
     
     @Autowired
-    UserBll bzUserBll;
+    UserBll userBll;
     
     public ModelAndView createModelWithUserDetails(String documentNumber) {
-        UserBO user = bzUserBll.getUserByDocumentNumber(documentNumber);
+        UserBO user = userBll.getUserByDocumentNumber(documentNumber);
         ModelAndView model = new ModelAndView();
 
         model.addObject("userFirstName", user.getName());

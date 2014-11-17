@@ -5,9 +5,9 @@
  */
 package co.com.carpco.altablero.hibernate.bll;
 
-import co.com.carpco.altablero.bo.ClassRoomBO;
-import co.com.carpco.altablero.hibernate.dao.ClassRoomDao;
-import co.com.carpco.altablero.hibernate.entities.BzClassRoom;
+import co.com.carpco.altablero.bo.GradeBO;
+import co.com.carpco.altablero.hibernate.dao.GradeDao;
+import co.com.carpco.altablero.hibernate.entities.BzGrade;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,12 +33,12 @@ import org.springframework.stereotype.Service;
  * @author Carlos Rodriguez
  */
 @Service
-public class ClassRoomBll {
+public class GradeBll {
     
     static Cache<Integer, Set> cache;
     
     @Autowired
-    private ClassRoomDao classRoomDao;
+    private GradeDao gradeDao;
     
     private void initializeCache() {
         CachingProvider cachingProvider = Caching.getCachingProvider();
@@ -58,13 +58,13 @@ public class ClassRoomBll {
 
                             @Override
                             public Set load(Integer key) throws CacheLoaderException {
-                                final Set<ClassRoomBO> classRoomBOSet = new HashSet<>();
-                                Set<BzClassRoom> bzClassRoomSet = classRoomDao.getClassRoomSet(key);
-                                if (bzClassRoomSet != null && bzClassRoomSet.size() > 0) {
-                                    bzClassRoomSet.forEach((BzClassRoom bzClassRoom) -> 
-                                            classRoomBOSet.add(new ClassRoomBO(bzClassRoom)));
+                                final Set<GradeBO> gradeBOSet = new HashSet<>();
+                                Set<BzGrade> bzGradeSet = gradeDao.getGradeSet();
+                                if (bzGradeSet != null && bzGradeSet.size() > 0) {
+                                    bzGradeSet.forEach((BzGrade bzGrade) -> 
+                                            gradeBOSet.add(new GradeBO(bzGrade)));
                                 }
-                                return classRoomBOSet;
+                                return gradeBOSet;
                             }
 
                             @Override
@@ -108,24 +108,15 @@ public class ClassRoomBll {
                 })
                 .setStatisticsEnabled(true);
         
-        cache = cacheManager.createCache("classRoomXYearCache", config);
+        cache = cacheManager.createCache("gradeCache", config);
         config.isReadThrough();
     }
     
-    public Set<ClassRoomBO> getClassRoomSet(int idSchool, String year, String grade) {
+    public Set<GradeBO> getGradeSet() {
         if (cache == null) {
             this.initializeCache();
         }
         
-        Set<ClassRoomBO> classRoomSet = cache.get(idSchool);
-        Set<ClassRoomBO> finalclassRoomSet = new HashSet<>();
-        for(ClassRoomBO classRoom : classRoomSet) {
-            if (classRoom.getYearBO().getName().equals(year) && 
-                    (grade.equals("Todos") || classRoom.getGradeBO().getName().equals(grade))) {
-                finalclassRoomSet.add(classRoom);
-            }
-        }
-        
-        return finalclassRoomSet;
+        return cache.get(1);
     }
 }

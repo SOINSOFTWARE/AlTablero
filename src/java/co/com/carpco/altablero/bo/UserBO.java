@@ -17,36 +17,44 @@ import java.util.Set;
  *
  * @author Carlos Rodriguez
  */
-public class UserBO implements Serializable{
+public class UserBO implements Serializable {
 
     private Integer id;
 
     private String documentNumber;
-    
+
     private String documentType;
-    
+
     private String name;
-    
+
     private String lastName;
-    
+
     private Date born;
-    
+
     private String address;
-    
+
     private long phone1;
-    
+
     private Long phone2;
-    
+
     private String password;
-    
+
     private String gender;
-    
+
+    private byte[] photo;
+
+    private UserBO guardian1;
+
+    private UserBO guardian2;
+
+    private SchoolBO school;
+
     private Date creation;
-    
+
     private Date updated;
-    
+
     private boolean enabled;
-    
+
     private Set<UserTypeBO> userTypeSet;
 
     public UserBO(BzUser bzUser) {
@@ -62,11 +70,18 @@ public class UserBO implements Serializable{
         this.phone2 = bzUser.getPhone2();
         this.password = bzUser.getPassword();
         this.gender = bzUser.getGender();
+        this.photo = bzUser.getPhoto();
+        this.guardian1 = bzUser.getBzUserByIdGuardian1() != null 
+                ? new UserBO(bzUser.getBzUserByIdGuardian1()) : null;
+        this.guardian2 = bzUser.getBzUserByIdGuardian2() != null 
+                ? new UserBO(bzUser.getBzUserByIdGuardian2()) : null;
+        this.school = new SchoolBO(
+                bzUser.getBzSchoolXusers().iterator().next().getBzSchool());
         this.creation = bzUser.getCreation();
         this.updated = bzUser.getUpdated();
         this.enabled = bzUser.isEnabled();
         this.userTypeSet = new HashSet<>();
-        
+
         Set<BzUserXuserType> bzUserXUserTypeSet = bzUser.getBzUserXuserTypes();
         bzUserXUserTypeSet.stream().forEach((bzUserXUserType) -> {
             userTypeSet.add(new UserTypeBO(bzUserXUserType.getCnUserType()));
@@ -227,6 +242,38 @@ public class UserBO implements Serializable{
         this.gender = gender;
     }
 
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
+    public UserBO getGuardian1() {
+        return guardian1;
+    }
+
+    public void setGuardian1(UserBO guardian1) {
+        this.guardian1 = guardian1;
+    }
+
+    public UserBO getGuardian2() {
+        return guardian2;
+    }
+
+    public void setGuardian2(UserBO guardian2) {
+        this.guardian2 = guardian2;
+    }
+
+    public SchoolBO getSchool() {
+        return school;
+    }
+
+    public void setSchool(SchoolBO school) {
+        this.school = school;
+    }
+
     /**
      * @return the creation
      */
@@ -303,9 +350,6 @@ public class UserBO implements Serializable{
         if (!Objects.equals(this.documentNumber, other.documentNumber)) {
             return false;
         }
-        if (!Objects.equals(this.documentType, other.documentType)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.documentType, other.documentType);
     }
 }

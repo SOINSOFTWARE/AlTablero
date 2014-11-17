@@ -21,6 +21,6 @@ public abstract class DaoAbstract {
     Logger DAO_LOGGER = LoggerFactory.getLogger("dao");
     
     public Session getSession() {
-        return HibernateUtil.getSessionFactory().getCurrentSession();
+        return HibernateUtil.getSessionFactory().openSession();
     }
 }
