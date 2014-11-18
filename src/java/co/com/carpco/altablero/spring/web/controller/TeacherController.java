@@ -5,7 +5,10 @@
  */
 package co.com.carpco.altablero.spring.web.controller;
 
+import co.com.carpco.altablero.bo.UserBO;
+import co.com.carpco.altablero.hibernate.bll.UserBll;
 import co.com.carpco.altablero.utils.RoleUtils;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -24,6 +28,10 @@ public class TeacherController {
 
     @Autowired
     RoleUtils roleUtils;
+    
+    
+  @Autowired
+  UserBll userBll;
 
     @RequestMapping(value = "/admin/profesor", method = RequestMethod.GET)
     public ModelAndView generalInformation() {
@@ -32,10 +40,49 @@ public class TeacherController {
         if (!(auth instanceof AnonymousAuthenticationToken)) {
 
             ModelAndView model = roleUtils.createModelWithUserDetails(auth.getName());
-            model.setViewName("admin/user_createEdit");
+            model.setViewName("admin/teacher/edit");
             return model;
         } else {
             return new ModelAndView("redirect:/login");
         }
     }
+    
+    
+  @RequestMapping(value = "/admin/profesor/save", method = RequestMethod.POST)
+  public ModelAndView saveInformation(@RequestParam(value = "selDocType", required = true) String docType,
+          @RequestParam(value = "txtDocNumber", required = true) String docNumber,
+          @RequestParam(value = "txtName", required = true) String name,
+          @RequestParam(value = "txtLastName", required = true) String lastName,
+          @RequestParam(value = "txtBornDate", required = true) String bornDate,
+          @RequestParam(value = "txtAddress", required = true) String address,
+          @RequestParam(value = "txtPhone1", required = true) Long phone1,
+          @RequestParam(value = "txtPhone2", required = true) Long phone2,
+          @RequestParam(value = "selGender", required = true) String gender
+  ) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    if (!(auth instanceof AnonymousAuthenticationToken)) {
+
+     
+      ModelAndView model = roleUtils.createModelWithUserDetails(auth.getName());
+      model.setViewName("admin/teacher/edit");
+      UserBO userBo = new UserBO();
+      userBo.setDocumentType(docType);
+      userBo.setDocumentNumber(docNumber);
+      userBo.setName(name);
+      userBo.setLastName(lastName);
+      userBo.setBorn(new Date());
+      userBo.setAddress(address);
+      userBo.setPhone1(phone1);
+      userBo.setPhone2(phone2);
+      userBo.setGender(gender);
+      
+      userBll.saveUser(userBo);
+      
+      return model;
+    } else {
+      return new ModelAndView("redirect:/login");
+    }
+
+  }
 }

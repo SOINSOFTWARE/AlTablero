@@ -74,7 +74,8 @@ public class UserBll {
 
                             @Override
                             public void write(Cache.Entry<? extends String, ? extends UserBO> entry) throws CacheWriterException {
-                                
+                                 UserBO userBo  = entry.getValue();
+                                userDao.saveUser(userBo);
                             }
 
                             @Override
@@ -107,6 +108,19 @@ public class UserBll {
             this.initializeCache();
         }
         
-        return cache.get(documentNumber);
+        UserBO cached = cache.get(documentNumber);
+        if (cached == null) {
+            cached = new UserBO(userDao.getUserByDocumentNumber(documentNumber));
+        }
+        return cached;
+    }
+    
+      public void saveUser(UserBO userBo) {
+        if (cache == null) {
+            this.initializeCache();
+        }
+        
+        cache.put(userBo.getDocumentNumber(), userBo);
+       
     }
 }
