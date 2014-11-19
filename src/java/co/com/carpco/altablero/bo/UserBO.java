@@ -17,7 +17,7 @@ import java.util.Set;
  *
  * @author Carlos Rodriguez
  */
-public class UserBO implements Serializable {
+public class UserBO implements Serializable, Comparable<UserBO> {
 
   private Integer id;
 
@@ -376,5 +376,10 @@ public class UserBO implements Serializable {
     return bzUser;
 
   }
+
+    @Override
+    public int compareTo(UserBO o) {
+        return this.lastName.compareToIgnoreCase(o.getLastName());
+    }
 
 }
