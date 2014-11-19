@@ -27,21 +27,28 @@
                         <div class="col-xs-12">
                             <div class="box box-tools" style="height: 50px">
                                 <a href="javascript:{}" class="btn btn-social-icon btn-success" 
-                                    onclick="document.getElementById('frmClassRoomSave').submit();"
+                                    onclick="saveClassRoom()"
                                     style="margin: 8px; margin-left: 15px">
                                     <i class="fa fa-save" title="Guardar"></i>
                                 </a>
-                                <a href="javascript:{}" class="btn btn-social-icon btn-google-plus" 
-                                    onclick="document.getElementById('frmClassRoom').submit();"
-                                    style="margin: 8px">
-                                    <i class="fa fa-minus-circle" title="Eliminar"></i>
-                                </a>
+                                <c:if test="${not empty classroom || classroom.id > 0}">
+                                    <a href="javascript:{}" class="btn btn-social-icon btn-google-plus" 
+                                        onclick="deleteClassRoom()"
+                                        style="margin: 8px">
+                                        <i class="fa fa-minus-circle" title="Eliminar"></i>
+                                    </a>
+                                </c:if>
                             </div>
                             <div class="box box-primary" style="height: 230px">
                                 <div class="box-header">
                                     <h3 class="box-title"></h3>
                                 </div>
                                 <div class="box-body">
+                                    <form id="frmClassRoomDelete" name="frmClassRoomDelete" method="POST"
+                                          action="<c:url value='/admin/cursos/edicion/guardar?${_csrf.parameterName}=${_csrf.token}' />">
+                                        <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
+                                        <input id="delete" name="delete" type="hidden" value="true" />
+                                    </form>
                                     <form id="frmClassRoomSave" name="frmClassRoomSave" method="POST"
                                           action="<c:url value='/admin/cursos/edicion/guardar?${_csrf.parameterName}=${_csrf.token}' />">
                                         <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
@@ -120,6 +127,19 @@
             $(document).ready(function() {
                 $('#refClassRoom').trigger("click");
             } );
+        </script>
+        <script type="text/javascript">
+            function saveClassRoom() {
+                if (confirm("¿Deseas guardar los datos?") == true) {
+                    document.getElementById('frmClassRoomSave').submit();
+                }
+            }
+            
+            function deleteClassRoom() {
+                if (confirm("¿Deseas eliminar el salon?") == true) {
+                    document.getElementById('frmClassRoomDelete').submit();
+                }
+            }
         </script>
     </body>
 </html>
