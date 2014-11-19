@@ -25,7 +25,7 @@
                 <section class="content">
                     <div class="row">
                         <div class="col-xs-12">
-                            <div class="box box-primary">
+                            <div class="box box-tools">
                                 <div class="box-body">
                                     <form id="frmClassRoom" name="frmClassRoom" method="POST"
                                           action="<c:url value='/admin/cursos?${_csrf.parameterName}=${_csrf.token}' />">
@@ -76,7 +76,7 @@
                             </div>
                         </div>
                         <div class="col-xs-12">
-                            <div class="box">
+                            <div class="box box-primary">
                                 <div class="box-header">
                                 </div><!-- /.box-header -->
                                 <div class="box-body table-responsive">
@@ -100,7 +100,7 @@
                                                     <td style="vertical-align: top;" align="center">
                                                         <form id="frmEdit${classroom.id}" name="frmEdit${classroom.id}" method="POST"
                                                               action="<c:url value='/admin/cursos/edicion?${_csrf.parameterName}=${_csrf.token}' />">
-                                                            <input id="classroomId" type="hidden" value="${classroom.id}" />
+                                                            <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
                                                             <a href="javascript:{}" class="btn btn-social-icon btn-dropbox" 
                                                                 onclick="document.getElementById('frmEdit${classroom.id}').submit();">
                                                                 <i class="fa fa-edit"></i>

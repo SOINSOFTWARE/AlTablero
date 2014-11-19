@@ -128,4 +128,22 @@ public class ClassRoomBll {
         
         return finalclassRoomSet;
     }
+    
+    public ClassRoomBO getClassRoom(int idClassRoom, int idSchool) {
+        if (cache == null) {
+            this.initializeCache();
+        }
+        
+        Set<ClassRoomBO> classRoomSet = cache.get(idSchool);
+        ClassRoomBO classRoomBO = null;
+        if (classRoomSet != null && !classRoomSet.isEmpty()) {
+            for(ClassRoomBO classRoom : classRoomSet) {
+                if(classRoom.getId().equals(idClassRoom)) {
+                    classRoomBO = classRoom;
+                    break;
+                }
+            }
+        }
+        return classRoomBO;
+    }
 }

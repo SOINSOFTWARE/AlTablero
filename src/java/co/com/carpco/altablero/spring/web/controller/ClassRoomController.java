@@ -85,4 +85,32 @@ public class ClassRoomController {
         }
     }
     
+    @RequestMapping(value = "/admin/cursos/edicion", method = { RequestMethod.GET, RequestMethod.POST })
+    public ModelAndView classRoomEdit(@RequestParam(value = "classroomId", required = false) Integer idClassRoom) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            ModelAndView model = roleUtils.createModelWithUserDetails(auth.getName());
+            UserBO user = userBll.getUserByDocumentNumber(auth.getName());
+            List<GradeBO> gradeList = new ArrayList<>(gradeBll.getGradeSet());
+            List<YearBO> yearList = new ArrayList<>(yearBll.getYearSet());
+            List<UserBO> teacherList = new ArrayList<>(userBll.getTeacherSet(user.getSchool().getId()));
+            Collections.sort(gradeList);
+            Collections.sort(yearList);
+            Collections.sort(teacherList);
+            
+            if(idClassRoom != null) {
+                ClassRoomBO classRoomBO = classRoomBll.getClassRoom(idClassRoom, user.getSchool().getId());
+                model.addObject("classroom", classRoomBO);
+            }            
+            
+            model.addObject("years", yearList);
+            model.addObject("grades", gradeList);
+            model.addObject("teachers", teacherList);
+            model.setViewName("admin/classroom/edit");
+            return model;
+        } else {
+            return new ModelAndView("redirect:/login");
+        }
+    }
 }
