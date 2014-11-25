@@ -43,16 +43,9 @@
                                 <div class="box-header">
                                     <h3 class="box-title"></h3>
                                 </div>
-                                <div class="box-body">
-                                    <form id="frmClassRoomDelete" name="frmClassRoomDelete" method="POST"
-                                          action="<c:url value='/admin/cursos/edicion/guardar?${_csrf.parameterName}=${_csrf.token}' />">
-                                        <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
-                                        <input id="delete" name="delete" type="hidden" value="true" />
-                                    </form>
-                                    <form id="frmClassRoomSave" name="frmClassRoomSave" method="POST"
-                                          action="<c:url value='/admin/cursos/edicion/guardar?${_csrf.parameterName}=${_csrf.token}' />">
-                                        <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
-                                        <table style="width: 100%">
+                                <div class="box-body" style="alignment-adjust: central" >
+                                  
+                                        <table style="width: 50%">
                                             <tr>
                                                 <th style="width: 20%"></th>
                                                 <th style="width: 20%">A&ntilde;o:</th>
