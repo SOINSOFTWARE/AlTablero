@@ -5,7 +5,9 @@
         <group>
             <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/web/WEB-INF/pages/admin/classroom/edit.jsp</file>
             <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/bll/UserBll.java</file>
+            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/web/WEB-INF/pages/admin/include_body_jscript.jsp</file>
             <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/spring/web/controller/ClassRoomController.java</file>
+            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/web/WEB-INF/pages/admin/include_header.jsp</file>
             <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/bo/ClassRoomBO.java</file>
             <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/hibernate/dao/UserDao.java</file>
         </group>
