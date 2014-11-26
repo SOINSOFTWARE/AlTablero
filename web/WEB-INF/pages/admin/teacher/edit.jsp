@@ -42,70 +42,76 @@
                 <div class="box-header">
                   <h3 class="box-title"></h3>
                 </div>
-                <div class="box-body">
-                  <form action="<c:url value='/admin/profesor/save?${_csrf.parameterName}=${_csrf.token}' />" method='POST'>
-                    <table style="width: 100%" >
+                <div class="box-body" style="alignment-adjust: central" >
 
-                      <td style="width: 30%">tt</td>
-                      <td style="width: 40%">aa
+
+                  <form action="<c:url value='/admin/profesor/save?${_csrf.parameterName}=${_csrf.token}' />" method='POST'>
+
+                    <table style="width: 100%" >
                       <tr>
-                        <td style="width: 20%"><label for="selDocType">Tipo de Documento</label></td>
-                        <td>
-                          <select name="selDocType" class="form-control">
-                            <option value="Cedula">Cédula</option>
+                        <td style="width: 20%"></td>
+                        <td style="width: 20%; text-align: right; padding-right: 10px" ><label for="selDocType">Tipo de Documento:</label></td>
+                        <td style="width: 60%">
+                          <select name="selDocType" class="form-control" style="width: 30%">
+                            <option value="Cedula">C&eacute;dula</option>
                             <option value="TI">Tarjeta de Identidad</option>                        
                           </select>
                         </td>
                       </tr>
                       <tr>
-                        <td><label for="txtDocNumber">Núm. de Documento</label></td>
-                        <td><input name="txtDocNumber" type="text" class="form-control"></input></td>
+                        <td></td>
+                        <td style="text-align: right; padding-right: 10px"><label for="txtDocNumber">Núm. de Documento:</label></td>
+                        <td><input name="txtDocNumber" type="text" class="form-control" style="width: 30%"></input></td>
                       </tr>
                       <tr>
-                        <td><label for="txtName">Nombres</label></td>
-                        <td><input name="txtName" type="text" class="form-control"></input></td>
+                        <td></td>
+                        <td style=" text-align: right; padding-right: 10px"><label for="txtName">Nombres:</label></td>
+                        <td><input name="txtName" type="text" class="form-control" style="width: 30%"></input></td>
                       </tr>
                       <tr>
-                        <td> <label for="txtLastName">Apellidos</label></td>
-                        <td><input name="txtLastName" type="text" class="form-control"></input></td>
+                        <td></td>
+                        <td style="text-align: right; padding-right: 10px"> <label for="txtLastName">Apellidos:</label></td>
+                        <td><input name="txtLastName" type="text" class="form-control" style="width: 30%"></input></td>
                       </tr>
                       <tr>
-                        <td> <label for="txtBornDate">Fecha nacimiento</label></td>
+                        <td></td>
+                        <td style="text-align: right; padding-right: 10px"> <label for="txtBornDate">Fecha Nacimiento:</label></td>
                         <td>
                           <div class="input-group">
                             <div class="input-group-addon">
-                              <i class="fa fa-calendar">
-
-                              </i>
+                              <i class="fa fa-calendar">  </i>
                             </div>
-                            <input type="text" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask/>
+                            <input type="text" class="form-control" style="width: 25.6%" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask/>
                           </div><!-- /.input group -->
                         </td>
                       </tr>
                       <tr>
-                        <td><label for="txtAddress">Dirección</label></td>
-                        <td><input name="txtAddress" type="text" class="form-control"></input></td>
+                        <td></td>
+                        <td style="text-align: right; padding-right: 10px"><label for="txtAddress">Direcci&oacute;n:</label></td>
+                        <td><input name="txtAddress" type="text" class="form-control" style="width: 30%"></input></td>
                       </tr>
                       <tr>
-                        <td><label for="txtPhone1">Teléfono 1</label></label></td>
-                        <td><input name="txtPhone1" type="text" class="form-control"></input></td>
+                        <td></td>
+                        <td style="text-align: right; padding-right: 10px"><label for="txtPhone1">Tel&eacute;fono 1:</label></label></td>
+                        <td><input name="txtPhone1" type="text" class="form-control" style="width: 30%"></input></td>
                       </tr>
                       <tr>
-                        <td><label for="txtPhone2">Teléfono 2</label></td>
-                        <td><input name="txtPhone2" type="text" class="form-control"></input></td>
+                        <td></td>
+                        <td style="text-align: right; padding-right: 10px"><label for="txtPhone2">Telf&eacute;ono 2:</label></td>
+                        <td><input name="txtPhone2" type="text" class="form-control" style="width: 30%"></input></td>
                       </tr>
                       <tr >
-                        <td><label for="selGender">Género</label></td>
+                        <td></td>
+                        <td style=" text-align: right; padding-right: 10px"><label for="selGender">G&eacute;nero:</label></td>
                         <td>
-                          <select name="selGender" class="form-control">
-                            <option value="F">F</option>
-                            <option value="M">M</option>                        
+                          <select name="selGender" class="form-control" style="width: 30%">
+                            <option value="F">Femenino</option>
+                            <option value="M">Masculino</option>                        
                           </select>
                         </td>
                       </tr>
-                      </td>
-                      <td style="width: 30%">aa</td>
 
+                      </td>
                     </table>
                     <input name="submit" type="submit" class="btn btn-success" value="Guardar" />
 
@@ -125,68 +131,21 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 
     <!-- InputMask -->
-    <script src="/res/javascript/plugins/input-mask/jquery.inputmask.js" type="text/javascript"></script>
-    <script src="/res/javascript/plugins/input-mask/jquery.inputmask.date.extensions.js" type="text/javascript"></script>
-    <script src="/res/javascript/plugins/input-mask/jquery.inputmask.extensions.js" type="text/javascript"></script>
+    <script src="<c:url value="/res/javascript/plugins/input-mask/jquery.inputmask.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/res/javascript/plugins/input-mask/jquery.inputmask.date.extensions.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/res/javascript/plugins/input-mask/jquery.inputmask.extensions.js" />" type="text/javascript"></script>
+
+
 
 
     <script type="text/javascript">
                        $(function () {
                          //Datemask dd/mm/yyyy
                          $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
-                         //Datemask2 mm/dd/yyyy
-                         $("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
                          //Money Euro
                          $("[data-mask]").inputmask();
 
-                         //Date range picker
-                         $('#reservation').daterangepicker();
-                         //Date range picker with time picker
-                         $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
-                         //Date range as a button
-                         $('#daterange-btn').daterangepicker(
-                                 {
-                                   ranges: {
-                                     'Today': [moment(), moment()],
-                                     'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
-                                     'Last 7 Days': [moment().subtract('days', 6), moment()],
-                                     'Last 30 Days': [moment().subtract('days', 29), moment()],
-                                     'This Month': [moment().startOf('month'), moment().endOf('month')],
-                                     'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
-                                   },
-                                   startDate: moment().subtract('days', 29),
-                                   endDate: moment()
-                                 },
-                         function (start, end) {
-                           $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                         }
-                         );
 
-                         //iCheck for checkbox and radio inputs
-                         $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-                           checkboxClass: 'icheckbox_minimal',
-                           radioClass: 'iradio_minimal'
-                         });
-                         //Red color scheme for iCheck
-                         $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-                           checkboxClass: 'icheckbox_minimal-red',
-                           radioClass: 'iradio_minimal-red'
-                         });
-                         //Flat red color scheme for iCheck
-                         $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-                           checkboxClass: 'icheckbox_flat-red',
-                           radioClass: 'iradio_flat-red'
-                         });
-
-                         //Colorpicker
-                         $(".my-colorpicker1").colorpicker();
-                         //color picker with addon
-                         $(".my-colorpicker2").colorpicker();
-
-                         //Timepicker
-                         $(".timepicker").timepicker({
-                           showInputs: false
-                         });
                        });
     </script>
   </body>
