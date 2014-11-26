@@ -6,7 +6,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Al Tablero | Tablero general</title>
         <%@include file="../include_header.jsp" %>
-        
+        <link href="<c:url value="/res/css/jquery-ui/jquery-ui.min.css" />" rel="stylesheet" type="text/css" />
     </head>
     <body class="skin-blue">
         <%@include file="../include_body_header.jsp" %>
@@ -26,15 +26,11 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box box-tools" style="height: 50px">
-                                <a href="javascript:{}" class="btn btn-social-icon btn-success" 
-                                    onclick="saveClassRoom()"
-                                    style="margin: 8px; margin-left: 15px">
+                                <a href="#" id="save-link" class="btn btn-social-icon btn-success" style="margin: 8px; margin-left: 15px">
                                     <i class="fa fa-save" title="Guardar"></i>
                                 </a>
                                 <c:if test="${not empty classroom || classroom.id > 0}">
-                                    <a href="javascript:{}" class="btn btn-social-icon btn-google-plus" 
-                                        onclick="deleteClassRoom()"
-                                        style="margin: 8px">
+                                    <a href="#" id="deactivate-link" class="btn btn-social-icon btn-google-plus" style="margin: 8px">
                                         <i class="fa fa-minus-circle" title="Eliminar"></i>
                                     </a>
                                 </c:if>
@@ -45,9 +41,8 @@
                                 </div>
                                 <div class="box-body">
                                     <form id="frmClassRoomDelete" name="frmClassRoomDelete" method="POST"
-                                          action="<c:url value='/admin/cursos/edicion/guardar?${_csrf.parameterName}=${_csrf.token}' />">
+                                          action="<c:url value='/admin/cursos/edicion/desactivar?${_csrf.parameterName}=${_csrf.token}' />">
                                         <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
-                                        <input id="delete" name="delete" type="hidden" value="true" />
                                     </form>
                                     <form id="frmClassRoomSave" name="frmClassRoomSave" method="POST"
                                           action="<c:url value='/admin/cursos/edicion/guardar?${_csrf.parameterName}=${_csrf.token}' />">
@@ -64,9 +59,9 @@
                                                 <td></td>
                                                 <td>
                                                     <select id="year" name="year" class="form-control">
-                                                        <option>Seleccione uno...</option>
+                                                        <option value="0">Seleccione uno...</option>
                                                         <c:forEach items="${years}" var="year">
-                                                            <option <c:if test="${classroom.yearBO.id == year.id}">selected</c:if>>
+                                                            <option value="${year.id}" <c:if test="${classroom.yearBO.id == year.id}">selected</c:if>>
                                                                 ${year.name}
                                                             </option>
                                                         </c:forEach>
@@ -74,9 +69,9 @@
                                                 </td>
                                                 <td>
                                                     <select id="grade" name="grade" class="form-control">
-                                                        <option>Seleccione uno...</option>
+                                                        <option value="0">Seleccione uno...</option>
                                                         <c:forEach items="${grades}" var="grade">
-                                                            <option <c:if test="${classroom.gradeBO.id == grade.id}">selected</c:if>>
+                                                            <option value="${grade.id}" <c:if test="${classroom.gradeBO.id == grade.id}">selected</c:if>>
                                                                 ${grade.name}
                                                             </option>
                                                         </c:forEach>
@@ -84,9 +79,9 @@
                                                 </td>
                                                 <td>
                                                     <select id="director" name="director" class="form-control">
-                                                        <option>Seleccione uno...</option>
+                                                        <option value="0">Seleccione uno...</option>
                                                         <c:forEach items="${teachers}" var="teacher">
-                                                            <option <c:if test="${classroom.userBO.id == teacher.id}">selected</c:if>>
+                                                            <option value="${teacher.id}" <c:if test="${classroom.userBO.id == teacher.id}">selected</c:if>>
                                                                 ${teacher.name} ${teacher.lastName}
                                                             </option>
                                                         </c:forEach>
@@ -98,8 +93,9 @@
                                                 <td></td>
                                                 <th style="padding-top: 20px; text-align: right; padding-right: 15px">C&oacute;digo:</th>
                                                 <td colspan="2" style="padding-top: 20px">
-                                                    <input name="code" type="text" maxlength="5" class="form-control" 
-                                                           placeholder="C&oacute;digo..." value="${classroom.code}"/>
+                                                    <div id="divCode" class="form-group">
+                                                        <input id="code" name="code" type="text" maxlength="5" class="form-control" placeholder="C&oacute;digo..." value="${classroom.code}"/>
+                                                    </div>
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -107,8 +103,9 @@
                                                 <td></td>
                                                 <th style="padding-top: 20px; text-align: right; padding-right: 15px">Salon:</th>
                                                 <td colspan="2" style="padding-top: 20px">
-                                                    <input name="name" type="text" maxlength="50" class="form-control" 
-                                                           placeholder="Salon..." value="${classroom.name}"/>
+                                                    <div id="divName" class="form-group">
+                                                        <input id="name" name="name" type="text" maxlength="50" class="form-control" placeholder="Salon..." value="${classroom.name}"/>
+                                                    </div>
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -121,25 +118,93 @@
                 </section>
             </aside>
         </div>
-                        
+                   
+        <div id="save-dialog" title="Guardar">
+            <c:choose>
+                <c:when test="${empty classroom}">
+                    <p>Un nuevo salon ser&aacute; creado, ¿Deseas cotinuar con la acci&oacute;n?</p>
+                </c:when>
+                <c:otherwise>
+                    <p>El salon ser&aacute; actualizado, ¿Deseas cotinuar con la acci&oacute;n?</p>
+                </c:otherwise>
+            </c:choose>
+        </div>
+                                                
+        <div id="deactivate-dialog" title="Eliminar">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:2px 7px 20px 0;"></span>El salon ser&aacute; eliminado, ¿Desea continuar con la acci&oacute;n?</p>
+        </div>
+        
         <%@include file="../include_body_jscript.jsp" %>
+        <script src="<c:url value="/res/javascript/jquery-ui.min.js" />" type="text/javascript"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('#refClassRoom').trigger("click");
             } );
         </script>
         <script type="text/javascript">
-            function saveClassRoom() {
-                if (confirm("¿Deseas guardar los datos?") == true) {
-                    document.getElementById('frmClassRoomSave').submit();
-                }
-            }
+            $( "#save-dialog" ).dialog({
+                autoOpen: false,
+                width: 400,
+                modal: true,
+                resizable: false,
+                buttons: [{
+                    text: "Guardar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                        document.getElementById("frmClassRoomSave").submit();
+                    }
+                },
+                {
+                    text: "Cancelar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }]
+            });
             
-            function deleteClassRoom() {
-                if (confirm("¿Deseas eliminar el salon?") == true) {
-                    document.getElementById('frmClassRoomDelete').submit();
+            $( "#deactivate-dialog" ).dialog({
+                autoOpen: false,
+                width: 400,
+                modal: true,
+                resizable: false,
+                buttons: [{
+                    text: "Eliminar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                        document.getElementById("frmClassRoomDelete").submit();
+                    }
+                },
+                {
+                    text: "Cancelar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }]
+            });
+
+            $( "#save-link" ).click(function( event ) {
+                if($.trim($("#code").val()) !== '' && $("#name").val() !== '' && $("#year").val() !== '0') {
+                    $( "#save-dialog" ).dialog( "open" );
+                } 
+                
+                if($.trim($("#code").val()) === '') {
+                    document.getElementById("divCode").className = "form-group has-error";
+                } else {
+                    document.getElementById("divCode").className = "form-group";
                 }
-            }
+                
+                if ($("#name").val() === '') {
+                    document.getElementById("divName").className = "form-group has-error";
+                } else {
+                    document.getElementById("divName").className = "form-group";
+                }
+                event.preventDefault();
+            });
+            
+            $( "#deactivate-link" ).click(function( event ) {
+                $( "#deactivate-dialog" ).dialog( "open" );
+                event.preventDefault();
+            });
         </script>
     </body>
 </html>
