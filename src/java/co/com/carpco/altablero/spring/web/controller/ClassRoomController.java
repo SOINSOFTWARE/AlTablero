@@ -64,7 +64,7 @@ public class ClassRoomController {
             }
             
             if (grade == null) {
-                grade = "Todos";
+                grade = "0";
             }
             
             ModelAndView model = roleUtils.createModelWithUserDetails(auth.getName());

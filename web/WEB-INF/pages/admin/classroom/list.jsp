@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Al Tablero | Cursos | Ver</title>
+        <title>Al Tablero | Salones</title>
         <%@include file="../include_header.jsp" %>
         
     </head>
@@ -15,10 +15,10 @@
             <%@include file="../include_body_menu.jsp" %>
             <aside class="right-side">
                 <section class="content-header">
-                    <h1>Cursos<small>Ver</small></h1>
+                    <h1>Salones<small>Ver</small></h1>
                     <ol class="breadcrumb">
                         <li><a href="<c:url value="/admin/general" />"><i class="fa fa-dashboard"></i> Inicio</a></li>
-                        <li><i class="fa fa-edit"></i> Cursos</li>
+                        <li><i class="fa fa-edit"></i> Salones</li>
                         <li class="active">Ver</li>
                     </ol>
                 </section>
@@ -43,7 +43,7 @@
                                                     <div class="form-group">
                                                         <select id="year" name="year" class="form-control">
                                                             <c:forEach items="${years}" var="year">
-                                                                <option <c:if test="${param.year == year.name}">selected</c:if>>
+                                                                <option value="${year.name}" <c:if test="${param.year == year.name}">selected</c:if>>
                                                                     ${year.name}
                                                                 </option>
                                                             </c:forEach>
@@ -53,9 +53,9 @@
                                                 <td>
                                                     <div class="form-group">
                                                         <select id="grade" name="grade" class="form-control">
-                                                            <option>Todos</option>
+                                                            <option value="0">Todos</option>
                                                             <c:forEach items="${grades}" var="grade">
-                                                                <option <c:if test="${param.grade == grade.name}">selected</c:if>>
+                                                                <option value="${grade.id}" <c:if test="${param.grade == grade.id}">selected</c:if>>
                                                                     ${grade.name}
                                                                 </option>
                                                             </c:forEach>
@@ -85,7 +85,7 @@
                                             <tr>
                                                 <th style="width: 20%">Curso</th>
                                                 <th style="width: 20%">C&oacute;digo</th>
-                                                <th style="width: 20%">Salon</th>
+                                                <th style="width: 20%">Sal&oacute;n</th>
                                                 <th style="width: 30%">Director</th>
                                                 <th style="width: 10%"></th>
                                             </tr>

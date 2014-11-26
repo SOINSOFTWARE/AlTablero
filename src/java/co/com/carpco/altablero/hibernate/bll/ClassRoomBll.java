@@ -121,7 +121,7 @@ public class ClassRoomBll {
         Set<ClassRoomBO> finalclassRoomSet = new HashSet<>();
         for(ClassRoomBO classRoom : classRoomSet) {
             if (classRoom.getYearBO().getName().equals(year) && 
-                    (grade.equals("Todos") || classRoom.getGradeBO().getName().equals(grade))) {
+                    (grade.equals("0") || classRoom.getGradeBO().getId().toString().equals(grade))) {
                 finalclassRoomSet.add(classRoom);
             }
         }

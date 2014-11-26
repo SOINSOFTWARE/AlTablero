@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Al Tablero | Tablero general</title>
+        <title>Al Tablero | Salones</title>
         <%@include file="../include_header.jsp" %>
         <link href="<c:url value="/res/css/jquery-ui/jquery-ui.min.css" />" rel="stylesheet" type="text/css" />
     </head>
@@ -15,11 +15,11 @@
             <%@include file="../include_body_menu.jsp" %>
             <aside class="right-side">
                 <section class="content-header">
-                    <h1>Cursos<small>Editar</small></h1>
+                    <h1>Salones<small><c:choose><c:when test="${empty classroom}">Crear</c:when><c:otherwise>Editar</c:otherwise></c:choose></small></h1>
                     <ol class="breadcrumb">
                         <li><a href="<c:url value="/admin/general" />"><i class="fa fa-dashboard"></i> Inicio</a></li>
-                        <li><i class="fa fa-edit"></i> Cursos</li>
-                        <li class="active">Editar</li>
+                        <li><i class="fa fa-edit"></i> Salones</li>
+                        <li class="active"><c:choose><c:when test="${empty classroom}">Crear</c:when><c:otherwise>Editar</c:otherwise></c:choose></li>
                     </ol>
                 </section>
                 <section class="content">
@@ -58,34 +58,40 @@
                                             <tr>
                                                 <td></td>
                                                 <td>
-                                                    <select id="year" name="year" class="form-control">
-                                                        <option value="0">Seleccione uno...</option>
-                                                        <c:forEach items="${years}" var="year">
-                                                            <option value="${year.id}" <c:if test="${classroom.yearBO.id == year.id}">selected</c:if>>
-                                                                ${year.name}
-                                                            </option>
-                                                        </c:forEach>
-                                                    </select>
+                                                    <div id="divYear" class="form-group">
+                                                        <select id="year" name="year" class="form-control">
+                                                            <option value="0">Seleccione uno...</option>
+                                                            <c:forEach items="${years}" var="year">
+                                                                <option value="${year.id}" <c:if test="${classroom.yearBO.id == year.id}">selected</c:if>>
+                                                                    ${year.name}
+                                                                </option>
+                                                            </c:forEach>
+                                                        </select>
+                                                    </div>
                                                 </td>
                                                 <td>
-                                                    <select id="grade" name="grade" class="form-control">
-                                                        <option value="0">Seleccione uno...</option>
-                                                        <c:forEach items="${grades}" var="grade">
-                                                            <option value="${grade.id}" <c:if test="${classroom.gradeBO.id == grade.id}">selected</c:if>>
-                                                                ${grade.name}
-                                                            </option>
-                                                        </c:forEach>
-                                                    </select>
+                                                    <div id="divGrade" class="form-group">
+                                                        <select id="grade" name="grade" class="form-control">
+                                                            <option value="0">Seleccione uno...</option>
+                                                            <c:forEach items="${grades}" var="grade">
+                                                                <option value="${grade.id}" <c:if test="${classroom.gradeBO.id == grade.id}">selected</c:if>>
+                                                                    ${grade.name}
+                                                                </option>
+                                                            </c:forEach>
+                                                        </select>
+                                                    </div>
                                                 </td>
                                                 <td>
-                                                    <select id="director" name="director" class="form-control">
-                                                        <option value="0">Seleccione uno...</option>
-                                                        <c:forEach items="${teachers}" var="teacher">
-                                                            <option value="${teacher.id}" <c:if test="${classroom.userBO.id == teacher.id}">selected</c:if>>
-                                                                ${teacher.name} ${teacher.lastName}
-                                                            </option>
-                                                        </c:forEach>
-                                                    </select>
+                                                    <div id="divDirector" class="form-group">
+                                                        <select id="director" name="director" class="form-control">
+                                                            <option value="0">Seleccione uno...</option>
+                                                            <c:forEach items="${teachers}" var="teacher">
+                                                                <option value="${teacher.id}" <c:if test="${classroom.userBO.id == teacher.id}">selected</c:if>>
+                                                                    ${teacher.name} ${teacher.lastName}
+                                                                </option>
+                                                            </c:forEach>
+                                                        </select>
+                                                    </div>
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -94,17 +100,17 @@
                                                 <th style="padding-top: 20px; text-align: right; padding-right: 15px">C&oacute;digo:</th>
                                                 <td colspan="2" style="padding-top: 20px">
                                                     <div id="divCode" class="form-group">
-                                                        <input id="code" name="code" type="text" maxlength="5" class="form-control" placeholder="C&oacute;digo..." value="${classroom.code}"/>
+                                                        <input id="code" name="code" type="text" maxlength="5" class="form-control" placeholder="C&oacute;digo..." value="${classroom.code}" autocomplete="off" />
                                                     </div>
                                                 </td>
                                                 <td></td>
                                             </tr>
                                             <tr>
                                                 <td></td>
-                                                <th style="padding-top: 20px; text-align: right; padding-right: 15px">Salon:</th>
+                                                <th style="padding-top: 20px; text-align: right; padding-right: 15px">Sal&oacute;n:</th>
                                                 <td colspan="2" style="padding-top: 20px">
                                                     <div id="divName" class="form-group">
-                                                        <input id="name" name="name" type="text" maxlength="50" class="form-control" placeholder="Salon..." value="${classroom.name}"/>
+                                                        <input id="name" name="name" type="text" maxlength="50" class="form-control" placeholder="Sal&oacute;n..." value="${classroom.name}" autocomplete="off" />
                                                     </div>
                                                 </td>
                                                 <td></td>
@@ -122,16 +128,16 @@
         <div id="save-dialog" title="Guardar">
             <c:choose>
                 <c:when test="${empty classroom}">
-                    <p>Un nuevo salon ser&aacute; creado, ¿Deseas cotinuar con la acci&oacute;n?</p>
+                    <p>Un nuevo sal&oacute;n ser&aacute; creado, ¿Deseas cotinuar con la acci&oacute;n?</p>
                 </c:when>
                 <c:otherwise>
-                    <p>El salon ser&aacute; actualizado, ¿Deseas cotinuar con la acci&oacute;n?</p>
+                    <p>El sal&oacute;n ser&aacute; actualizado, ¿Deseas cotinuar con la acci&oacute;n?</p>
                 </c:otherwise>
             </c:choose>
         </div>
                                                 
         <div id="deactivate-dialog" title="Eliminar">
-            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:2px 7px 20px 0;"></span>El salon ser&aacute; eliminado, ¿Desea continuar con la acci&oacute;n?</p>
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:2px 7px 20px 0;"></span>El sal&oacute;n ser&aacute; eliminado, ¿Desea continuar con la acci&oacute;n?</p>
         </div>
         
         <%@include file="../include_body_jscript.jsp" %>
@@ -183,8 +189,20 @@
             });
 
             $( "#save-link" ).click(function( event ) {
-                if($.trim($("#code").val()) !== '' && $("#name").val() !== '' && $("#year").val() !== '0') {
-                    $( "#save-dialog" ).dialog( "open" );
+                if($.trim($("#code").val()) !== '' && $.trim($("#name").val()) !== '' && $("#year").val() !== '0' 
+                        && $("#grade").val() !== '0' && $("#director").val() !== '0') {
+                    <c:choose>
+                        <c:when test="${empty classroom}">
+                            $( "#save-dialog" ).dialog( "open" );
+                        </c:when>
+                        <c:otherwise>
+                            if($("#code").val() !== '${classroom.code}' || $("#name").val() !== '${classroom.name}'
+                                || $("#year").val() !== '${classroom.yearBO.id}' || $("#grade").val() !== '${classroom.gradeBO.id}'
+                                || $("#director").val() !== '${classroom.userBO.id}') {
+                                $( "#save-dialog" ).dialog( "open" );
+                            }
+                        </c:otherwise>
+                    </c:choose>
                 } 
                 
                 if($.trim($("#code").val()) === '') {
@@ -197,6 +215,24 @@
                     document.getElementById("divName").className = "form-group has-error";
                 } else {
                     document.getElementById("divName").className = "form-group";
+                }
+                
+                if ($("#year").val() === '0') {
+                    document.getElementById("divYear").className = "form-group has-error";
+                } else {
+                    document.getElementById("divYear").className = "form-group";
+                }
+                
+                if ($("#grade").val() === '0') {
+                    document.getElementById("divGrade").className = "form-group has-error";
+                } else {
+                    document.getElementById("divGrade").className = "form-group";
+                }
+                
+                if ($("#director").val() === '0') {
+                    document.getElementById("divDirector").className = "form-group has-error";
+                } else {
+                    document.getElementById("divDirector").className = "form-group";
                 }
                 event.preventDefault();
             });
