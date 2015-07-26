@@ -6,11 +6,7 @@
 
 package co.com.carpco.altablero.spring.web.controller;
 
-import co.com.carpco.altablero.utils.RoleUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import java.io.IOException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,22 +18,22 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Carlos
  */
 @Controller
-public class MainBoardController {
+public class MainBoardController extends AbstractController {
     
-    @Autowired
-    RoleUtils roleUtils;
+    private static final String DEFAULT_PAGE = "/";    
+    private static final String GENERAL_PAGE = "/admin/general";    
+    //private static final Logger LOGGER = LoggerFactory.getLogger(MainBoardController.class);
     
-    @RequestMapping(value = { "/", "/admin/general" }, method = RequestMethod.GET)
+    @RequestMapping(value = { DEFAULT_PAGE, GENERAL_PAGE }, method = RequestMethod.GET)
     public ModelAndView generalPage() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        
-        if (!(auth instanceof AnonymousAuthenticationToken)) {
-            
-            ModelAndView model = roleUtils.createModelWithUserDetails(auth.getName());
-            model.setViewName("admin/general");
-            return model;
-        } else {
-            return new ModelAndView("redirect:/login");
+        ModelAndView model = null;
+        try {
+            model = this.buildModelAndView();
+            model.setViewName(GENERAL_PAGE);
+        } catch (IOException ex) {
+            //LOGGER.error(ex.getMessage());
+            model = LoginController.buildRedirectLoginModel();
         }
+        return model;
     }
 }

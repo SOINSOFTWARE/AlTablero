@@ -11,7 +11,8 @@ package co.com.carpco.altablero.utils;
  */
 public class Chronometer {
     
-    private long begin, end;
+    private long begin;
+    private long end;
  
     public void start(){
         begin = System.currentTimeMillis();

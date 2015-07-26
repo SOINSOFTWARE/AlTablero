@@ -5,12 +5,9 @@
  */
 package co.com.carpco.altablero.utils;
 
-import co.com.carpco.altablero.bo.AccessBO;
-import co.com.carpco.altablero.bo.UserBO;
-import co.com.carpco.altablero.bo.UserTypeBO;
-import co.com.carpco.altablero.hibernate.bll.UserBll;
-import java.util.HashSet;
-import java.util.Set;
+import co.com.carpco.altablero.bll.UserBLL;
+import co.com.carpco.altablero.entity.UserBO;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,61 +19,36 @@ import org.springframework.web.servlet.ModelAndView;
 @Service
 public class RoleUtils {
     
-    @Autowired
-    UserBll userBll;
+    private static final String USER_FIRST_NAME_ATTRIBUTE = "userFirstName";
+    private static final String USER_NAME_ATTRIBUTE = "username";
+    private static final String USER_PHOTO_ATTRIBUTE = "avatar";
+    private static final String USER_ACCESS_ATTRIBUTE = "accessList";
     
-    public ModelAndView createModelWithUserDetails(String documentNumber) {
-        UserBO user = userBll.getUserByDocumentNumber(documentNumber);
+    private static final String MENU_GRADE_ATTRIBUTE = "canViewGradeMenu";
+    private static final String MENU_SUBJECT_ATTRIBUTE = "canViewSubjectMenu";
+    private static final String MENU_TEACHER_ATTRIBUTE = "canViewTeacherMenu";
+    private static final String MENU_STUDENT_ATTRIBUTE = "canViewStudentMenu";
+    
+    @Autowired
+    private UserBLL userBLL;
+
+    public ModelAndView createModelWithUserDetails(String documentNumber) throws IOException {
+        UserBO user = this.userBLL.findUserByDocument(documentNumber);
+        return this.buildModelUsingUserBO(user);
+    }
+    
+    private ModelAndView buildModelUsingUserBO(UserBO user) {
         ModelAndView model = new ModelAndView();
-
-        model.addObject("userFirstName", user.getName());
-        model.addObject("username", user.getName() + " " + user.getLastName());
-
-        if (user.getGender().equals("Masculino")) {
-            model.addObject("avatar", "avatar5");
-        } else {
-            model.addObject("avatar", "avatar2");
+        if (user != null) {
+            model.addObject(USER_FIRST_NAME_ATTRIBUTE, user.getName());
+            model.addObject(USER_NAME_ATTRIBUTE, user.getCompleteName());
+            model.addObject(USER_PHOTO_ATTRIBUTE, user.getDefaultAvatar());
+            model.addObject(USER_ACCESS_ATTRIBUTE, user.getAccessCodeList());
+            model.addObject(MENU_GRADE_ATTRIBUTE, user.canViewGradeMenu());
+            model.addObject(MENU_SUBJECT_ATTRIBUTE, user.canViewSubjectMenu());
+            model.addObject(MENU_TEACHER_ATTRIBUTE, user.canViewTeacherMenu());
+            model.addObject(MENU_STUDENT_ATTRIBUTE, user.canViewStudentMenu());
         }
-
-        boolean viewGradeMenu = false;
-        boolean viewSubjectMenu = false;
-        boolean viewTeacherMenu = false;
-        boolean viewStudentMenu = false;
-        Set<String> accessList = new HashSet();
-
-        for (UserTypeBO userType : user.getUserTypeSet()) {
-
-            switch (userType.getCode()) {
-                case "RCTOR":
-                    viewGradeMenu = true;
-                    viewSubjectMenu = true;
-                    viewTeacherMenu = true;
-                    viewStudentMenu = true;
-                    break;
-                case "COORD":
-                    viewSubjectMenu = true;
-                    viewTeacherMenu = true;
-                    viewStudentMenu = true;
-                    break;
-                case "PROFE":
-                    viewTeacherMenu = true;
-                    viewStudentMenu = true;
-                    break;
-                case "ESTUD":
-                    viewStudentMenu = true;
-                    break;
-            }
-
-            for (AccessBO access : userType.getAccessSet()) {
-                accessList.add(access.getCode());
-            }
-        }
-        model.addObject("canViewGradeMenu", viewGradeMenu);
-        model.addObject("canViewSubjectMenu", viewSubjectMenu);
-        model.addObject("canViewTeacherMenu", viewTeacherMenu);
-        model.addObject("canViewStudentMenu", viewStudentMenu);
-        model.addObject("accessList", accessList);
-
         return model;
     }
 }

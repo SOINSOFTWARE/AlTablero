@@ -25,7 +25,7 @@
                 <section class="content">
                     <div class="row">
                         <div class="col-xs-12">
-                            <div class="box box-tools" style="height: 50px">
+                            <div class="box box-tools">
                                 <a href="#" id="save-link" class="btn btn-social-icon btn-success" style="margin: 8px; margin-left: 15px">
                                     <i class="fa fa-save" title="Guardar"></i>
                                 </a>
@@ -35,7 +35,7 @@
                                     </a>
                                 </c:if>
                             </div>
-                            <div class="box box-primary" style="height: 230px">
+                            <div class="box box-primary">
                                 <div class="box-header">
                                     <h3 class="box-title"></h3>
                                 </div>
@@ -60,7 +60,6 @@
                                                 <td>
                                                     <div id="divYear" class="form-group">
                                                         <select id="year" name="year" class="form-control">
-                                                            <option value="0">Seleccione uno...</option>
                                                             <c:forEach items="${years}" var="year">
                                                                 <option value="${year.id}" <c:if test="${classroom.yearBO.id == year.id}">selected</c:if>>
                                                                     ${year.name}

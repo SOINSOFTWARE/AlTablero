@@ -4,7 +4,7 @@
             <div class="pull-left image">
                 <img src="<c:url value="/res/img/${avatar}.png" />" class="img-circle" alt="Imagen de usuario" />
             </div>
-            <div class="pull-left info"><p>Hola, ${userFirstName}</p></div>
+            <div class="pull-left info"><p>Hola ${userFirstName}</p></div>
         </div>
 
         <ul class="sidebar-menu">

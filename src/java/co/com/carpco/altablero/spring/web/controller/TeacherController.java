@@ -5,10 +5,12 @@
  */
 package co.com.carpco.altablero.spring.web.controller;
 
-import co.com.carpco.altablero.bo.UserBO;
-import co.com.carpco.altablero.hibernate.bll.UserBll;
+import co.com.carpco.altablero.entity.UserBO;
 import co.com.carpco.altablero.utils.RoleUtils;
+import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,11 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class TeacherController {
 
     @Autowired
-    RoleUtils roleUtils;
-    
-    
-  @Autowired
-  UserBll userBll;
+    private RoleUtils roleUtils;
 
     @RequestMapping(value = "/admin/profesor", method = RequestMethod.GET)
     public ModelAndView generalInformation() {
@@ -39,7 +37,12 @@ public class TeacherController {
 
         if (!(auth instanceof AnonymousAuthenticationToken)) {
 
-            ModelAndView model = roleUtils.createModelWithUserDetails(auth.getName());
+            ModelAndView model = null;
+            try {
+                model = roleUtils.createModelWithUserDetails(auth.getName());
+            } catch (IOException ex) {
+                Logger.getLogger(TeacherController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             model.setViewName("admin/teacher/edit");
             return model;
         } else {
@@ -64,7 +67,12 @@ public class TeacherController {
     if (!(auth instanceof AnonymousAuthenticationToken)) {
 
      
-      ModelAndView model = roleUtils.createModelWithUserDetails(auth.getName());
+      ModelAndView model = null;
+        try {
+            model = roleUtils.createModelWithUserDetails(auth.getName());
+        } catch (IOException ex) {
+            Logger.getLogger(TeacherController.class.getName()).log(Level.SEVERE, null, ex);
+        }
       model.setViewName("admin/teacher/edit");
       UserBO userBo = new UserBO();
       userBo.setDocumentType(docType);
@@ -76,8 +84,6 @@ public class TeacherController {
       userBo.setPhone1(phone1);
       userBo.setPhone2(phone2);
       userBo.setGender(gender);
-      
-      userBll.saveUser(userBo);
       
       return model;
     } else {
