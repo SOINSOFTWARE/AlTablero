@@ -5,7 +5,7 @@
  */
 package co.com.carpco.altablero.json.mapper;
 
-import co.com.carpco.altablero.entity.YearBO;
+import co.com.carpco.altablero.entity.TimeBO;
 import static co.com.carpco.altablero.json.mapper.IJsonMappable.JSON_MAPPER;
 import java.io.IOException;
 import java.util.HashSet;
@@ -21,40 +21,41 @@ import org.springframework.stereotype.Service;
  *
  * @author Carlos Rodriguez
  * @version 1.0
- * @since 29/06/2015
+ * @since 27/08/2015
  */
 @Service
-public class YearMapper implements IJsonMappable<YearBO> {
+public class TimeMapper implements IJsonMappable<TimeBO> {
     
-    protected static final Logger LOGGER = LoggerFactory.getLogger(YearMapper.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(TimeMapper.class);
 
     @Override
-    public YearBO getObjectFromJSON(String objectAsJSON) {
-        YearBO yearBO = null;
+    public TimeBO getObjectFromJSON(String objectAsJSON) {
+        TimeBO timeBO = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                yearBO = JSON_MAPPER.readValue(objectAsJSON, YearBO.class);
+                timeBO = JSON_MAPPER.readValue(objectAsJSON, TimeBO.class);
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());
             }
         }
-        return yearBO;
+        return timeBO;
     }
-    
+
     @Override
-    public Set<YearBO> getObjectSetFromJSON(String objectAsJSON) {
-        Set<YearBO> yearBOSet = null;
+    public Set<TimeBO> getObjectSetFromJSON(String objectAsJSON) {
+        Set<TimeBO> timeBOSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                Map<String, List<YearBO>> yearMap =
-                    JSON_MAPPER.readValue(objectAsJSON, new TypeReference<Map<String, List<YearBO>>>() { });
-                if (yearMap != null && !yearMap.isEmpty()) {
-                    yearBOSet = new HashSet(yearMap.values().iterator().next());
+                Map<String, List<TimeBO>> timeMap =
+                    JSON_MAPPER.readValue(objectAsJSON, new TypeReference<Map<String, List<TimeBO>>>() { });
+                if (timeMap != null && !timeMap.isEmpty()) {
+                    timeBOSet = new HashSet(timeMap.values().iterator().next());
                 }
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());
             }
         }
-        return yearBOSet;
+        return timeBOSet;
     }
+    
 }

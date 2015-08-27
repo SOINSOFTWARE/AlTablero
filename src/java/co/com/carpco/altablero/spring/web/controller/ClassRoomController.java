@@ -7,17 +7,19 @@ package co.com.carpco.altablero.spring.web.controller;
 
 import co.com.carpco.altablero.bll.ClassRoomBLL;
 import co.com.carpco.altablero.bll.GradeBLL;
+import co.com.carpco.altablero.bll.TimeBLL;
 import co.com.carpco.altablero.bll.UserBLL;
 import co.com.carpco.altablero.bll.YearBLL;
 import co.com.carpco.altablero.entity.ClassRoomBO;
 import co.com.carpco.altablero.entity.GradeBO;
+import co.com.carpco.altablero.entity.TimeBO;
 import co.com.carpco.altablero.entity.UserBO;
-import co.com.carpco.altablero.entity.UserTypeBO;
 import co.com.carpco.altablero.entity.YearBO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -37,15 +39,19 @@ import org.springframework.web.servlet.ModelAndView;
 public class ClassRoomController extends AbstractController {
     
     private static final String CLASSROOM_EDIT_PAGE = "/admin/cursos/edicion";
-    private static final String CLASSROOM_PAGE = "/admin/cursos";
+    private static final String CLASSROOM_LIST_PAGE = "/admin/cursos";
+    private static final String CLASSROOM_SAVE_PAGE = "/admin/cursos/edicion/guardar";
+    
     private static final String CLASSROOM_EDIT_MODEL = "admin/classroom/edit";
     private static final String CLASSROOM_MODEL = "admin/classroom/list";
     
     private static final String CLASSROOM_PARAMETER = "classroom";
     private static final String CLASSROOM_LIST_PARAMETER = "classrooms";
+    private static final String CURRENT_YEAR_PARAMETER = "currentYear";
     private static final String GRADE_PARAMETER = "grade";
     private static final String GRADE_LIST_PARAMETER = "grades";
     private static final String TEACHER_LIST_PARAMETER = "teachers";
+    private static final String TIME_LIST_PARAMETER = "times";
     private static final String YEAR_PARAMETER = "year";
     private static final String YEAR_LIST_PARAMETER = "years";
     
@@ -56,12 +62,15 @@ public class ClassRoomController extends AbstractController {
     private GradeBLL gradeBLL;
     
     @Autowired
-    private YearBLL yearBLL;
-    
-    @Autowired
     private UserBLL userBLL;
     
-    @RequestMapping(value = CLASSROOM_PAGE, method = { RequestMethod.GET, RequestMethod.POST })
+    @Autowired
+    private TimeBLL timeBLL;
+    
+    @Autowired
+    private YearBLL yearBLL;
+    
+    @RequestMapping(value = CLASSROOM_LIST_PAGE, method = { RequestMethod.GET, RequestMethod.POST })
     public ModelAndView classRoomPage(@RequestParam(value = YEAR_PARAMETER, required = false) String year, 
             @RequestParam(value = GRADE_PARAMETER, required = false) Integer grade) throws IOException {
         ModelAndView model = null;
@@ -78,15 +87,52 @@ public class ClassRoomController extends AbstractController {
     
     @RequestMapping(value = CLASSROOM_EDIT_PAGE, method = { RequestMethod.GET, RequestMethod.POST })
     public ModelAndView classRoomEdit(@RequestParam(value = "classroomId", required = false) Integer idClassRoom) {
+        ClassRoomBO classRoomBO = (idClassRoom != null && idClassRoom > 0) ? 
+                this.getClassRoom(idClassRoom) : null;
+        return this.buildEditPageModel(classRoomBO);
+    }
+    
+    @RequestMapping(value = CLASSROOM_SAVE_PAGE, method = RequestMethod.POST)
+    public ModelAndView saveInformation(@RequestParam(value = "classroomId", required = true) Integer idClassRoom,
+            @RequestParam(value = "year", required = true) int idYear,
+            @RequestParam(value = "grade", required = true) int idGrade,
+            @RequestParam(value = "time", required = true) int idTime,
+            @RequestParam(value = "director", required = true) int idUser,
+            @RequestParam(value = "code", required = true) String code,
+            @RequestParam(value = "name", required = true) String name) {
+        
+        ModelAndView view = null;
+        ClassRoomBO classRoom = new ClassRoomBO(0, code, name, this.getSchoolId(), 
+                idYear, idGrade, idUser, idTime, new Date(), new Date(), true);
+        try {
+            ClassRoomBO savedClassRoomBO = classRoomBLL.saveClassRoom(classRoom);
+            if (savedClassRoomBO != null) {
+                view = this.buildEditPageModel(savedClassRoomBO);
+            } else {
+                view = this.buildEditPageModel(classRoom);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ClassRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return view;
+    }
+    
+    private ModelAndView buildEditPageModel(ClassRoomBO classRoomBO) {
         ModelAndView model = null;
         try {
             model = this.buildModelAndView();
             model.setViewName(CLASSROOM_EDIT_MODEL);
-            this.addTeacherListToModel(model);
-            this.addClassRoomIdToModel(model, idClassRoom);
+            UserBO currentDirector = null;
+            if(classRoomBO != null) {
+                currentDirector = classRoomBO.getUserBO();
+                model.addObject(CLASSROOM_PARAMETER, classRoomBO);
+            }
+            this.addTeacherListToModel(model, currentDirector);
             this.addObjectsToClassRoomPages(model);
+            model.addObject(CURRENT_YEAR_PARAMETER, yearBLL.findCurrentYear());
         } catch (IOException ex) {
             model = LoginController.buildRedirectLoginModel();
+            Logger.getLogger(ClassRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }  
         return model;
     }
@@ -94,6 +140,7 @@ public class ClassRoomController extends AbstractController {
     private void addObjectsToClassRoomPages(ModelAndView model) {
         this.addYearListToModel(model);
         this.addGradeListToModel(model);
+        this.addTimeListToModel(model);
     }
     
     private Set<ClassRoomBO> getClassRoomSet(String year, Integer grade) {
@@ -102,9 +149,9 @@ public class ClassRoomController extends AbstractController {
             year = this.getDefaultYear();
         }
         try {
-            classRoomBOSet = classRoomBLL.findClassRooms(this.getSchoolId(), year, grade, null);
+            classRoomBOSet = classRoomBLL.findClassRooms(this.getSchoolId(), year, grade, null, null);
         } catch (IOException ex) {
-            
+            Logger.getLogger(ClassRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return classRoomBOSet;
     }
@@ -112,15 +159,12 @@ public class ClassRoomController extends AbstractController {
     private ClassRoomBO getClassRoom(Integer idClassRoom) {
         ClassRoomBO classRoomBO = null;
         try {
-            Set<ClassRoomBO> classRoomBOSet = classRoomBLL.findClassRooms(this.getSchoolId(), null, null, idClassRoom);
-            if (!classRoomBOSet.isEmpty()) {
-                for(ClassRoomBO newClassRoomBO : classRoomBOSet) {
-                    classRoomBO = newClassRoomBO;
-                    break;
-                }
+            Set<ClassRoomBO> classRoomBOSet = classRoomBLL.findClassRooms(this.getSchoolId(), null, null, null, idClassRoom);
+            if (classRoomBOSet != null && !classRoomBOSet.isEmpty()) {
+                classRoomBO = classRoomBOSet.iterator().next();
             }
         } catch (IOException ex) {
-            
+            Logger.getLogger(ClassRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return classRoomBO;
     }
@@ -140,9 +184,24 @@ public class ClassRoomController extends AbstractController {
             yearBOList = new ArrayList<>(yearBLL.findAll());
             Collections.sort(yearBOList);
         } catch (IOException ex) {
-            
+            Logger.getLogger(ClassRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }        
         return yearBOList;
+    }
+    
+    private void addTimeListToModel(ModelAndView model) {
+        model.addObject(TIME_LIST_PARAMETER, this.getTimeList());
+    }
+    
+    private List<TimeBO> getTimeList() {
+        List<TimeBO> timeBOList = null;
+        try {
+            timeBOList = new ArrayList<>(timeBLL.findAll());
+            Collections.sort(timeBOList);
+        } catch (IOException ex) {
+            Logger.getLogger(ClassRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return timeBOList;
     }
     
     private void addGradeListToModel(ModelAndView model) {
@@ -160,26 +219,25 @@ public class ClassRoomController extends AbstractController {
         return gradeBOList;
     }
     
-    private void addTeacherListToModel(ModelAndView model) {
-        model.addObject(TEACHER_LIST_PARAMETER, this.getTeacherList());
+    private void addTeacherListToModel(ModelAndView model, UserBO currentDirector) {        
+        model.addObject(TEACHER_LIST_PARAMETER, this.getTeacherNoDirectorsList(currentDirector));
     }
     
-    private List<UserBO> getTeacherList() {
+    private List<UserBO> getTeacherNoDirectorsList(UserBO currentDirector) {
         List<UserBO> userList = null;
         try {
-            userList = new ArrayList<>( 
-                    userBLL.findUsersByUserType(this.getSchoolId(), UserTypeBO.getTeacherCode()));
+            Set<UserBO> teacherAvailableSet = userBLL.findTeacherNoDirectors(this.getSchoolId());
+            userList = new ArrayList<>();
+            if (teacherAvailableSet != null) {
+                userList.addAll(teacherAvailableSet);
+            }
+            if (currentDirector != null) {
+                userList.add(currentDirector);
+            }
             Collections.sort(userList);
         } catch (IOException ex) {
             Logger.getLogger(ClassRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return userList;
-    }
-    
-    private void addClassRoomIdToModel(ModelAndView model, Integer idClassRoom) {
-        if(idClassRoom != null && idClassRoom > 0) {
-            ClassRoomBO classRoomBO = this.getClassRoom(idClassRoom);
-            model.addObject(CLASSROOM_PARAMETER, classRoomBO);
-        }
     }
 }

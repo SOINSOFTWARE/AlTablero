@@ -41,15 +41,11 @@ public class HttpRequest implements ResponseHandler<String>{
         return this.getResponse(httpget);
     }
     
-    public String sendPost(String method) throws IOException {
+    public String sendPost(String method, String object) throws IOException {
         String completeUrl = URL + method;
         HttpPost httppost = new HttpPost(completeUrl);
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("sn", "C02G8416DRJM"));
-        urlParameters.add(new BasicNameValuePair("cn", ""));
-        urlParameters.add(new BasicNameValuePair("locale", ""));
-        urlParameters.add(new BasicNameValuePair("caller", ""));
-        urlParameters.add(new BasicNameValuePair("num", "12345"));
+        urlParameters.add(new BasicNameValuePair("object", object));
         httppost.setEntity(new UrlEncodedFormEntity(urlParameters));
         return this.getResponse(httppost);
     }

@@ -5,8 +5,8 @@
  */
 package co.com.carpco.altablero.bll;
 
-import co.com.carpco.altablero.entity.YearBO;
-import co.com.carpco.altablero.json.mapper.YearMapper;
+import co.com.carpco.altablero.entity.TimeBO;
+import co.com.carpco.altablero.json.mapper.TimeMapper;
 import co.com.carpco.altablero.utils.HttpRequest;
 import java.io.IOException;
 import java.util.Set;
@@ -19,24 +19,19 @@ import org.springframework.stereotype.Service;
  * @since 29/06/2015
  */
 @Service
-public class YearBLL {
+public class TimeBLL {
     
-    private static final String FIND_ALL = "year/all";
-    private static final String FIND_CURRENT_YEAR = "year/currentYear";
+    private static final String FIND_ALL = "time/all";
     
     @Autowired
     private HttpRequest httpRequest;
     
     @Autowired
-    private YearMapper yearMapper;
+    private TimeMapper timeMapper;
     
-    public Set<YearBO> findAll() throws IOException {
+    public Set<TimeBO> findAll() throws IOException {
         String response = httpRequest.sendGet(FIND_ALL);
-        return yearMapper.getObjectSetFromJSON(response);
+        return timeMapper.getObjectSetFromJSON(response);
     }
     
-    public YearBO findCurrentYear() throws IOException {
-        String response = httpRequest.sendGet(FIND_CURRENT_YEAR);
-        return yearMapper.getObjectFromJSON(response);
-    }
 }

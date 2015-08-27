@@ -19,27 +19,60 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>, 
 
     private GradeBO gradeBO;
 
-    private YearBO yearBO;
+    private SchoolBO schoolBO;
+
+    private TimeBO timeBO;
 
     private UserBO userBO;
 
-    private SchoolBO schoolBO;
+    private YearBO yearBO;
+
+    private int idGrade;
+
+    private int idSchool;
+
+    private int idTime;
+
+    private int idUser;
+
+    private int idYear;
 
     public ClassRoomBO() {
         super();
     }
-    
-    public ClassRoomBO(int id, String name, boolean enabled, Date creation, Date updated) {
-        super(id, name, enabled, creation, updated);
+
+    public ClassRoomBO(int id, String code, String name, boolean enabled, Date creation, Date updated) {
+        super(id, code, name, enabled, creation, updated);
     }
-    
-    public ClassRoomBO(int id, String name, boolean enabled, Date creation, Date updated,
-            GradeBO gradeBO, YearBO yearBO, UserBO userBO, SchoolBO schoolBO) {
-        super(id, name, enabled, creation, updated);
-        this.gradeBO = gradeBO;
-        this.yearBO = yearBO;
-        this.userBO = userBO;
-        this.schoolBO = schoolBO;
+
+    public ClassRoomBO(int id, String code, String name, int idSchool, int idYear,
+            int idGrade, int idUser, int idTime, Date creation, Date updated, boolean enabled) {
+        super(id, code, name, enabled, creation, updated);
+        this.idGrade = idGrade;
+        this.idSchool = idSchool;
+        this.idTime = idTime;
+        this.idUser = idUser;
+        this.idYear = idYear;
+    }
+
+    public int getIdGrade() {
+        return this.idGrade;
+    }
+
+    public int getIdSchool() {
+        return this.idSchool;
+    }
+
+    public int getIdTime() {
+        return this.idTime;
+    }
+
+    public int getIdUser() {
+        return this.idUser;
+    }
+
+    public int getIdYear() {
+        return this.idYear;
     }
 
     /**
@@ -57,17 +90,25 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>, 
     }
 
     /**
-     * @return the year
+     * @return the schoolBO
      */
-    public YearBO getYearBO() {
-        return yearBO;
+    public SchoolBO getSchoolBO() {
+        return schoolBO;
     }
 
     /**
-     * @param yearBO the year to set
+     * @param schoolBO the schoolBO to set
      */
-    public void setYearBO(YearBO yearBO) {
-        this.yearBO = yearBO;
+    public void setSchoolBO(SchoolBO schoolBO) {
+        this.schoolBO = schoolBO;
+    }
+
+    public TimeBO getTimeBO() {
+        return timeBO;
+    }
+
+    public void setTimeBO(TimeBO timeBO) {
+        this.timeBO = timeBO;
     }
 
     /**
@@ -85,17 +126,17 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>, 
     }
 
     /**
-     * @return the schoolBO
+     * @return the year
      */
-    public SchoolBO getSchoolBO() {
-        return schoolBO;
+    public YearBO getYearBO() {
+        return yearBO;
     }
 
     /**
-     * @param schoolBO the schoolBO to set
+     * @param yearBO the year to set
      */
-    public void setSchoolBO(SchoolBO schoolBO) {
-        this.schoolBO = schoolBO;
+    public void setYearBO(YearBO yearBO) {
+        this.yearBO = yearBO;
     }
 
     @Override
@@ -111,6 +152,7 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>, 
         hash = 71 * hash + Objects.hashCode(this.yearBO);
         hash = 71 * hash + Objects.hashCode(this.userBO);
         hash = 71 * hash + Objects.hashCode(this.schoolBO);
+        hash = 71 * hash + Objects.hashCode(this.timeBO);
         return hash;
     }
 
@@ -153,17 +195,18 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>, 
         if (!Objects.equals(this.schoolBO, other.schoolBO)) {
             return false;
         }
+        if (!Objects.equals(this.timeBO, other.timeBO)) {
+            return false;
+        }
         return true;
     }
-    
-    
 
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "ClassRoomBO [gradeBO=" + gradeBO + ", yearBO=" + yearBO
+        return "ClassRoomBO [gradeBO=" + gradeBO + ", yearBO=" + yearBO + ", timeBO=" + timeBO
                 + ", userBO=" + userBO + ", schoolBO=" + schoolBO + ", id="
                 + id + ", code=" + code + ", name=" + name + ", creation="
                 + creation + ", updated=" + updated + ", enabled=" + enabled

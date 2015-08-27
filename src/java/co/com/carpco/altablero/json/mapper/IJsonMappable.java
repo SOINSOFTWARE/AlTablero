@@ -5,11 +5,10 @@
  */
 package co.com.carpco.altablero.json.mapper;
 
-import java.text.ParseException;
-import java.util.Map;
 import java.util.Set;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectWriter;
 
 /**
  *
@@ -22,6 +21,8 @@ public interface IJsonMappable<T> {
     static final ObjectMapper JSON_MAPPER = new ObjectMapper()
             .configure(DeserializationConfig.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
             .configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    
+    static final ObjectWriter JSON_WRITER = new ObjectMapper().writer().withDefaultPrettyPrinter();
     
     public T getObjectFromJSON(String objectAsJSON);
     
