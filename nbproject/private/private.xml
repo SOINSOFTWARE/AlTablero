@@ -4,9 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/web/WEB-INF/pages/admin/classroom/edit.jsp</file>
-            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/spring/web/controller/ClassRoomController.java</file>
-            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/entity/ClassRoomBO.java</file>
-            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/carpco/altablero/bll/ClassRoomBLL.java</file>
+            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/soinsoftware/altablero/bll/ClassRoomBLL.java</file>
+            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/soinsoftware/altablero/request/ClassRoomRequestHandler.java</file>
         </group>
     </open-files>
 </project-private>

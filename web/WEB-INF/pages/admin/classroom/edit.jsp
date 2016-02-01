@@ -18,35 +18,69 @@
                     <h1>Salones<small><c:choose><c:when test="${empty classroom}">Crear</c:when><c:otherwise>Editar</c:otherwise></c:choose></small></h1>
                     <ol class="breadcrumb">
                         <li><a href="<c:url value="/admin/general" />"><i class="fa fa-dashboard"></i> Inicio</a></li>
-                        <li><i class="fa fa-edit"></i> Salones</li>
+                        <li><a href="<c:url value="/admin/cursos" />"><i class="fa fa-edit"></i> Salones</a></li>
                         <li class="active"><c:choose><c:when test="${empty classroom}">Crear</c:when><c:otherwise>Editar</c:otherwise></c:choose></li>
                     </ol>
                 </section>
                 <section class="content">
+                    <c:if test="${not empty classroom && classroom.id > 0}">
+                        <c:set var="updateMode" value="true" />
+                    </c:if>
                     <c:choose>
-                        <c:when test="${not empty classroom.yearBO.id && classroom.yearBO.id != currentYear.id}">
+                        <c:when test="${not empty classroom.yearBO.id && 
+                            (classroom.yearBO.id != currentYear.id || not classroom.enabled)}">
                            <c:set var="disabled" value='readonly="readonly"' />
+                           <c:set var="disabledForSelect" value='disabled="true"' />
                         </c:when>
                     </c:choose>
                     <div class="row">
                         <div class="col-xs-12">
-                            <div class="box box-tools">
-                                <c:if test="${empty disabled}">
-                                    <a href="#" id="save-link" class="btn btn-social-icon btn-success" style="margin: 8px; margin-left: 15px">
-                                        <i class="fa fa-save" title="Guardar"></i>
-                                    </a>
-                                </c:if>
-                                <c:if test="${not empty classroom || classroom.id > 0}">
-                                    <a href="#" id="deactivate-link" class="btn btn-social-icon btn-google-plus" style="margin: 8px">
-                                        <i class="fa fa-minus-circle" title="Eliminar"></i>
-                                    </a>
-                                </c:if>
-                            </div>
                             <div class="box box-primary">
+                                <br/>
                                 <div class="box-header">
-                                    <h3 class="box-title"></h3>
+                                    <c:if test="${empty disabled}">
+                                        <a href="#" id="save-link" class="btn btn-app">
+                                            <i class="fa fa-save"></i> Guardar
+                                        </a>
+                                    </c:if>
+                                    <c:if test="${not empty updateMode && classroom.enabled}">
+                                        <a href="#" id="deactivate-link" class="btn btn-app">
+                                            <i class="fa fa-minus-circle"></i> Eliminar
+                                        </a>
+                                    </c:if>
+                                    <a href="#" id="cancel-link" class="btn btn-app">
+                                        <i class="fa fa-angle-left"></i> Volver
+                                    </a>
                                 </div>
-                                <div class="box-body">
+                                <div class="box-body">                                    	
+                                    <c:if test="${hasServerErrors}">
+                                        <div class="alert alert-danger alert-dismissable">
+                                            <i class="fa fa-ban"></i>
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                            <b>Error!</b> Por favor contacte a SOIN Software.
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${invalidCode}">
+                                        <div class="alert alert-danger alert-dismissable">
+                                            <i class="fa fa-ban"></i>
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                            <b>Error!</b> El c&oacute;digo del sal&oacute;n ${classroom.code} ya est&aacute; siendo usado.
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${saved}">
+                                        <div class="alert alert-success alert-dismissable">
+                                            <i class="fa fa-check"></i>
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                            <b>Guardar!</b> Los datos han sido salvados exitosamente.
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${deactivated}">
+                                        <div class="alert alert-success alert-dismissable">
+                                            <i class="fa fa-check"></i>
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                            <b>Eliminar!</b> El sal&oacute;n ha sido eliminado.
+                                        </div>
+                                    </c:if>
                                     <form id="frmClassRoomDelete" name="frmClassRoomDelete" method="POST"
                                           action="<c:url value='/admin/cursos/edicion/desactivar?${_csrf.parameterName}=${_csrf.token}' />">
                                         <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
@@ -61,13 +95,10 @@
                                             <tr>
                                                 <td>
                                                     <div id="divYear" class="form-group">
-                                                        <select id="year" name="year" class="form-control" readonly="readonly" >
-                                                            <c:forEach items="${years}" var="year">
-                                                                <option value="${year.id}" <c:if test="${classroom.yearBO.id == year.id}">selected</c:if>>
-                                                                    ${year.name}
-                                                                </option>
-                                                            </c:forEach>
-                                                        </select>
+                                                        <input id="yearName" name="yearName" type="text" maxlength="4" class="form-control" placeholder="A&ntilde;o" 
+                                                               value="<c:choose><c:when test="${not empty updateMode}">${classroom.yearBO.name}</c:when><c:otherwise>${currentYear.name}</c:otherwise></c:choose>"
+                                                               autocomplete="off" disabled=true" />
+                                                        <input type="hidden" id="year" name="year" value="<c:choose><c:when test="${not empty updateMode}">${classroom.yearBO.id}</c:when><c:otherwise>${currentYear.id}</c:otherwise></c:choose>" />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -78,10 +109,10 @@
                                                 <td>
                                                     <div id="divGrade" class="form-group">
                                                         <label id="lblGrade" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
-                                                        <select id="grade" name="grade" class="form-control" ${disabled}>
+                                                        <select id="grade" name="grade" class="form-control" ${disabledForSelect}>
                                                             <option value="0">Seleccione uno...</option>
                                                             <c:forEach items="${grades}" var="grade">
-                                                                <option value="${grade.id}" <c:if test="${classroom.gradeBO.id == grade.id}">selected</c:if>>
+                                                                <option value="${grade.id}" <c:if test="${classroom.gradeBO.id == grade.id || classroom.idGrade == grade.id}">selected</c:if>>
                                                                     ${grade.name}
                                                                 </option>
                                                             </c:forEach>
@@ -96,10 +127,10 @@
                                                 <td>
                                                     <div id="divTime" class="form-group">
                                                         <label id="lblTime" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
-                                                        <select id="time" name="time" class="form-control" ${disabled}>
+                                                        <select id="time" name="time" class="form-control" ${disabledForSelect}>
                                                             <option value="0">Seleccione uno...</option>
                                                             <c:forEach items="${times}" var="time">
-                                                                <option value="${time.id}" <c:if test="${classroom.timeBO.id == time.id}">selected</c:if>>
+                                                                <option value="${time.id}" <c:if test="${classroom.timeBO.id == time.id || classroom.idTime == time.id}">selected</c:if>>
                                                                     ${time.name}
                                                                 </option>
                                                             </c:forEach>
@@ -114,10 +145,10 @@
                                                 <td>
                                                     <div id="divDirector" class="form-group">
                                                         <label id="lblDirector" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
-                                                        <select id="director" name="director" class="form-control" ${disabled}>
+                                                        <select id="director" name="director" class="form-control" ${disabledForSelect}>
                                                             <option value="0">Seleccione uno...</option>
                                                             <c:forEach items="${teachers}" var="teacher">
-                                                                <option value="${teacher.id}" <c:if test="${classroom.userBO.id == teacher.id}">selected</c:if>>
+                                                                <option value="${teacher.id}" <c:if test="${classroom.userBO.id == teacher.id || classroom.idUser == teacher.id}">selected</c:if>>
                                                                     ${teacher.name} ${teacher.lastName}
                                                                 </option>
                                                             </c:forEach>
@@ -148,7 +179,7 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                    </form>
+                                    </form>                                    
                                 </div>
                             </div>
                         </div>
@@ -159,7 +190,7 @@
                    
         <div id="save-dialog" title="Guardar">
             <c:choose>
-                <c:when test="${empty classroom}">
+                <c:when test="${empty updateMode}">
                     <p>Un nuevo sal&oacute;n ser&aacute; creado, ¿Deseas cotinuar con la acci&oacute;n?</p>
                 </c:when>
                 <c:otherwise>
@@ -193,6 +224,7 @@
                     text: "Guardar",
                     click: function() {
                         $( this ).dialog( "close" );
+                        $( "<div class='overlay'></div><div class='loading-img'></div>" ).appendTo( ".box-primary" );
                         document.getElementById("frmClassRoomSave").submit();
                     }
                 },
@@ -213,6 +245,7 @@
                     text: "Eliminar",
                     click: function() {
                         $( this ).dialog( "close" );
+                        $( "<div class='overlay'></div><div class='loading-img'></div>" ).appendTo( ".box-primary" );
                         document.getElementById("frmClassRoomDelete").submit();
                     }
                 },
@@ -241,7 +274,7 @@
                 if($.trim($("#code").val()) !== '' && $.trim($("#name").val()) !== '' && $("#year").val() !== '0' 
                         && $("#grade").val() !== '0' && $("#time").val() !== '0' && $("#director").val() !== '0') {
                     <c:choose>
-                        <c:when test="${empty classroom}">
+                        <c:when test="${empty updateMode}">
                             $( "#save-dialog" ).dialog( "open" );
                         </c:when>
                         <c:otherwise>
@@ -306,6 +339,11 @@
             
             $( "#deactivate-link" ).click(function( event ) {
                 $( "#deactivate-dialog" ).dialog( "open" );
+                event.preventDefault();
+            });
+            
+            $( "#cancel-link" ).click(function( event ) {
+                window.location.href = "/AlTablero/admin/cursos";
                 event.preventDefault();
             });
         </script>
