@@ -12,8 +12,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- *
  * @author Carlos Rodriguez
+ * @since 03/02/2016
+ * @version 1.0
  */
 @XmlRootElement(name = "classrooms")
 public class ClassRoomBO extends AbstractWithCodeBO implements Comparable<ClassRoomBO>, Serializable {
@@ -47,12 +48,15 @@ public class ClassRoomBO extends AbstractWithCodeBO implements Comparable<ClassR
         super();
     }
 
-    public ClassRoomBO(int id, String code, String name, boolean enabled, Date creation, Date updated) {
+    public ClassRoomBO(final int id, final String code, final String name,
+            final boolean enabled, final Date creation, final Date updated) {
         super(id, code, name, enabled, creation, updated);
     }
 
-    public ClassRoomBO(int id, String code, String name, int idSchool, int idYear,
-            int idGrade, int idUser, int idTime, Date creation, Date updated, boolean enabled) {
+    public ClassRoomBO(final int id, final String code, final String name,
+            final int idSchool, final int idYear, final int idGrade, final int idUser,
+            final int idTime, final Date creation, final Date updated,
+            final boolean enabled) {
         super(id, code, name, enabled, creation, updated);
         this.idGrade = idGrade;
         this.idSchool = idSchool;
@@ -218,8 +222,8 @@ public class ClassRoomBO extends AbstractWithCodeBO implements Comparable<ClassR
 
     @Override
     public int compareTo(ClassRoomBO other) {
-        Integer thisGradeCode = Integer.parseInt(this.gradeBO.getCode());
-        Integer otherGradeCode = Integer.parseInt(other.getGradeBO().getCode());
-        return thisGradeCode.compareTo(otherGradeCode) + this.code.compareTo(other.getCode());
+        final GradeBO itsGrade = this.gradeBO;
+        final GradeBO otherGrade = other.getGradeBO();
+        return (itsGrade.compareTo(otherGrade) * this.name.compareTo(other.getName())) * -1;
     }
 }

@@ -5,12 +5,10 @@
  */
 package co.com.soinsoftware.altablero.controller;
 
-import co.com.soinsoftware.altablero.bll.TimeBLL;
-import co.com.soinsoftware.altablero.entity.TimeBO;
+import co.com.soinsoftware.altablero.bll.SubjectBLL;
+import co.com.soinsoftware.altablero.entity.SubjectBO;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +18,13 @@ import org.springframework.stereotype.Service;
  * @version 1.0
  */
 @Service
-public class TimeController {
+public class SubjectController {
 
     @Autowired
-    private TimeBLL timeBLL;
+    private SubjectBLL subjectBLL;
 
-    public List<TimeBO> findAll() throws IOException {
-        List<TimeBO> timeBOList = timeBOList = new ArrayList<>(timeBLL.findAll());
-        Collections.sort(timeBOList);
-        return timeBOList;
+    public Set<SubjectBO> findExcludingClass(final int idClassRoom)
+            throws IOException {
+        return subjectBLL.findExcludingClass(idClassRoom);
     }
 }

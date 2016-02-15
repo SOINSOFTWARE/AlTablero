@@ -8,20 +8,16 @@ package co.com.soinsoftware.altablero.json.mapper;
 import co.com.soinsoftware.altablero.entity.SchoolBO;
 import java.io.IOException;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Carlos Rodriguez
- * @version 1.0
  * @since 17/03/2015
+ * @version 1.0
  */
 @Service
 public class SchoolMapper implements IJsonMappable<SchoolBO> {
-    
-    protected static final Logger LOGGER = LoggerFactory.getLogger(SchoolMapper.class);
 
     @Override
     public SchoolBO getObjectFromJSON(String objectAsJSON) {
@@ -38,6 +34,6 @@ public class SchoolMapper implements IJsonMappable<SchoolBO> {
 
     @Override
     public Set<SchoolBO> getObjectSetFromJSON(String objectAsJSON) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

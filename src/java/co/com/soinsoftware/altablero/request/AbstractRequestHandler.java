@@ -11,6 +11,7 @@ import co.com.soinsoftware.altablero.entity.UserBO;
 import co.com.soinsoftware.altablero.utils.AuthenticationUtils;
 import co.com.soinsoftware.altablero.utils.RoleUtils;
 import java.io.IOException;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,11 @@ public abstract class AbstractRequestHandler {
 
     protected int getIdSchool() {
         final UserBO user = this.getLogeduser();
-        final SchoolBO school = (user != null) ? user.getSchool() : null;
-        return (school != null) ? school.getId() : 0;
+        final Set<SchoolBO> schoolSet = (user != null) ? user.getSchoolSet() : null;
+        int idSchool = 0;
+        for (final SchoolBO school : schoolSet) {
+            idSchool = school.getId();
+        }
+        return idSchool;
     }
 }

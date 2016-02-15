@@ -10,8 +10,9 @@ import java.util.Objects;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- *
- * @author carlosandres
+ * @author Carlos Rodriguez
+ * @since 03/02/2016
+ * @version 1.0
  */
 public class AbstractBO {
     

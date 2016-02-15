@@ -16,7 +16,7 @@
             <c:if test="${canViewGradeMenu}">
                 <li class="treeview">                            
                     <a id="refClassRoom" href="#">
-                        <i class="fa fa-edit"></i> <span>Cursos</span>
+                        <i class="fa fa-edit"></i> <span>Salones</span>
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
@@ -27,10 +27,10 @@
                             <li><a href="<c:url value="/admin/cursos/edicion" />"><i class="fa fa-angle-double-right"></i> Crear</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('CURMA')}">
-                            <li><a href="pages/forms/editors.html"><i class="fa fa-angle-double-right"></i> Asociar materias</a></li>
+                            <li><a href="<c:url value="/admin/cursos/clases" />"><i class="fa fa-angle-double-right"></i> Crear clases</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('CURES')}">
-                            <li><a href="pages/forms/editors.html"><i class="fa fa-angle-double-right"></i> Asociar estudiantes</a></li>
+                            <li><a href="<c:url value="/admin/cursos/estudiantes" />"><i class="fa fa-angle-double-right"></i> Matricular</a></li>
                         </c:if>
                     </ul>
                 </li>

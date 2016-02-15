@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author Carlos Rodriguez
+ * @since 03/02/2016
+ * @version 1.0
  */
 @Service
 public class UserController {
@@ -24,7 +26,7 @@ public class UserController {
     @Autowired
     private UserBLL userBLL;
 
-    public List<UserBO> findTeachersNoGroupDirector(final int idSchool,
+    public List<UserBO> findTeachersNotGroupDirector(final int idSchool,
             final UserBO currentDirector) throws IOException {
         List<UserBO> userList = null;
         final Set<UserBO> teacherAvailableSet = userBLL.findTeacherNoDirectors(idSchool);
@@ -36,6 +38,17 @@ public class UserController {
             userList.add(currentDirector);
         }
         Collections.sort(userList);
+        return userList;
+    }
+    
+    public List<UserBO> findUsersByUserType(final int idSchool, final String cdUserType)
+            throws IOException {
+        List<UserBO> userList = new ArrayList<>();
+        final Set<UserBO> userSet = userBLL.findUsersByUserType(idSchool, cdUserType);
+        if (userSet != null) {
+            userList = new ArrayList<>(userSet);
+            Collections.sort(userList);
+        }
         return userList;
     }
 }

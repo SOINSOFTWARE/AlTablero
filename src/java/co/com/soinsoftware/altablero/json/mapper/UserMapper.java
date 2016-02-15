@@ -12,22 +12,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.codehaus.jackson.type.TypeReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
  * @author Carlos Rodriguez
- * @version 1.0
  * @since 31/03/2015
+ * @version 1.0
  */
 @Service
 public class UserMapper implements IJsonMappable<UserBO> {
-
-    /**
-     * Logger object
-     */
-    protected static final Logger LOGGER = LoggerFactory.getLogger(UserMapper.class);
 
     @Override
     public UserBO getObjectFromJSON(String objectAsJSON) {
@@ -47,8 +40,10 @@ public class UserMapper implements IJsonMappable<UserBO> {
         Set<UserBO> userSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                Map<String, List<UserBO>> userMap =
-                    JSON_MAPPER.readValue(objectAsJSON, new TypeReference<Map<String, List<UserBO>>>() { });
+                Map<String, List<UserBO>> userMap
+                        = JSON_MAPPER.readValue(objectAsJSON,
+                                new TypeReference<Map<String, List<UserBO>>>() {
+                                });
                 if (userMap != null && !userMap.isEmpty()) {
                     userSet = new HashSet(userMap.values().iterator().next());
                 }

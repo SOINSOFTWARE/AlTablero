@@ -5,8 +5,7 @@
  */
 package co.com.soinsoftware.altablero.json.mapper;
 
-import co.com.soinsoftware.altablero.entity.TimeBO;
-import static co.com.soinsoftware.altablero.json.mapper.IJsonMappable.JSON_MAPPER;
+import co.com.soinsoftware.altablero.entity.ClassBO;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -17,41 +16,41 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author Carlos Rodriguez
- * @since 27/08/2015
+ * @since 05/02/2016
  * @version 1.0
  */
 @Service
-public class TimeMapper implements IJsonMappable<TimeBO> {
+public class ClassMapper implements IJsonMappable<ClassBO> {
 
     @Override
-    public TimeBO getObjectFromJSON(String objectAsJSON) {
-        TimeBO timeBO = null;
+    public ClassBO getObjectFromJSON(String objectAsJSON) {
+        ClassBO classBO = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                timeBO = JSON_MAPPER.readValue(objectAsJSON, TimeBO.class);
+                classBO = JSON_MAPPER.readValue(objectAsJSON, ClassBO.class);
             } catch (IOException ex) {
-                LOGGER.error(ex.getMessage());
+                LOGGER.error(ex.getMessage(), ex);
             }
         }
-        return timeBO;
+        return classBO;
     }
 
     @Override
-    public Set<TimeBO> getObjectSetFromJSON(String objectAsJSON) {
-        Set<TimeBO> timeBOSet = null;
+    public Set<ClassBO> getObjectSetFromJSON(String objectAsJSON) {
+        Set<ClassBO> classBOSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                Map<String, List<TimeBO>> timeMap
+                Map<String, List<ClassBO>> classMap
                         = JSON_MAPPER.readValue(objectAsJSON,
-                                new TypeReference<Map<String, List<TimeBO>>>() {
+                                new TypeReference<Map<String, List<ClassBO>>>() {
                                 });
-                if (timeMap != null && !timeMap.isEmpty()) {
-                    timeBOSet = new HashSet(timeMap.values().iterator().next());
+                if (classMap != null && !classMap.isEmpty()) {
+                    classBOSet = new HashSet(classMap.values().iterator().next());
                 }
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());
             }
         }
-        return timeBOSet;
+        return classBOSet;
     }
 }

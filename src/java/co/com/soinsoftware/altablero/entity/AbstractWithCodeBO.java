@@ -11,6 +11,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * @author Carlos Rodriguez
+ * @since 03/02/2016
+ * @version 1.0
  */
 public class AbstractWithCodeBO extends AbstractBO{
     
@@ -21,7 +23,8 @@ public class AbstractWithCodeBO extends AbstractBO{
         super();
     }
     
-    public AbstractWithCodeBO(int id, String code, String name, boolean enabled, Date creation, Date updated) {
+    public AbstractWithCodeBO(final int id, final String code, final String name,
+            final boolean enabled, final Date creation, final Date updated) {
         super();
         this.id = id;
         this.code = code;
@@ -47,7 +50,7 @@ public class AbstractWithCodeBO extends AbstractBO{
 
     @Override
     public int hashCode() {
-        int hash = 5;
+        int hash = super.hashCode();
         hash = 61 * hash + Objects.hashCode(this.code);
         return hash;
     }
@@ -58,6 +61,9 @@ public class AbstractWithCodeBO extends AbstractBO{
             return false;
         }
         if (getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
             return false;
         }
         final AbstractWithCodeBO other = (AbstractWithCodeBO) obj;

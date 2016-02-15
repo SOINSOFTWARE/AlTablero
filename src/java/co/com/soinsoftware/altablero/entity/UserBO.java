@@ -7,47 +7,23 @@ package co.com.soinsoftware.altablero.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
  * @author Carlos Rodriguez
+ * @since 03/02/2016
+ * @version 1.0
  */
 @XmlRootElement(name = "users")
-public class UserBO implements Serializable, Comparable<UserBO> {
+public class UserBO extends AbstractBO implements Serializable,
+        Comparable<UserBO> {
 
     public static final String maleAvatar = "avatar5";
     public static final String maleGender = "Masculino";
     public static final String femaleAvatar = "avatar2";
     public static final String femaleGender = "Femenino";
-
-    /**
-     * Identifier
-     */
-    protected Integer id;
-
-    /**
-     * Name
-     */
-    protected String name;
-
-    /**
-     * Creation date
-     */
-    protected Date creation;
-
-    /**
-     * Last update date
-     */
-    protected Date updated;
-
-    /**
-     * Enabled
-     */
-    protected boolean enabled;
 
     private String documentNumber;
 
@@ -73,82 +49,12 @@ public class UserBO implements Serializable, Comparable<UserBO> {
 
     private UserBO guardian2;
 
-    private SchoolBO school;
+    private Set<SchoolBO> schoolSet;
 
     private Set<UserTypeBO> userTypeSet;
 
     public UserBO() {
         super();
-    }
-
-    /**
-     * @return the id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return the creation
-     */
-    public Date getCreation() {
-        return creation;
-    }
-
-    /**
-     * @param creation the creation to set
-     */
-    public void setCreation(Date creation) {
-        this.creation = creation;
-    }
-
-    /**
-     * @return the updated
-     */
-    public Date getUpdated() {
-        return updated;
-    }
-
-    /**
-     * @param updated the updated to set
-     */
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
-
-    /**
-     * @return the enabled
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     * @param enabled the enabled to set
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     /**
@@ -301,12 +207,12 @@ public class UserBO implements Serializable, Comparable<UserBO> {
         this.guardian2 = guardian2;
     }
 
-    public SchoolBO getSchool() {
-        return school;
+    public Set<SchoolBO> getSchoolSet() {
+        return schoolSet;
     }
 
-    public void setSchool(SchoolBO school) {
-        this.school = school;
+    public void setSchoolSet(Set<SchoolBO> schoolSet) {
+        this.schoolSet = schoolSet;
     }
 
     public Set<UserTypeBO> getUserTypeSet() {

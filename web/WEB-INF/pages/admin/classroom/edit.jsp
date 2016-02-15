@@ -9,8 +9,7 @@
         <link href="<c:url value="/res/css/jquery-ui/jquery-ui.min.css" />" rel="stylesheet" type="text/css" />
     </head>
     <body class="skin-blue">
-        <%@include file="../include_body_header.jsp" %>
-                            
+        <%@include file="../include_body_header.jsp" %>                            
         <div class="wrapper row-offcanvas row-offcanvas-left">
             <%@include file="../include_body_menu.jsp" %>
             <aside class="right-side">
@@ -191,10 +190,10 @@
         <div id="save-dialog" title="Guardar">
             <c:choose>
                 <c:when test="${empty updateMode}">
-                    <p>Un nuevo sal&oacute;n ser&aacute; creado, ¿Deseas cotinuar con la acci&oacute;n?</p>
+                    <p>Un nuevo sal&oacute;n ser&aacute; creado, ¿Deseas continuar con la acci&oacute;n?</p>
                 </c:when>
                 <c:otherwise>
-                    <p>El sal&oacute;n ser&aacute; actualizado, ¿Deseas cotinuar con la acci&oacute;n?</p>
+                    <p>El sal&oacute;n ser&aacute; actualizado, ¿Deseas continuar con la acci&oacute;n?</p>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -213,8 +212,7 @@
             $(document).ready(function() {
                 $('#refClassRoom').trigger("click");
             } );
-        </script>
-        <script type="text/javascript">
+            
             $( "#save-dialog" ).dialog({
                 autoOpen: false,
                 width: 400,

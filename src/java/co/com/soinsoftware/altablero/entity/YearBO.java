@@ -10,30 +10,24 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
  * @author Carlos Rodriguez
+ * @since 03/02/2016
+ * @version 1.0
  */
 @XmlRootElement(name = "year")
 public class YearBO extends AbstractBO implements Serializable, Comparable<YearBO> {
 
-    /**
-     * Auto generated serial version
-     */
     private static final long serialVersionUID = -6670213337879299160L;
 
     public YearBO() {
         super();
     }
 
-    public YearBO(int id, String name, boolean enabled, Date creation, Date updated) {
+    public YearBO(final int id, final String name, final boolean enabled,
+            final Date creation, final Date updated) {
         super(id, name, enabled, creation, updated);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "YearBO [id=" + id + ", name=" + name + ", creation=" + creation
@@ -46,5 +40,4 @@ public class YearBO extends AbstractBO implements Serializable, Comparable<YearB
         Integer otherName = Integer.parseInt(other.getName());
         return thisName.compareTo(otherName) * -1;
     }
-
 }

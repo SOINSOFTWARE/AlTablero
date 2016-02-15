@@ -13,20 +13,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.codehaus.jackson.type.TypeReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
- *
  * @author Carlos Rodriguez
- * @version 1.0
  * @since 29/06/2015
+ * @version 1.0
  */
 @Service
 public class YearMapper implements IJsonMappable<YearBO> {
-    
-    protected static final Logger LOGGER = LoggerFactory.getLogger(YearMapper.class);
 
     @Override
     public YearBO getObjectFromJSON(String objectAsJSON) {
@@ -35,24 +30,26 @@ public class YearMapper implements IJsonMappable<YearBO> {
             try {
                 yearBO = JSON_MAPPER.readValue(objectAsJSON, YearBO.class);
             } catch (IOException ex) {
-                LOGGER.error(ex.getMessage());
+                LOGGER.error(ex.getMessage(), ex);
             }
         }
         return yearBO;
     }
-    
+
     @Override
     public Set<YearBO> getObjectSetFromJSON(String objectAsJSON) {
         Set<YearBO> yearBOSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                Map<String, List<YearBO>> yearMap =
-                    JSON_MAPPER.readValue(objectAsJSON, new TypeReference<Map<String, List<YearBO>>>() { });
+                Map<String, List<YearBO>> yearMap
+                        = JSON_MAPPER.readValue(objectAsJSON,
+                                new TypeReference<Map<String, List<YearBO>>>() {
+                                });
                 if (yearMap != null && !yearMap.isEmpty()) {
                     yearBOSet = new HashSet(yearMap.values().iterator().next());
                 }
             } catch (IOException ex) {
-                LOGGER.error(ex.getMessage());
+                LOGGER.error(ex.getMessage(), ex);
             }
         }
         return yearBOSet;

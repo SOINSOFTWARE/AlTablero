@@ -7,28 +7,28 @@ package co.com.soinsoftware.altablero.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Carlos Rodriguez
  * @since 03/02/2016
  * @version 1.0
  */
-@XmlRootElement(name = "schools")
-public class SchoolBO extends AbstractWithCodeBO implements Serializable {
+public class SubjectBO extends AbstractWithCodeBO implements Serializable {
     
-    public SchoolBO() {
+    private static final long serialVersionUID = -3541220834853035946L;
+
+    public SubjectBO() {
         super();
     }
     
-    public SchoolBO(final int id, final String code, final String name,
-            final boolean enabled, final Date creation, final Date updated) {
+    public SubjectBO(int id, String code, String name, boolean enabled, Date creation,
+            Date updated) {
         super(id, code, name, enabled, creation, updated);
     }
 
     @Override
     public String toString() {
-        return "SchoolBO [id=" + id + ", code=" + code + ", name=" + name
+        return "SubjectBO [id=" + id + ", code=" + code + ", name=" + name
                 + ", creation=" + creation + ", updated=" + updated
                 + ", enabled=" + enabled + "]";
     }

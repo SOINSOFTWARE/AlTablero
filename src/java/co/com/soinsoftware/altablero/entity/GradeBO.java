@@ -10,30 +10,25 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
  * @author Carlos Rodriguez
+ * @since 03/02/2016
+ * @version 1.0
  */
 @XmlRootElement(name = "grades")
-public class GradeBO extends AbstractWithCodeBO implements Serializable, Comparable<GradeBO> {
+public class GradeBO extends AbstractWithCodeBO implements Serializable,
+        Comparable<GradeBO> {
 
-    /**
-     * Auto generated serial version
-     */
     private static final long serialVersionUID = 5622827774843357933L;
 
     public GradeBO() {
         super();
     }
     
-    public GradeBO(int id, String code, String name, boolean enabled, Date creation, Date updated) {
+    public GradeBO(final int id, final String code, final String name,
+            final boolean enabled, final Date creation, final Date updated) {
         super(id, code, name, enabled, creation, updated);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "GradeBO [id=" + id + ", code=" + code + ", name=" + name
