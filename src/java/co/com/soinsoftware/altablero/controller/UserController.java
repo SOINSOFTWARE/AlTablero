@@ -40,7 +40,7 @@ public class UserController {
         Collections.sort(userList);
         return userList;
     }
-    
+
     public List<UserBO> findUsersByUserType(final int idSchool, final String cdUserType)
             throws IOException {
         List<UserBO> userList = new ArrayList<>();
@@ -50,5 +50,20 @@ public class UserController {
             Collections.sort(userList);
         }
         return userList;
+    }
+
+    public List<UserBO> findStudentsNotLinked(final int idSchool, final Integer idGrade,
+            final Integer idClassRoom) throws IOException {
+        List<UserBO> userList = new ArrayList<>();
+        final Set<UserBO> userSet = userBLL.findStudentsNotLinked(idSchool, idGrade, idClassRoom);
+        if (userSet != null) {
+            userList = new ArrayList<>(userSet);
+            Collections.sort(userList);
+        }
+        return userList;
+    }
+    
+    public List<UserBO> sortUserSet(final Set<UserBO> userSet) {
+        return userBLL.sortUserSet(userSet);
     }
 }

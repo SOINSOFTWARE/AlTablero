@@ -8,6 +8,9 @@ package co.com.soinsoftware.altablero.bll;
 import co.com.soinsoftware.altablero.entity.UserBO;
 import co.com.soinsoftware.altablero.json.mapper.UserMapper;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,14 +40,30 @@ public class UserBLL extends AbstractBLL {
             throws IOException {
         final String methodAndParameters = this.buildFindUserByTypeUrlMethod(
                 idSchool, cdUserType);
-        final String response = httpRequest.sendGet(methodAndParameters);
-        return userMapper.getObjectSetFromJSON(response);
+        return this.sendGetToReceiveSet(methodAndParameters);
     }
 
     public Set<UserBO> findTeacherNoDirectors(final int idSchool)
             throws IOException {
         final String methodAndParameters = this.buildTeacherNoDirectorsUrlMethod(
                 idSchool);
+        return this.sendGetToReceiveSet(methodAndParameters);
+    }
+
+    public Set<UserBO> findStudentsNotLinked(final int idSchool, final Integer idGrade,
+            final Integer idClassRoom) throws IOException {
+        final String methodAndParameters = this.buildStudentsNotLinkedUrlMethod(
+                idSchool, idGrade, idClassRoom);
+        return this.sendGetToReceiveSet(methodAndParameters);
+    }
+    
+    public List<UserBO> sortUserSet(final Set<UserBO> userSet) {
+        List<UserBO> userList = new ArrayList<>(userSet);
+        Collections.sort(userList);
+        return userList;
+    }
+    
+    private Set<UserBO> sendGetToReceiveSet(final String methodAndParameters) throws IOException {
         final String response = httpRequest.sendGet(methodAndParameters);
         return userMapper.getObjectSetFromJSON(response);
     }
@@ -65,6 +84,21 @@ public class UserBLL extends AbstractBLL {
         final StringBuilder urlMethod = new StringBuilder(method);
         urlMethod.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_SCHOOL_ID,
                 idSchool));
+        return urlMethod.toString();
+    }
+
+    private String buildStudentsNotLinkedUrlMethod(final int idSchool,
+            final Integer idGrade, final Integer idClassRoom) {
+        final String method = MODULE_USER + PATH_STUDENTS_NOT_LINKED;
+        final StringBuilder urlMethod = new StringBuilder(method);
+        urlMethod.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_SCHOOL_ID,
+                idSchool));
+        if (idGrade != null && idGrade > 0) {
+            urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_GRADE, idGrade));
+        }
+        if (idClassRoom != null && idClassRoom > 0) {
+            urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_CLASSROOM_ID, idClassRoom));
+        }
         return urlMethod.toString();
     }
 }

@@ -7,7 +7,9 @@ package co.com.soinsoftware.altablero.controller;
 
 import co.com.soinsoftware.altablero.bll.ClassBLL;
 import co.com.soinsoftware.altablero.entity.ClassBO;
+import co.com.soinsoftware.altablero.entity.ClassRoomBO;
 import co.com.soinsoftware.altablero.entity.SubjectBO;
+import co.com.soinsoftware.altablero.entity.UserBO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,13 +26,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ClassController {
-    
+
     @Autowired
     private SubjectController subjectController;
-    
+
     @Autowired
     private ClassBLL classBLL;
-    
+
     public Set<ClassBO> findClasses(final int idSchool, final int idClassRoom)
             throws IOException {
         Set<ClassBO> classSet = classBLL.findClasses(idSchool, idClassRoom);
@@ -49,12 +51,12 @@ public class ClassController {
         }
         return classSet;
     }
-    
+
     public Set<ClassBO> saveClasses(final List<ClassBO> classList)
             throws IOException {
         return classBLL.saveClasses(classList);
     }
-    
+
     public List<ClassBO> buildClassBOListFromString(final int idClassRoom,
             String classesStr) {
         final List<ClassBO> classList = new ArrayList<>();
@@ -68,11 +70,11 @@ public class ClassController {
                     classList.add(classBO);
                 }
                 classesStr = classesStr.substring(finalIndex + 1);
-            } while(classesStr.contains("["));
+            } while (classesStr.contains("["));
         }
         return classList;
     }
-    
+
     private ClassBO buildClassBOFromString(final int idClassRoom, final String classStr) {
         ClassBO classBO = null;
         final String[] properties = classStr.split(";");
@@ -81,7 +83,7 @@ public class ClassController {
         int idTeacher = 0;
         String name = null;
         boolean enabled = false;
-        for(int i = 0; i < properties.length; i++) {
+        for (int i = 0; i < properties.length; i++) {
             final String[] property = properties[i].split("=");
             switch (property[0]) {
                 case "idClass":

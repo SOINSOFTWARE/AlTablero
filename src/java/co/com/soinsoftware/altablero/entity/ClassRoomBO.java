@@ -8,6 +8,7 @@ package co.com.soinsoftware.altablero.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -19,30 +20,34 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @XmlRootElement(name = "classrooms")
 public class ClassRoomBO extends AbstractWithCodeBO implements Comparable<ClassRoomBO>, Serializable {
 
+    private int idGrade;
+
     @JsonProperty("grade")
     private GradeBO gradeBO;
+
+    private int idSchool;
 
     @JsonProperty("school")
     private SchoolBO schoolBO;
 
+    private int idTime;
+
     @JsonProperty("time")
     private TimeBO timeBO;
+
+    private int idUser;
 
     @JsonProperty("teacher")
     private UserBO userBO;
 
+    private int idYear;
+
     @JsonProperty("year")
     private YearBO yearBO;
 
-    private int idGrade;
+    private Set<ClassBO> classSet;
 
-    private int idSchool;
-
-    private int idTime;
-
-    private int idUser;
-
-    private int idYear;
+    private Set<UserBO> studentSet;
 
     public ClassRoomBO() {
         super();
@@ -85,30 +90,18 @@ public class ClassRoomBO extends AbstractWithCodeBO implements Comparable<ClassR
         return this.idYear;
     }
 
-    /**
-     * @return the grade
-     */
     public GradeBO getGradeBO() {
         return gradeBO;
     }
 
-    /**
-     * @param gradeBO the grade to set
-     */
     public void setGradeBO(GradeBO gradeBO) {
         this.gradeBO = gradeBO;
     }
 
-    /**
-     * @return the schoolBO
-     */
     public SchoolBO getSchoolBO() {
         return schoolBO;
     }
 
-    /**
-     * @param schoolBO the schoolBO to set
-     */
     public void setSchoolBO(SchoolBO schoolBO) {
         this.schoolBO = schoolBO;
     }
@@ -121,32 +114,36 @@ public class ClassRoomBO extends AbstractWithCodeBO implements Comparable<ClassR
         this.timeBO = timeBO;
     }
 
-    /**
-     * @return the user
-     */
     public UserBO getUserBO() {
         return userBO;
     }
 
-    /**
-     * @param userBO the user to set
-     */
     public void setUserBO(UserBO userBO) {
         this.userBO = userBO;
     }
 
-    /**
-     * @return the year
-     */
     public YearBO getYearBO() {
         return yearBO;
     }
 
-    /**
-     * @param yearBO the year to set
-     */
     public void setYearBO(YearBO yearBO) {
         this.yearBO = yearBO;
+    }
+
+    public Set<ClassBO> getClassSet() {
+        return classSet;
+    }
+
+    public void setClassSet(final Set<ClassBO> classSet) {
+        this.classSet = classSet;
+    }
+
+    public Set<UserBO> getStudentSet() {
+        return studentSet;
+    }
+
+    public void setStudentSet(final Set<UserBO> studentSet) {
+        this.studentSet = studentSet;
     }
 
     @Override
@@ -208,9 +205,6 @@ public class ClassRoomBO extends AbstractWithCodeBO implements Comparable<ClassR
         return Objects.equals(this.timeBO, other.timeBO);
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "ClassRoomBO [gradeBO=" + gradeBO + ", yearBO=" + yearBO + ", timeBO=" + timeBO

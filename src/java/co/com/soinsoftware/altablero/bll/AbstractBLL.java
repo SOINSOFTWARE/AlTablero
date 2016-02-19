@@ -31,6 +31,8 @@ public abstract class AbstractBLL {
     protected static final String PATH_CURRENT_YEAR = "currentYear";
     protected static final String PATH_EXCLUDING_CLASS = "excludingClass";
     protected static final String PATH_SAVE = "save";
+    protected static final String PATH_SAVE_CLASSROOM_X_STUDENT = "saveClassRoomxStudent";
+    protected static final String PATH_STUDENTS_NOT_LINKED = "studentsNotLinked";
     protected static final String PATH_TEACHER_NOT_DIRECTORS = "teacherNotDirectors";
     protected static final String PATH_VALIDATE = "validate";
     

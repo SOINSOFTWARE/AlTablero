@@ -37,27 +37,32 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
     private static final String CLASSROOM_CLASSES_SAVE_PAGE = "/admin/cursos/clases/guardar";
     private static final String CLASSROOM_DEACTIVATE_PAGE = "/admin/cursos/edicion/desactivar";
     private static final String CLASSROOM_EDIT_PAGE = "/admin/cursos/edicion";
+    private static final String CLASSROOM_LINK_PAGE = "/admin/cursos/asociar";
+    private static final String CLASSROOM_LINK_SAVE_PAGE = "/admin/cursos/asociar/guardar";
     private static final String CLASSROOM_PAGE = "/admin/cursos";
     private static final String CLASSROOM_SAVE_PAGE = "/admin/cursos/edicion/guardar";
 
     private static final String CLASSROOM_CLASSES_MODEL = "admin/classroom/class";
     private static final String CLASSROOM_EDIT_MODEL = "admin/classroom/edit";
     private static final String CLASSROOM_MODEL = "admin/classroom/list";
+    private static final String CLASSROOM_LINK_MODEL = "admin/classroom/link";
 
     private static final String CLASS_LIST_PARAMETER = "classes";
     private static final String CLASSROOM_PARAMETER = "classroom";
     private static final String CLASSROOM_LIST_PARAMETER = "classrooms";
+    private static final String CURRENT_CLASSROOM_LIST_PARAMETER = "currentClassrooms";
     private static final String CURRENT_YEAR_PARAMETER = "currentYear";
     private static final String DEACTIVATED_PARAMETER = "deactivated";
     private static final String GRADE_PARAMETER = "grade";
     private static final String GRADE_LIST_PARAMETER = "grades";
     private static final String SAVED_PARAMETER = "saved";
+    private static final String STUDENT_LIST_PARAMETER = "students";
     private static final String TEACHER_LIST_PARAMETER = "teachers";
     private static final String TIME_LIST_PARAMETER = "times";
     private static final String INVALIDCODE_PARAMETER = "invalidCode";
     private static final String YEAR_PARAMETER = "year";
     private static final String YEAR_LIST_PARAMETER = "years";
-    
+
     @Autowired
     private ClassController classController;
 
@@ -144,6 +149,11 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
                 saved = true;
             } else {
                 invalidCode = true;
+                savedClassRoom = classRoomController.findClassRoom(this.getIdSchool(), idClassRoomForSave);
+                classRoomBO.setClassSet(savedClassRoom.getClassSet());
+                classRoomBO.setYearBO(savedClassRoom.getYearBO());
+                classRoomBO.setStudentSet(savedClassRoom.getStudentSet());
+                classRoomBO.setUserBO(savedClassRoom.getUserBO());
             }
             model = this.buildEditPageModel((saved) ? savedClassRoom : classRoomBO,
                     saved, false, false, invalidCode);
@@ -197,9 +207,9 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
             final String classJson) {
         ModelAndView model = null;
         try {
-            final List<ClassBO> classList = 
-                    classController.buildClassBOListFromString(idClassRoom, classJson);
-            final Set<ClassBO> classSet = classController.saveClasses(classList);   
+            final List<ClassBO> classList
+                    = classController.buildClassBOListFromString(idClassRoom, classJson);
+            final Set<ClassBO> classSet = classController.saveClasses(classList);
             boolean wasSaved = true;
             boolean hasServerErrors = false;
             if (classSet == null || classSet.size() != classList.size()) {
@@ -207,6 +217,51 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
                 wasSaved = false;
             }
             model = this.buildEditClassesPageModel(idClassRoom, wasSaved, hasServerErrors);
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            model = LoginRequestHandler.buildRedirectLoginModel();
+        }
+        return model;
+    }
+
+    @RequestMapping(value = CLASSROOM_LINK_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView linkStudentsToClassRooms(
+            @RequestParam(value = "grade", required = false)
+            final Integer idGrade,
+            @RequestParam(value = "classroom", required = false)
+            final Integer idClassRoom) {
+        ModelAndView model = null;
+        try {
+            model = this.buildLinkStudentsToClassRoomPageModel(idGrade, idClassRoom,
+                    false, false);
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            model = LoginRequestHandler.buildRedirectLoginModel();
+        }
+        return model;
+    }
+
+    @RequestMapping(value = CLASSROOM_LINK_SAVE_PAGE, method = RequestMethod.POST)
+    public ModelAndView saveLinkStudentsToClassRooms(
+            @RequestParam(value = "gradeId", required = false)
+            final Integer idGrade,
+            @RequestParam(value = "classroomId", required = false)
+            final Integer idClassRoom,
+            @RequestParam(value = "classJson", required = true)
+            final String objectJson) {
+        ModelAndView model = null;
+        try {
+            final List<ClassRoomBO> classRoomList = classRoomController
+                    .buildStudentsLinkedToClassRoomList(objectJson);
+            final Set<ClassRoomBO> classRoomSet = classRoomController.saveClassRoomXStudent(classRoomList);
+            boolean wasSaved = true;
+            boolean hasServerErrors = false;
+            if (classRoomSet == null || classRoomSet.size() > classRoomList.size()) {
+                hasServerErrors = true;
+                wasSaved = false;
+            }
+            model = this.buildLinkStudentsToClassRoomPageModel(idGrade, idClassRoom,
+                    wasSaved, hasServerErrors);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
             model = LoginRequestHandler.buildRedirectLoginModel();
@@ -225,6 +280,10 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
             if (classRoomBO != null) {
                 currentDirector = classRoomBO.getUserBO();
                 model.addObject(CLASSROOM_PARAMETER, classRoomBO);
+                if (classRoomBO.getStudentSet() != null) {
+                    model.addObject(STUDENT_LIST_PARAMETER,
+                            userController.sortUserSet(classRoomBO.getStudentSet()));
+                }
             }
             this.addTeacherNotDirectorListToModel(model, currentDirector);
             this.addObjectsToClassRoomPages(model);
@@ -239,19 +298,37 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
-    
+
     private ModelAndView buildEditClassesPageModel(final Integer idClassRoom,
             final boolean wasSaved, final boolean hasServerErrors)
             throws IOException {
         ModelAndView model = this.buildModelAndView();
         model.setViewName(CLASSROOM_CLASSES_MODEL);
         this.addGradeListToModel(model);
-        final String year = yearController.getDefaultYear();
+        final String year = yearController.getCurrentYearString();
         this.addClassRoomListToModel(model, year, null);
         if (idClassRoom != null && idClassRoom > 0) {
             this.addClassListToModel(model, idClassRoom);
             this.addTeacherListToModel(model);
         }
+        model.addObject(SAVED_PARAMETER, wasSaved);
+        model.addObject(HAS_SERVER_ERRORS_PARAMETER, hasServerErrors);
+        return model;
+    }
+
+    private ModelAndView buildLinkStudentsToClassRoomPageModel(final Integer idGrade,
+            final Integer idClassRoom, final boolean wasSaved, final boolean hasServerErrors)
+            throws IOException {
+        final ModelAndView model = this.buildModelAndView();
+        model.setViewName(CLASSROOM_LINK_MODEL);
+        final String year = yearController.getLastYearString();
+        model.addObject(YEAR_PARAMETER, year);
+        this.addGradeListToModel(model);
+        this.addClassRoomListToModel(model, year, null);
+        this.addStudentsNotLinked(model, idGrade, idClassRoom);
+        final String currentYear = yearController.getCurrentYearString();
+        model.addObject(CURRENT_CLASSROOM_LIST_PARAMETER,
+                classRoomController.findClassRooms(currentYear, null, this.getIdSchool()));
         model.addObject(SAVED_PARAMETER, wasSaved);
         model.addObject(HAS_SERVER_ERRORS_PARAMETER, hasServerErrors);
         return model;
@@ -306,5 +383,12 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
         final String teacherCode = UserTypeBO.getTeacherCode();
         final List<UserBO> teacherList = userController.findUsersByUserType(idSchool, teacherCode);
         model.addObject(TEACHER_LIST_PARAMETER, teacherList);
+    }
+
+    private void addStudentsNotLinked(final ModelAndView model, final Integer idGrade,
+            final Integer idClassRoom) throws IOException {
+        final int idSchool = this.getIdSchool();
+        final List<UserBO> userList = userController.findStudentsNotLinked(idSchool, idGrade, idClassRoom);
+        model.addObject(STUDENT_LIST_PARAMETER, userList);
     }
 }

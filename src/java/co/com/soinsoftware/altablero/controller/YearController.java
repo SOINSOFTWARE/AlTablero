@@ -30,9 +30,14 @@ public class YearController {
         return yearBLL.findCurrentYear();
     }
 
-    public String getDefaultYear() {
+    public String getCurrentYearString() {
         Calendar date = Calendar.getInstance();
         return String.valueOf(date.get(Calendar.YEAR));
+    }
+    
+    public String getLastYearString() {
+        Calendar date = Calendar.getInstance();
+        return String.valueOf(date.get(Calendar.YEAR) - 1);
     }
 
     public List<YearBO> findAll() throws IOException {

@@ -5,9 +5,11 @@
  */
 package co.com.soinsoftware.altablero.bll;
 
+import static co.com.soinsoftware.altablero.bll.AbstractBLL.MODULE_CLASS;
 import co.com.soinsoftware.altablero.entity.ClassRoomBO;
 import co.com.soinsoftware.altablero.json.mapper.ClassRoomMapper;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,35 @@ public class ClassRoomBLL extends AbstractBLL {
         return classRoomMapper.getObjectSetFromJSON(response);
     }
 
+    public ClassRoomBO saveClassRoom(final ClassRoomBO classRoom)
+            throws IOException {
+        final String jsonObject = this.writeValueAsString(classRoom);
+        final String method = MODULE_CLASSROOM + PATH_SAVE;
+        final String response = httpRequest.sendPost(method, jsonObject);
+        return classRoomMapper.getObjectFromJSON(response);
+    }
+
+    public boolean IsValidCode(final int idSchool, final int idClassRoom,
+            final String code) throws IOException {
+        final String method = MODULE_CLASSROOM + PATH_VALIDATE;
+        final StringBuilder urlMethod = new StringBuilder(method);
+        urlMethod.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_SCHOOL_ID,
+                idSchool));
+        urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_CODE, code));
+        urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_CLASSROOM_ID,
+                idClassRoom));
+        final String response = httpRequest.sendGet(urlMethod.toString());
+        return Boolean.valueOf(response);
+    }
+    
+    public Set<ClassRoomBO> saveClassRoomXStudent(final List<ClassRoomBO> classRoomList)
+            throws IOException {
+        final String jsonObject = this.writeValueAsString(classRoomList);
+        final String method = MODULE_CLASSROOM + PATH_SAVE_CLASSROOM_X_STUDENT;
+        final String response = httpRequest.sendPost(method, jsonObject);
+        return classRoomMapper.getObjectSetFromJSON(response);
+    }
+    
     private String buildFindClassRoomsByUrlMethod(final int idSchool, final String year,
             final Integer idGrade, final Integer idTime, final Integer idClassRoom) {
         final String method = MODULE_CLASSROOM + PATH_BY;
@@ -57,15 +88,7 @@ public class ClassRoomBLL extends AbstractBLL {
         }
         return urlMethod.toString();
     }
-
-    public ClassRoomBO saveClassRoom(final ClassRoomBO classRoom)
-            throws IOException {
-        final String jsonObject = this.writeValueAsString(classRoom);
-        final String method = MODULE_CLASSROOM + PATH_SAVE;
-        final String response = httpRequest.sendPost(method, jsonObject);
-        return classRoomMapper.getObjectFromJSON(response);
-    }
-
+    
     private String writeValueAsString(final ClassRoomBO classRoom) {
         String jsonObject = null;
         try {
@@ -75,17 +98,14 @@ public class ClassRoomBLL extends AbstractBLL {
         }
         return jsonObject;
     }
-
-    public boolean IsValidCode(final int idSchool, final int idClassRoom,
-            final String code) throws IOException {
-        final String method = MODULE_CLASSROOM + PATH_VALIDATE;
-        final StringBuilder urlMethod = new StringBuilder(method);
-        urlMethod.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_SCHOOL_ID,
-                idSchool));
-        urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_CODE, code));
-        urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_CLASSROOM_ID,
-                idClassRoom));
-        final String response = httpRequest.sendGet(urlMethod.toString());
-        return Boolean.valueOf(response);
+    
+    private String writeValueAsString(final List<ClassRoomBO> classRoomList) {
+        String jsonObject = null;
+        try {
+            jsonObject = ClassRoomMapper.JSON_WRITER.writeValueAsString(classRoomList);
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+        return jsonObject;
     }
 }

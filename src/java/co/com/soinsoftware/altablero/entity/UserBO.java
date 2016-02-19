@@ -52,6 +52,8 @@ public class UserBO extends AbstractBO implements Serializable,
     private Set<SchoolBO> schoolSet;
 
     private Set<UserTypeBO> userTypeSet;
+    
+    private ClassRoomBO lastClassRoom;
 
     public UserBO() {
         super();
@@ -221,6 +223,14 @@ public class UserBO extends AbstractBO implements Serializable,
 
     public void setUserTypeSet(Set<UserTypeBO> userTypeSet) {
         this.userTypeSet = userTypeSet;
+    }
+    
+    public ClassRoomBO getLastClassRoom() {
+        return lastClassRoom;
+    }
+
+    public void setLastClassRoom(ClassRoomBO lastClassRoom) {
+        this.lastClassRoom = lastClassRoom;
     }
 
     public boolean canViewGradeMenu() {

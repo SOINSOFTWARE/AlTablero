@@ -5,12 +5,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Al Tablero | Salones</title>
-        <%@include file="../include_header.jsp" %>
-        
+        <%@include file="../include_header.jsp" %>        
     </head>
     <body class="skin-blue">
-        <%@include file="../include_body_header.jsp" %>
-                            
+        <%@include file="../include_body_header.jsp" %>                            
         <div class="wrapper row-offcanvas row-offcanvas-left">
             <%@include file="../include_body_menu.jsp" %>
             <aside class="right-side">
@@ -27,7 +25,7 @@
                         <div class="col-xs-12">
                             <div class="box box-tools">
                                 <div class="box-body">
-                                    <form id="frmClassRoom" name="frmClassRoom" method="POST"
+                                    <form id="frmSearch" name="frmSearch" method="POST"
                                           action="<c:url value='/admin/cursos?${_csrf.parameterName}=${_csrf.token}' />">
                                        <table style="width: 100%">
                                             <tr>
@@ -51,20 +49,10 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="form-group">
-                                                        <select id="grade" name="grade" class="form-control">
-                                                            <option value="0">Todos</option>
-                                                            <c:forEach items="${grades}" var="grade">
-                                                                <option value="${grade.id}" <c:if test="${param.grade == grade.id}">selected</c:if>>
-                                                                    ${grade.name}
-                                                                </option>
-                                                            </c:forEach>
-                                                        </select>
-                                                    </div>
+                                                    <%@include file="../include_div_grade_all.jsp" %>
                                                 </td>
                                                 <td style="vertical-align: top;">
-                                                    <a href="javascript:{}" class="btn btn-social-icon btn-dropbox" 
-                                                        onclick="document.getElementById('frmClassRoom').submit();">
+                                                    <a href="#" id="search-link" class="btn btn-social-icon btn-dropbox" onclick="onSearchClick();">
                                                         <i class="fa fa-search"></i>
                                                     </a>
                                                 </td>
@@ -78,7 +66,7 @@
                         <div class="col-xs-12">
                             <div class="box box-primary">
                                 <div class="box-header">
-                                </div><!-- /.box-header -->
+                                </div>
                                 <div class="box-body table-responsive">
                                     <table id="tblClassRoom" class="table table-bordered table-striped">
                                         <thead>
@@ -101,8 +89,7 @@
                                                         <form id="frmEdit${classroom.id}" name="frmEdit${classroom.id}" method="POST"
                                                               action="<c:url value='/admin/cursos/edicion?${_csrf.parameterName}=${_csrf.token}' />">
                                                             <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
-                                                            <a href="javascript:{}" class="btn btn-social-icon btn-dropbox" 
-                                                                onclick="document.getElementById('frmEdit${classroom.id}').submit();">
+                                                            <a href="#" id="edit-link${classroom.id}" class="btn btn-social-icon btn-dropbox">
                                                                 <i class="fa fa-edit"></i>
                                                             </a>
                                                         </form>
@@ -117,16 +104,24 @@
                     </div>
                 </section>
             </aside>
-        </div>
-        
+        </div>        
         <%@include file="../include_body_jscript.jsp" %>
         <script src="<c:url value="/res/javascript/plugins/datatables/jquery.dataTables.js" />" type="text/javascript"></script>
         <script src="<c:url value="/res/javascript/plugins/datatables/dataTables.bootstrap.js" />" type="text/javascript"></script>
+        <script src="<c:url value="/res/javascript/altablero.js" />" type="text/javascript"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('#refClassRoom').trigger("click");
                 $('#tblClassRoom').dataTable();
             } );
+            
+            <c:forEach items="${classrooms}" var="classroom">
+                $( "#edit-link${classroom.id}" ).click(function( event ) {
+                    showLoadingImage();
+                    $("#frmEdit${classroom.id}").submit();
+                    event.preventDefault();
+                });
+            </c:forEach>
         </script>
     </body>
 </html>

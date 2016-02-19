@@ -30,7 +30,7 @@
                             <li><a href="<c:url value="/admin/cursos/clases" />"><i class="fa fa-angle-double-right"></i> Crear clases</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('CURES')}">
-                            <li><a href="<c:url value="/admin/cursos/estudiantes" />"><i class="fa fa-angle-double-right"></i> Matricular</a></li>
+                            <li><a href="<c:url value="/admin/cursos/asociar" />"><i class="fa fa-angle-double-right"></i> Asociar estudiantes</a></li>
                         </c:if>
                     </ul>
                 </li>

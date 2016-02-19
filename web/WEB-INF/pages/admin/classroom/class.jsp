@@ -26,7 +26,7 @@
                         <div class="col-xs-12">
                             <div class="box box-tools">
                                 <div class="box-body">
-                                    <form id="frmClass" name="frmClass" method="GET"
+                                    <form id="frmSearch" name="frmSearch" method="POST"
                                           action="<c:url value='/admin/cursos/clases?${_csrf.parameterName}=${_csrf.token}' />">
                                         <table style="width: 100%">
                                             <tr>
@@ -39,35 +39,10 @@
                                             <tr>
                                                 <td></td>
                                                 <td align="right">
-                                                    <div class="form-group">
-                                                        <select id="grade" name="grade" class="form-control">
-                                                            <option value="0">Todos</option>
-                                                            <c:forEach items="${grades}" var="grade">
-                                                                <option value="${grade.id}" <c:if test="${param.grade == grade.id || param.gradeId == grade.id}">selected</c:if>>
-                                                                    ${grade.name}
-                                                                </option>
-                                                                <c:if test="${param.grade == grade.id || param.gradeId == grade.id}">
-                                                                    <c:set var="gradeId" value="${grade.id}" />
-                                                                </c:if>
-                                                            </c:forEach>
-                                                        </select>
-                                                    </div>
+                                                    <%@include file="../include_div_grade_all.jsp" %>
                                                 </td>
                                                 <td>
-                                                    <div class="form-group">
-                                                        <select id="classroom" name="classroom" class="form-control">
-                                                            <option value="0">Seleccione uno...</option>
-                                                            <c:forEach items="${classrooms}" var="classroom">
-                                                                <option value="${classroom.id}" <c:if test="${param.classroom == classroom.id || param.classroomId == classroom.id}">selected</c:if>>
-                                                                    ${classroom.name}
-                                                                </option>
-                                                                <c:if test="${param.classroom == classroom.id || param.classroomId == classroom.id}">
-                                                                    <c:set var="classroomName" value="${classroom.name}" />
-                                                                    <c:set var="classroomId" value="${classroom.id}" />
-                                                                </c:if>
-                                                            </c:forEach>
-                                                        </select>
-                                                    </div>
+                                                    <%@include file="../include_div_classroom_select_one.jsp" %>
                                                 </td>
                                                 <td style="vertical-align: top;">
                                                     <a href="#" id="search-link" class="btn btn-social-icon btn-dropbox">
@@ -90,22 +65,9 @@
                                     </a>
                                 </div>
                                 <div class="box-body table-responsive">
-                                    <c:if test="${hasServerErrors}">
-                                        <div class="alert alert-danger alert-dismissable">
-                                            <i class="fa fa-ban"></i>
-                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                            <b>Error!</b> Por favor contacte a SOIN Software.
-                                        </div>
-                                    </c:if>
-                                    <c:if test="${saved}">
-                                        <div class="alert alert-success alert-dismissable">
-                                            <i class="fa fa-check"></i>
-                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                            <b>Guardar!</b> Los datos han sido salvados exitosamente.
-                                        </div>
-                                    </c:if>
+                                    <%@include file="../include_div_messages.jsp" %>
                                     <h3 class="box-title">${classroomName}</h3>
-                                    <form id="frmClassSave" name="frmClassSave" method="POST"
+                                    <form id="frmSave" name="frmSave" method="POST"
                                           action="<c:url value='/admin/cursos/clases/guardar?${_csrf.parameterName}=${_csrf.token}' />">
                                         <input id="classroomId" name="classroomId" type="hidden" value="${classroomId}" />
                                         <input id="gradeId" name="gradeId" type="hidden" value="${gradeId}" />
@@ -170,22 +132,16 @@
                     </div>
                 </section>
             </aside>
-        </div>
-                                        
-        <div id="save-dialog" title="Guardar">
+        </div>                                        
+        <div id="save-dialog" title="Guardar" style="display: none">
             <p>Las clases seleccionadas ser&aacute;n guardadas, ¿Deseas continuar con la acci&oacute;n?</p>
-        </div>
-        
-        <div id="required-dialog" title="Error">
-            <p><span class="ui-icon ui-icon-cancel" style="float:left; margin:2px 7px 20px 0;"></span>
-                Por favor complete todos los campos requeridos.
-            </p>
-        </div>
-        
+        </div>        
+        <%@include file="../include_required_dialog.jsp" %>        
         <%@include file="../include_body_jscript.jsp" %>
         <script src="<c:url value="/res/javascript/plugins/datatables/jquery.dataTables.js" />" type="text/javascript"></script>
         <script src="<c:url value="/res/javascript/plugins/datatables/dataTables.bootstrap.js" />" type="text/javascript"></script>
         <script src="<c:url value="/res/javascript/jquery-ui.min.js" />" type="text/javascript"></script>
+        <script src="<c:url value="/res/javascript/altablero.js" />" type="text/javascript"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('#refClassRoom').trigger("click");
@@ -209,43 +165,10 @@
                 "bAutoWidth": false
             });
             
-            $( "#save-dialog" ).dialog({
-                autoOpen: false,
-                width: 400,
-                modal: true,
-                resizable: false,
-                buttons: [{
-                    text: "Guardar",
-                    click: function() {
-                        $(this).dialog( "close" );
-                        $("<div class='overlay'></div><div class='loading-img'></div>").appendTo( ".box-primary" );
-                        $("#frmClassSave").submit();
-                    }
-                },
-                {
-                    text: "Cancelar",
-                    click: function() {
-                        $(this).dialog( "close" );
-                    }
-                }]
-            });
-            
-            $( "#required-dialog" ).dialog({
-                autoOpen: false,
-                width: 400,
-                modal: true,
-                resizable: false,
-                buttons: [{
-                    text: "Volver",
-                    click: function() {
-                        $(this).dialog( "close" );
-                    }
-                }]
-            });
-            
             $( "#search-link" ).click(function( event ) {
                 if($("#classroom").val() !== '0') {
-                    $("#frmClass").submit();
+                    showLoadingImage();
+                    $("#frmSearch").submit();
                 }
                 event.preventDefault();
             });
@@ -314,10 +237,10 @@
                 if (canSave) {
                     classJson += "}";
                     $("#classJson").val(classJson);
-                    $( "#save-dialog" ).dialog( "open" );
+                    showSaveDialog();
                 } else if (showRequired) {
                     classJson = "{";
-                    $( "#required-dialog" ).dialog( "open" );
+                    showRequiredFieldsDialog();
                 }
                 event.preventDefault();
             });
