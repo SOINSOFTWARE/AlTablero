@@ -58,26 +58,26 @@ public class ClassController {
     }
 
     public List<ClassBO> buildClassBOListFromString(final int idClassRoom,
-            String classesStr) {
+            String objectsStr) {
         final List<ClassBO> classList = new ArrayList<>();
-        if (classesStr != null && !classesStr.equals("{}")) {
+        if (objectsStr != null && !objectsStr.equals("{}")) {
             do {
-                final int initIndex = classesStr.indexOf("[");
-                final int finalIndex = classesStr.indexOf("]");
-                final String classStr = classesStr.substring(initIndex + 1, finalIndex);
-                final ClassBO classBO = buildClassBOFromString(idClassRoom, classStr);
+                final int initIndex = objectsStr.indexOf("[");
+                final int finalIndex = objectsStr.indexOf("]");
+                final String objectStr = objectsStr.substring(initIndex + 1, finalIndex);
+                final ClassBO classBO = buildClassBOFromString(idClassRoom, objectStr);
                 if (classBO != null) {
                     classList.add(classBO);
                 }
-                classesStr = classesStr.substring(finalIndex + 1);
-            } while (classesStr.contains("["));
+                objectsStr = objectsStr.substring(finalIndex + 1);
+            } while (objectsStr.contains("["));
         }
         return classList;
     }
 
-    private ClassBO buildClassBOFromString(final int idClassRoom, final String classStr) {
+    private ClassBO buildClassBOFromString(final int idClassRoom, final String objectStr) {
         ClassBO classBO = null;
-        final String[] properties = classStr.split(";");
+        final String[] properties = objectStr.split(";");
         int idClass = 0;
         int idSubject = 0;
         int idTeacher = 0;

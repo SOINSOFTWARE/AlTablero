@@ -5,7 +5,7 @@
  */
 package co.com.soinsoftware.altablero.utils;
 
-import co.com.soinsoftware.altablero.bll.UserBLL;
+import co.com.soinsoftware.altablero.controller.UserController;
 import co.com.soinsoftware.altablero.entity.AccessBO;
 import co.com.soinsoftware.altablero.entity.UserBO;
 import static co.com.soinsoftware.altablero.entity.UserBO.femaleAvatar;
@@ -29,6 +29,7 @@ public class RoleUtils {
     private static final String USER_FIRST_NAME_ATTRIBUTE = "userFirstName";
     private static final String USER_NAME_ATTRIBUTE = "username";
     private static final String USER_PHOTO_ATTRIBUTE = "avatar";
+    private static final String USER_PHOTO_ATTRIBUTE_ONLY = "isAvatar";
     private static final String USER_ACCESS_ATTRIBUTE = "accessList";
 
     private static final String MENU_GRADE_ATTRIBUTE = "canViewGradeMenu";
@@ -37,31 +38,29 @@ public class RoleUtils {
     private static final String MENU_STUDENT_ATTRIBUTE = "canViewStudentMenu";
 
     @Autowired
-    private UserBLL userBLL;
+    private UserController userController;
 
-    public ModelAndView createModelWithUserDetails(final String documentNumber)
-            throws IOException {
-        final UserBO user = this.userBLL.findUserByDocument(documentNumber);
+    public ModelAndView createModelWithUserDetails(final String documentNumber,
+            final int idSchool) throws IOException {
+        final UserBO user = this.userController.findUserByDocument(documentNumber);
         if (user == null) {
             throw new IOException("User not found");
         }
-        return this.buildModelUsingUserBO(user);
+        return this.buildModelUsingUserBO(user, idSchool);
     }
 
-    private ModelAndView buildModelUsingUserBO(UserBO user) {
+    private ModelAndView buildModelUsingUserBO(final UserBO user, final int idSchool) {
         ModelAndView model = new ModelAndView();
         if (user != null) {
             final String fullName = user.getName() + " " + user.getLastName();
-            final String photoAttr = user.getGender().equals(maleGender)
-                    ? maleAvatar : femaleAvatar;
             model.addObject(USER_FIRST_NAME_ATTRIBUTE, user.getName());
             model.addObject(USER_NAME_ATTRIBUTE, fullName);
-            model.addObject(USER_PHOTO_ATTRIBUTE, photoAttr);
             model.addObject(USER_ACCESS_ATTRIBUTE, this.getAccessCodeList(user));
             model.addObject(MENU_GRADE_ATTRIBUTE, user.canViewGradeMenu());
             model.addObject(MENU_SUBJECT_ATTRIBUTE, user.canViewSubjectMenu());
             model.addObject(MENU_TEACHER_ATTRIBUTE, user.canViewTeacherMenu());
             model.addObject(MENU_STUDENT_ATTRIBUTE, user.canViewStudentMenu());
+            this.addUserPhotoToModel(model, user, idSchool);
         }
         return model;
     }
@@ -81,5 +80,20 @@ public class RoleUtils {
             accessList.add(access.getCode());
         }
         return accessList;
+    }
+    
+    private void addUserPhotoToModel(final ModelAndView model, final UserBO user,
+            final int idSchool) {
+        String photoAttr = null;
+        boolean isAvatar = true;
+        if (user.getPhoto() == null && idSchool > 0) {
+            photoAttr = user.getGender().equals(maleGender)
+                    ? maleAvatar : femaleAvatar;
+        } else {
+            photoAttr = this.userController.getHttpPath(user, idSchool);
+            isAvatar = false;
+        }
+        model.addObject(USER_PHOTO_ATTRIBUTE, photoAttr);
+        model.addObject(USER_PHOTO_ATTRIBUTE_ONLY, isAvatar);
     }
 }

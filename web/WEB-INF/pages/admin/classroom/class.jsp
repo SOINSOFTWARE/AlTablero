@@ -71,7 +71,7 @@
                                           action="<c:url value='/admin/cursos/clases/guardar?${_csrf.parameterName}=${_csrf.token}' />">
                                         <input id="classroomId" name="classroomId" type="hidden" value="${classroomId}" />
                                         <input id="gradeId" name="gradeId" type="hidden" value="${gradeId}" />
-                                        <input id="classJson" name="classJson" type="hidden" />
+                                        <input id="objectStr" name="objectStr" type="hidden" />
                                         <table id="tblClass" class="table table-bordered table-striped">
                                             <thead>
                                                 <tr>
@@ -200,7 +200,7 @@
             $( "#save-link" ).click(function( event ) {
                 var canSave = false;
                 var showRequired = false;
-                var classJson = "{";
+                var objectStr = "{";
                 <c:forEach items="${classes}" var="classBO">
                     var idTeacher = 0;
                     <c:choose>
@@ -217,7 +217,7 @@
                             if (isDataChanged(${classBO.subject.id}, "${classBO.name}", idTeacher.toString(), ${classBO.enabled})
                                     && !showRequired) {
                                 canSave = true;
-                                classJson += buildClassAsString(${classBO.subject.id}, true);
+                                objectStr += buildClassAsString(${classBO.subject.id}, true);
                             }
                         } else {
                             showRequired = true;
@@ -231,15 +231,15 @@
                         }
                     } else if (${classBO.enabled}) {
                         canSave = true;
-                        classJson += buildClassAsString(${classBO.subject.id}, false);
+                        objectStr += buildClassAsString(${classBO.subject.id}, false);
                     }
                 </c:forEach>
                 if (canSave) {
-                    classJson += "}";
-                    $("#classJson").val(classJson);
+                    objectStr += "}";
+                    $("#objectStr").val(objectStr);
                     showSaveDialog();
                 } else if (showRequired) {
-                    classJson = "{";
+                    objectStr = "{";
                     showRequiredFieldsDialog();
                 }
                 event.preventDefault();
@@ -358,14 +358,14 @@
             }
             
             function buildClassAsString(id, enabled) {
-                var classJson = "[";
-                classJson += "idClass=" + $("#class" + id).val() + ";";
-                classJson += "idSubject=" + $("#subject" + id).val() + ";";
-                classJson += "name=" + $("#name" + id).val() + ";";
-                classJson += "idTeacher=" + $("#teacher" + id).val() + ";";
-                classJson += "enabled=" + enabled;
-                classJson += "]";
-                return classJson;
+                var objectStr = "[";
+                objectStr += "idClass=" + $("#class" + id).val() + ";";
+                objectStr += "idSubject=" + $("#subject" + id).val() + ";";
+                objectStr += "name=" + $("#name" + id).val() + ";";
+                objectStr += "idTeacher=" + $("#teacher" + id).val() + ";";
+                objectStr += "enabled=" + enabled;
+                objectStr += "]";
+                return objectStr;
             }
         </script>
     </body>

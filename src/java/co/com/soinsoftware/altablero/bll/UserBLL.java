@@ -35,6 +35,16 @@ public class UserBLL extends AbstractBLL {
         final String response = httpRequest.sendGet(methodAndParameters);
         return userMapper.getObjectFromJSON(response);
     }
+    
+    public UserBO findUserByIdentifier(final int idUser)
+            throws IOException {
+        final StringBuilder method = new StringBuilder(MODULE_USER + PATH_BY);
+        method.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_USER_ID,
+                idUser));
+        final String methodAndParameters = method.toString();
+        final String response = httpRequest.sendGet(methodAndParameters);
+        return userMapper.getObjectFromJSON(response);
+    }
 
     public Set<UserBO> findUsersByUserType(final int idSchool, final String cdUserType)
             throws IOException {
@@ -63,7 +73,27 @@ public class UserBLL extends AbstractBLL {
         return userList;
     }
     
-    private Set<UserBO> sendGetToReceiveSet(final String methodAndParameters) throws IOException {
+    public boolean isValidDocumentNumber(final Integer idUser, final String documentNumber)
+            throws IOException {
+        final String method = MODULE_USER + PATH_VALIDATE;
+        final StringBuilder urlMethod = new StringBuilder(method);
+        urlMethod.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_USER_ID,
+                (idUser == null) ? 0 : idUser));
+        urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_DOCUMENT_NUMBER,
+                documentNumber));
+        final String response = httpRequest.sendGet(urlMethod.toString());
+        return Boolean.valueOf(response);
+    }
+    
+    public UserBO save(final UserBO user) throws IOException {
+        final String jsonObject = this.writeValueAsString(user);
+        final String method = MODULE_USER + PATH_SAVE;
+        final String response = httpRequest.sendPost(method, jsonObject);
+        return this.userMapper.getObjectFromJSON(response);
+    } 
+    
+    private Set<UserBO> sendGetToReceiveSet(final String methodAndParameters)
+            throws IOException {
         final String response = httpRequest.sendGet(methodAndParameters);
         return userMapper.getObjectSetFromJSON(response);
     }
@@ -100,5 +130,15 @@ public class UserBLL extends AbstractBLL {
             urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_CLASSROOM_ID, idClassRoom));
         }
         return urlMethod.toString();
+    }
+    
+    private String writeValueAsString(final UserBO user) {
+        String jsonObject = null;
+        try {
+            jsonObject = UserMapper.JSON_WRITER.writeValueAsString(user);
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+        return jsonObject;
     }
 }

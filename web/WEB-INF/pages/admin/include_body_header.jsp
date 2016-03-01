@@ -16,7 +16,11 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li class="user-header bg-light-blue">
-                            <img src="<c:url value="/res/img/${avatar}.png" />" class="img-circle" alt="User Image" />
+                            <c:choose>
+                                <c:when test="${isAvatar}"><c:set var="imgSrc" value="/res/img/${avatar}.png"></c:set></c:when>
+                                <c:otherwise><c:set var="imgSrc" value="${avatar}"></c:set></c:otherwise>
+                            </c:choose>
+                            <img src="<c:url value='${imgSrc}' />" class="img-circle" alt="User Image" />
                             <p> ${username} </p>
                         </li>
                         <li class="user-footer">

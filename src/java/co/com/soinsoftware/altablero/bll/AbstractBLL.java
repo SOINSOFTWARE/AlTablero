@@ -20,9 +20,11 @@ public abstract class AbstractBLL {
     protected static final String MODULE_CLASS = "class/";
     protected static final String MODULE_CLASSROOM = "classroom/";
     protected static final String MODULE_GRADE = "grade/";
+    protected static final String MODULE_SCHOOL = "school/";
     protected static final String MODULE_SUBJECT = "subject/";
     protected static final String MODULE_TIME = "time/";
     protected static final String MODULE_USER = "user/";
+    protected static final String MODULE_USERTYPE = "usertype/";
     protected static final String MODULE_YEAR = "year/";
     
     protected static final String PATH_ALL = "all";
@@ -43,6 +45,7 @@ public abstract class AbstractBLL {
     protected static final String PARAMETER_SCHOOL_ID = "schoolId";
     protected static final String PARAMETER_TIME = "time";
     protected static final String PARAMETER_TYPE_CODE = "userTypeCode";
+    protected static final String PARAMETER_USER_ID = "userId";
     protected static final String PARAMETER_YEAR = "year";
     
     protected static final String ADD_PARAMETERS = "?";

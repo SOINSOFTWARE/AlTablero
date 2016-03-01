@@ -5,22 +5,12 @@
  */
 package co.com.soinsoftware.altablero.request;
 
-import co.com.soinsoftware.altablero.controller.ClassController;
-import co.com.soinsoftware.altablero.controller.ClassRoomController;
-import co.com.soinsoftware.altablero.controller.GradeController;
-import co.com.soinsoftware.altablero.controller.TimeController;
-import co.com.soinsoftware.altablero.controller.UserController;
-import co.com.soinsoftware.altablero.controller.YearController;
 import co.com.soinsoftware.altablero.entity.ClassBO;
 import co.com.soinsoftware.altablero.entity.ClassRoomBO;
 import co.com.soinsoftware.altablero.entity.UserBO;
-import co.com.soinsoftware.altablero.entity.UserTypeBO;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,40 +37,6 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
     private static final String CLASSROOM_MODEL = "admin/classroom/list";
     private static final String CLASSROOM_LINK_MODEL = "admin/classroom/link";
 
-    private static final String CLASS_LIST_PARAMETER = "classes";
-    private static final String CLASSROOM_PARAMETER = "classroom";
-    private static final String CLASSROOM_LIST_PARAMETER = "classrooms";
-    private static final String CURRENT_CLASSROOM_LIST_PARAMETER = "currentClassrooms";
-    private static final String CURRENT_YEAR_PARAMETER = "currentYear";
-    private static final String DEACTIVATED_PARAMETER = "deactivated";
-    private static final String GRADE_PARAMETER = "grade";
-    private static final String GRADE_LIST_PARAMETER = "grades";
-    private static final String SAVED_PARAMETER = "saved";
-    private static final String STUDENT_LIST_PARAMETER = "students";
-    private static final String TEACHER_LIST_PARAMETER = "teachers";
-    private static final String TIME_LIST_PARAMETER = "times";
-    private static final String INVALIDCODE_PARAMETER = "invalidCode";
-    private static final String YEAR_PARAMETER = "year";
-    private static final String YEAR_LIST_PARAMETER = "years";
-
-    @Autowired
-    private ClassController classController;
-
-    @Autowired
-    private ClassRoomController classRoomController;
-
-    @Autowired
-    private GradeController gradeController;
-
-    @Autowired
-    private TimeController timeController;
-
-    @Autowired
-    private UserController userController;
-
-    @Autowired
-    private YearController yearController;
-
     @RequestMapping(value = CLASSROOM_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView listClassRooms(
             @RequestParam(value = YEAR_PARAMETER, required = false)
@@ -103,7 +59,7 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
 
     @RequestMapping(value = CLASSROOM_EDIT_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView editClassRoom(
-            @RequestParam(value = "classroomId", required = false)
+            @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = false)
             final Integer idClassRoom) {
         ModelAndView model = null;
         ClassRoomBO classRoomBO = null;
@@ -121,19 +77,19 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
 
     @RequestMapping(value = CLASSROOM_SAVE_PAGE, method = RequestMethod.POST)
     public ModelAndView saveClassRoom(
-            @RequestParam(value = "classroomId", required = true)
+            @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = true)
             final Integer idClassRoom,
-            @RequestParam(value = "year", required = true)
+            @RequestParam(value = YEAR_REQUEST_PARAM, required = true)
             final int idYear,
-            @RequestParam(value = "grade", required = true)
+            @RequestParam(value = GRADE_REQUEST_PARAM, required = true)
             final int idGrade,
-            @RequestParam(value = "time", required = true)
+            @RequestParam(value = TIME_REQUEST_PARAM, required = true)
             final int idTime,
-            @RequestParam(value = "director", required = true)
+            @RequestParam(value = DIRECTOR_REQUEST_PARAM, required = true)
             final int idUser,
-            @RequestParam(value = "code", required = true)
+            @RequestParam(value = CODE_REQUEST_PARAM, required = true)
             final String code,
-            @RequestParam(value = "name", required = true)
+            @RequestParam(value = NAME_REQUEST_PARAM, required = true)
             final String name) {
         ModelAndView model = null;
         final int idClassRoomForSave = (idClassRoom == null) ? 0 : idClassRoom;
@@ -166,7 +122,7 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
 
     @RequestMapping(value = CLASSROOM_DEACTIVATE_PAGE, method = RequestMethod.POST)
     public ModelAndView deactivateClassRoom(
-            @RequestParam(value = "classroomId", required = true)
+            @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = true)
             final int idClassRoom) {
         ModelAndView model = null;
         final int idSchool = this.getIdSchool();
@@ -185,9 +141,9 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
 
     @RequestMapping(value = CLASSROOM_CLASSES_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView listClasses(
-            @RequestParam(value = "grade", required = false)
+            @RequestParam(value = GRADE_REQUEST_PARAM, required = false)
             final Integer idGrade,
-            @RequestParam(value = "classroom", required = false)
+            @RequestParam(value = CLASSROOM_REQUEST_PARAM, required = false)
             final Integer idClassRoom) {
         ModelAndView model = null;
         try {
@@ -201,14 +157,14 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
 
     @RequestMapping(value = CLASSROOM_CLASSES_SAVE_PAGE, method = RequestMethod.POST)
     public ModelAndView saveClasses(
-            @RequestParam(value = "classroomId", required = true)
+            @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = true)
             final Integer idClassRoom,
-            @RequestParam(value = "classJson", required = true)
-            final String classJson) {
+            @RequestParam(value = OBJECT_AS_STRING_REQUEST_PARAM, required = true)
+            final String objectStr) {
         ModelAndView model = null;
         try {
             final List<ClassBO> classList
-                    = classController.buildClassBOListFromString(idClassRoom, classJson);
+                    = classController.buildClassBOListFromString(idClassRoom, objectStr);
             final Set<ClassBO> classSet = classController.saveClasses(classList);
             boolean wasSaved = true;
             boolean hasServerErrors = false;
@@ -226,9 +182,9 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
 
     @RequestMapping(value = CLASSROOM_LINK_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView linkStudentsToClassRooms(
-            @RequestParam(value = "grade", required = false)
+            @RequestParam(value = GRADE_REQUEST_PARAM, required = false)
             final Integer idGrade,
-            @RequestParam(value = "classroom", required = false)
+            @RequestParam(value = CLASSROOM_REQUEST_PARAM, required = false)
             final Integer idClassRoom) {
         ModelAndView model = null;
         try {
@@ -243,16 +199,16 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
 
     @RequestMapping(value = CLASSROOM_LINK_SAVE_PAGE, method = RequestMethod.POST)
     public ModelAndView saveLinkStudentsToClassRooms(
-            @RequestParam(value = "gradeId", required = false)
+            @RequestParam(value = GRADE_ID_REQUEST_PARAM, required = false)
             final Integer idGrade,
-            @RequestParam(value = "classroomId", required = false)
+            @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = false)
             final Integer idClassRoom,
-            @RequestParam(value = "classJson", required = true)
-            final String objectJson) {
+            @RequestParam(value = OBJECT_AS_STRING_REQUEST_PARAM, required = true)
+            final String objectStr) {
         ModelAndView model = null;
         try {
             final List<ClassRoomBO> classRoomList = classRoomController
-                    .buildStudentsLinkedToClassRoomList(objectJson);
+                    .buildStudentsLinkedToClassRoomList(objectStr);
             final Set<ClassRoomBO> classRoomSet = classRoomController.saveClassRoomXStudent(classRoomList);
             boolean wasSaved = true;
             boolean hasServerErrors = false;
@@ -325,7 +281,7 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
         model.addObject(YEAR_PARAMETER, year);
         this.addGradeListToModel(model);
         this.addClassRoomListToModel(model, year, null);
-        this.addStudentsNotLinked(model, idGrade, idClassRoom);
+        this.addStudentsNotLinkedToModel(model, idGrade, idClassRoom);
         final String currentYear = yearController.getCurrentYearString();
         model.addObject(CURRENT_CLASSROOM_LIST_PARAMETER,
                 classRoomController.findClassRooms(currentYear, null, this.getIdSchool()));
@@ -339,56 +295,5 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
         this.addYearListToModel(model);
         this.addGradeListToModel(model);
         this.addTimeListToModel(model);
-    }
-
-    private void addYearListToModel(final ModelAndView model)
-            throws IOException {
-        model.addObject(YEAR_LIST_PARAMETER, yearController.findAll());
-    }
-
-    private void addTimeListToModel(final ModelAndView model)
-            throws IOException {
-        model.addObject(TIME_LIST_PARAMETER, timeController.findAll());
-    }
-
-    private void addGradeListToModel(final ModelAndView model)
-            throws IOException {
-        model.addObject(GRADE_LIST_PARAMETER, gradeController.findAll());
-    }
-
-    private void addTeacherNotDirectorListToModel(final ModelAndView model,
-            final UserBO currentDirector) throws IOException {
-        final int idSchool = this.getIdSchool();
-        final List<UserBO> teacherList
-                = userController.findTeachersNotGroupDirector(idSchool, currentDirector);
-        model.addObject(TEACHER_LIST_PARAMETER, teacherList);
-    }
-
-    private void addClassRoomListToModel(final ModelAndView model, final String year,
-            final Integer grade) throws IOException {
-        model.addObject(CLASSROOM_LIST_PARAMETER,
-                classRoomController.findClassRooms(year, grade, this.getIdSchool()));
-    }
-
-    private void addClassListToModel(final ModelAndView model, final int idClassRoom)
-            throws IOException {
-        final Set<ClassBO> classSet = classController.findClasses(this.getIdSchool(), idClassRoom);
-        final List<ClassBO> classList = new ArrayList<>(classSet);
-        Collections.sort(classList);
-        model.addObject(CLASS_LIST_PARAMETER, classList);
-    }
-
-    private void addTeacherListToModel(final ModelAndView model) throws IOException {
-        final int idSchool = this.getIdSchool();
-        final String teacherCode = UserTypeBO.getTeacherCode();
-        final List<UserBO> teacherList = userController.findUsersByUserType(idSchool, teacherCode);
-        model.addObject(TEACHER_LIST_PARAMETER, teacherList);
-    }
-
-    private void addStudentsNotLinked(final ModelAndView model, final Integer idGrade,
-            final Integer idClassRoom) throws IOException {
-        final int idSchool = this.getIdSchool();
-        final List<UserBO> userList = userController.findStudentsNotLinked(idSchool, idGrade, idClassRoom);
-        model.addObject(STUDENT_LIST_PARAMETER, userList);
     }
 }

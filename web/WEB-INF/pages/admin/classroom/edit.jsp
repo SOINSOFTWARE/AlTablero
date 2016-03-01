@@ -46,18 +46,14 @@
                                         <div class="tab-pane active" id="tab_1">
                                             <div class="box-header">
                                                 <c:if test="${empty disabled}">
-                                                    <a href="#" id="save-link" class="btn btn-app">
-                                                        <i class="fa fa-save"></i> Guardar
-                                                    </a>
+                                                    <%@include file="../include_save_link.jsp" %>
                                                 </c:if>
                                                 <c:if test="${not empty updateMode && classroom.enabled}">
                                                     <a href="#" id="deactivate-link" class="btn btn-app" onclick="showDeactivateDialog();">
                                                         <i class="fa fa-minus-circle"></i> Eliminar
                                                     </a>
                                                 </c:if>
-                                                <a href="#" id="cancel-link" class="btn btn-app">
-                                                    <i class="fa fa-angle-left"></i> Volver
-                                                </a>
+                                                <%@include file="../include_return_link.jsp" %>
                                             </div>
                                             <div class="box-body">                                    	
                                                 <%@include file="../include_div_messages.jsp" %>
@@ -226,10 +222,7 @@
         </div>
         <%@include file="../include_required_dialog.jsp" %>
         <%@include file="../include_body_jscript.jsp" %>
-        <script src="<c:url value="/res/javascript/plugins/datatables/jquery.dataTables.js" />" type="text/javascript"></script>
-        <script src="<c:url value="/res/javascript/plugins/datatables/dataTables.bootstrap.js" />" type="text/javascript"></script>
-        <script src="<c:url value="/res/javascript/jquery-ui.min.js" />" type="text/javascript"></script>
-        <script src="<c:url value="/res/javascript/altablero.js" />" type="text/javascript"></script>
+        <%@include file="../include_datatable_jscript.jsp" %>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('#refClassRoom').trigger("click");

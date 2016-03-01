@@ -65,7 +65,7 @@ public class LoginRequestHandler extends AbstractRequestHandler {
         final String documentNumber
                 = AuthenticationUtils.getDocumentNumberFromAuthentication();
         try {
-            model = roleUtils.createModelWithUserDetails(documentNumber);
+            model = roleUtils.createModelWithUserDetails(documentNumber, 0);
             model.setViewName(LOCKSCREEN_PAGE);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage());
@@ -81,7 +81,7 @@ public class LoginRequestHandler extends AbstractRequestHandler {
             final String documentNumber
                     = AuthenticationUtils.getDocumentNumberFromAuthentication();
             try {
-                model = roleUtils.createModelWithUserDetails(documentNumber);
+                model = roleUtils.createModelWithUserDetails(documentNumber, 0);
                 model.setViewName(NOT_FOUND_PAGE);
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());

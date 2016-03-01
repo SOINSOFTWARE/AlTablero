@@ -3,10 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/web/WEB-INF/pages/admin/classroom/edit.jsp</file>
-            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/web/WEB-INF/pages/admin/classroom/class.jsp</file>
-            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/soinsoftware/altablero/request/ClassRoomRequestHandler.java</file>
-            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/soinsoftware/altablero/controller/ClassController.java</file>
+            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/soinsoftware/altablero/request/TeacherRequestHandler.java</file>
+            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/web/WEB-INF/pages/admin/teacher/edit.jsp</file>
+            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/soinsoftware/altablero/entity/UserBO.java</file>
+            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/soinsoftware/altablero/utils/FileUtils.java</file>
+            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/soinsoftware/altablero/utils/RoleUtils.java</file>
+            <file>file:/C:/Users/carlosandres/Documents/GitHub/AlTablero/src/java/co/com/soinsoftware/altablero/request/AbstractRequestHandler.java</file>
         </group>
     </open-files>
 </project-private>

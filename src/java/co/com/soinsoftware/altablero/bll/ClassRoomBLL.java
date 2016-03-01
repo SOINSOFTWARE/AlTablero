@@ -5,7 +5,6 @@
  */
 package co.com.soinsoftware.altablero.bll;
 
-import static co.com.soinsoftware.altablero.bll.AbstractBLL.MODULE_CLASS;
 import co.com.soinsoftware.altablero.entity.ClassRoomBO;
 import co.com.soinsoftware.altablero.json.mapper.ClassRoomMapper;
 import java.io.IOException;
@@ -43,7 +42,7 @@ public class ClassRoomBLL extends AbstractBLL {
         return classRoomMapper.getObjectFromJSON(response);
     }
 
-    public boolean IsValidCode(final int idSchool, final int idClassRoom,
+    public boolean isValidCode(final int idSchool, final int idClassRoom,
             final String code) throws IOException {
         final String method = MODULE_CLASSROOM + PATH_VALIDATE;
         final StringBuilder urlMethod = new StringBuilder(method);

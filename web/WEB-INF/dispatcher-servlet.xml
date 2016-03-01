@@ -11,6 +11,11 @@
         http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
     <context:component-scan base-package="co.com.soinsoftware.altablero" />
+    
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<property name="maxUploadSize" value="5000000" />
+	<property name="maxInMemorySize" value="5000000" />
+    </bean>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix">

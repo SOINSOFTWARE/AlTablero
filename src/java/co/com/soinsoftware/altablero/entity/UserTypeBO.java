@@ -75,6 +75,10 @@ public class UserTypeBO extends AbstractWithCodeBO implements Serializable {
                 || this.code.equals(TEACHER) || this.code.equals(STUDENT)
                 || this.code.equals(GUARDIAN);
     }
+    
+    public boolean isCoordinator() {
+        return this.code.equals(COORDINATOR);
+    }
 
     @Override
     public String toString() {

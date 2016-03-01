@@ -1,8 +1,14 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <aside class="left-side sidebar-offcanvas">
     <section class="sidebar">
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="<c:url value="/res/img/${avatar}.png" />" class="img-circle" alt="Imagen de usuario" />
+                <c:choose>
+                    <c:when test="${isAvatar}"><c:set var="imgSrc" value="/res/img/${avatar}.png"></c:set></c:when>
+                    <c:otherwise><c:set var="imgSrc" value="${avatar}"></c:set></c:otherwise>
+                </c:choose>
+                <img src="<c:url value='${imgSrc}' />" class="img-circle" alt="Imagen de usuario" />
             </div>
             <div class="pull-left info"><p>Hola ${userFirstName}</p></div>
         </div>
@@ -13,6 +19,34 @@
                     <i class="fa fa-dashboard"></i> <span>Tablero general</span>
                 </a>
             </li>
+            <c:if test="${canViewTeacherMenu}">
+                <li class="treeview">
+                    <a id="refTeacher" href="#">
+                        <i class="fa fa-laptop"></i> <span>Profesores</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <c:if test="${accessList.contains('PROVE')}">
+                            <li><a href="<c:url value="/admin/profesores" />"><i class="fa fa-angle-double-right"></i> Ver</a></li>
+                        </c:if>
+                        <c:if test="${accessList.contains('PROCE')}">
+                            <li><a href="<c:url value="/admin/profesores/edicion" />"><i class="fa fa-angle-double-right"></i> Crear</a></li>
+                        </c:if>
+                        <c:if test="${accessList.contains('PROMA')}">
+                            <li><a href="pages/charts/flot.html"><i class="fa fa-angle-double-right"></i> Asociar a materia</a></li>
+                        </c:if>
+                        <c:if test="${accessList.contains('PROCC')}">
+                            <li><a href="pages/charts/morris.html"><i class="fa fa-angle-double-right"></i> Crear o editar notas</a></li>
+                        </c:if>
+                        <c:if test="${accessList.contains('PROCA')}">
+                            <li><a href="pages/charts/morris.html"><i class="fa fa-angle-double-right"></i> Tomar notas</a></li>
+                        </c:if>
+                        <c:if test="${accessList.contains('PRODE')}">
+                            <li><a href="pages/charts/inline.html"><i class="fa fa-angle-double-right"></i> Despedir</a></li>
+                        </c:if>
+                    </ul>
+                </li>
+            </c:if>
             <c:if test="${canViewGradeMenu}">
                 <li class="treeview">                            
                     <a id="refClassRoom" href="#">
@@ -50,34 +84,6 @@
                         </c:if>
                         <c:if test="${accessList.contains('MATCU')}">
                             <li><a href="pages/tables/data.html"><i class="fa fa-angle-double-right"></i> Asociar a curso</a></li>
-                        </c:if>
-                    </ul>
-                </li>
-            </c:if>
-            <c:if test="${canViewTeacherMenu}">
-                <li id="liTeacher" class="treeview">
-                    <a href="#">
-                        <i class="fa fa-laptop"></i> <span>Profesores</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <c:if test="${accessList.contains('PROVE')}">
-                            <li><a href="pages/charts/morris.html"><i class="fa fa-angle-double-right"></i> Ver</a></li>
-                        </c:if>
-                        <c:if test="${accessList.contains('PROCE')}">
-                            <li><a href="<c:url value="/admin/profesor" />"><i class="fa fa-angle-double-right"></i> Crear o editar</a></li>
-                        </c:if>
-                        <c:if test="${accessList.contains('PROMA')}">
-                            <li><a href="pages/charts/flot.html"><i class="fa fa-angle-double-right"></i> Asociar a materia</a></li>
-                        </c:if>
-                        <c:if test="${accessList.contains('PROCC')}">
-                            <li><a href="pages/charts/morris.html"><i class="fa fa-angle-double-right"></i> Crear o editar notas</a></li>
-                        </c:if>
-                        <c:if test="${accessList.contains('PROCA')}">
-                            <li><a href="pages/charts/morris.html"><i class="fa fa-angle-double-right"></i> Tomar notas</a></li>
-                        </c:if>
-                        <c:if test="${accessList.contains('PRODE')}">
-                            <li><a href="pages/charts/inline.html"><i class="fa fa-angle-double-right"></i> Despedir</a></li>
                         </c:if>
                     </ul>
                 </li>

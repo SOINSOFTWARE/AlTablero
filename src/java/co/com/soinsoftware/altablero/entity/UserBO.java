@@ -6,7 +6,9 @@
 package co.com.soinsoftware.altablero.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -21,9 +23,9 @@ public class UserBO extends AbstractBO implements Serializable,
         Comparable<UserBO> {
 
     public static final String maleAvatar = "avatar5";
-    public static final String maleGender = "Masculino";
+    public static final String maleGender = "M";
     public static final String femaleAvatar = "avatar2";
-    public static final String femaleGender = "Femenino";
+    public static final String femaleGender = "F";
 
     private String documentNumber;
 
@@ -69,7 +71,7 @@ public class UserBO extends AbstractBO implements Serializable,
     /**
      * @param documentNumber the documentNumber to set
      */
-    public void setDocumentNumber(String documentNumber) {
+    public void setDocumentNumber(final String documentNumber) {
         this.documentNumber = documentNumber;
     }
 
@@ -83,7 +85,7 @@ public class UserBO extends AbstractBO implements Serializable,
     /**
      * @param documentType the documentType to set
      */
-    public void setDocumentType(String documentType) {
+    public void setDocumentType(final String documentType) {
         this.documentType = documentType;
     }
 
@@ -97,7 +99,7 @@ public class UserBO extends AbstractBO implements Serializable,
     /**
      * @param lastName the lastName to set
      */
-    public void setLastName(String lastName) {
+    public void setLastName(final String lastName) {
         this.lastName = lastName;
     }
 
@@ -111,7 +113,7 @@ public class UserBO extends AbstractBO implements Serializable,
     /**
      * @param born the born to set
      */
-    public void setBorn(Date born) {
+    public void setBorn(final Date born) {
         this.born = born;
     }
 
@@ -125,7 +127,7 @@ public class UserBO extends AbstractBO implements Serializable,
     /**
      * @param address the address to set
      */
-    public void setAddress(String address) {
+    public void setAddress(final String address) {
         this.address = address;
     }
 
@@ -139,7 +141,7 @@ public class UserBO extends AbstractBO implements Serializable,
     /**
      * @param phone1 the phone1 to set
      */
-    public void setPhone1(long phone1) {
+    public void setPhone1(final long phone1) {
         this.phone1 = phone1;
     }
 
@@ -153,7 +155,7 @@ public class UserBO extends AbstractBO implements Serializable,
     /**
      * @param phone2 the phone2 to set
      */
-    public void setPhone2(Long phone2) {
+    public void setPhone2(final Long phone2) {
         this.phone2 = phone2;
     }
 
@@ -167,7 +169,7 @@ public class UserBO extends AbstractBO implements Serializable,
     /**
      * @param password the password to set
      */
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -181,7 +183,7 @@ public class UserBO extends AbstractBO implements Serializable,
     /**
      * @param gender the gender to set
      */
-    public void setGender(String gender) {
+    public void setGender(final String gender) {
         this.gender = gender;
     }
 
@@ -189,7 +191,7 @@ public class UserBO extends AbstractBO implements Serializable,
         return photo;
     }
 
-    public void setPhoto(String photo) {
+    public void setPhoto(final String photo) {
         this.photo = photo;
     }
 
@@ -197,7 +199,7 @@ public class UserBO extends AbstractBO implements Serializable,
         return guardian1;
     }
 
-    public void setGuardian1(UserBO guardian1) {
+    public void setGuardian1(final UserBO guardian1) {
         this.guardian1 = guardian1;
     }
 
@@ -205,7 +207,7 @@ public class UserBO extends AbstractBO implements Serializable,
         return guardian2;
     }
 
-    public void setGuardian2(UserBO guardian2) {
+    public void setGuardian2(final UserBO guardian2) {
         this.guardian2 = guardian2;
     }
 
@@ -213,23 +215,37 @@ public class UserBO extends AbstractBO implements Serializable,
         return schoolSet;
     }
 
-    public void setSchoolSet(Set<SchoolBO> schoolSet) {
+    public void setSchoolSet(final Set<SchoolBO> schoolSet) {
         this.schoolSet = schoolSet;
+    }
+    
+    public void addSchoolToSet(final SchoolBO school) {
+        if (this.schoolSet == null) {
+            this.schoolSet = new HashSet<>();
+        }
+        this.schoolSet.add(school);
     }
 
     public Set<UserTypeBO> getUserTypeSet() {
         return userTypeSet;
     }
 
-    public void setUserTypeSet(Set<UserTypeBO> userTypeSet) {
+    public void setUserTypeSet(final Set<UserTypeBO> userTypeSet) {
         this.userTypeSet = userTypeSet;
+    }
+    
+    public void addUserTypeToSet(final UserTypeBO userType) {
+        if (this.userTypeSet == null) {
+            this.userTypeSet = new HashSet<>();
+        }
+        this.userTypeSet.add(userType);
     }
     
     public ClassRoomBO getLastClassRoom() {
         return lastClassRoom;
     }
 
-    public void setLastClassRoom(ClassRoomBO lastClassRoom) {
+    public void setLastClassRoom(final ClassRoomBO lastClassRoom) {
         this.lastClassRoom = lastClassRoom;
     }
 
@@ -276,6 +292,24 @@ public class UserBO extends AbstractBO implements Serializable,
         }
         return canViewMenu;
     }
+    
+    public boolean isCoordinator() {
+        boolean isCoordinator = false;
+        if (this.userTypeSet != null) {
+            for (final UserTypeBO userType : this.userTypeSet) {
+                isCoordinator = userType.isCoordinator();
+                if (isCoordinator) {
+                    break;
+                }
+            }
+        }
+        return isCoordinator;
+    }
+    
+    public String getBornDateInFormat() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return dateFormat.format(born);
+    }
 
     @Override
     public int hashCode() {
@@ -302,6 +336,7 @@ public class UserBO extends AbstractBO implements Serializable,
 
     @Override
     public int compareTo(UserBO o) {
-        return this.lastName.compareToIgnoreCase(o.getLastName());
+        return this.lastName.compareToIgnoreCase(o.getLastName()) 
+                * this.name.compareToIgnoreCase(o.getName());
     }
 }

@@ -64,7 +64,7 @@ public class ClassRoomController {
 
     public boolean isValidCode(final int idSchool, final int idClassRoom,
             final String code) throws IOException {
-        return classRoomBLL.IsValidCode(idSchool, idClassRoom, code);
+        return classRoomBLL.isValidCode(idSchool, idClassRoom, code);
     }
     
     public Set<ClassRoomBO> saveClassRoomXStudent(final List<ClassRoomBO> classRoomList)
