@@ -33,14 +33,14 @@ public class ClassController {
     @Autowired
     private ClassBLL classBLL;
 
-    public Set<ClassBO> findClasses(final int idSchool, final int idClassRoom)
-            throws IOException {
-        Set<ClassBO> classSet = classBLL.findClasses(idSchool, idClassRoom);
+    public Set<ClassBO> findClasses(final int idSchool, final int idClassRoom,
+            final int idTeacher, final boolean addDefaultData) throws IOException {
+        Set<ClassBO> classSet = classBLL.findClasses(idSchool, idClassRoom, idTeacher);
         if (classSet == null) {
             classSet = new HashSet<>();
         }
-        final Set<SubjectBO> subjectSet = subjectController
-                .findExcludingClass(idClassRoom);
+        final Set<SubjectBO> subjectSet = (addDefaultData) ? subjectController
+                .findExcludingClass(idClassRoom) : null;
         if (subjectSet != null && !subjectSet.isEmpty()) {
             for (SubjectBO subject : subjectSet) {
                 final ClassBO classBO = new ClassBO(0, subject.getName(), false,

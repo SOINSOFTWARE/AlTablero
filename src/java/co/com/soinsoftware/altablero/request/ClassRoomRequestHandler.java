@@ -264,7 +264,7 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
         final String year = yearController.getCurrentYearString();
         this.addClassRoomListToModel(model, year, null);
         if (idClassRoom != null && idClassRoom > 0) {
-            this.addClassListToModel(model, idClassRoom);
+            this.addClassListToModel(model, idClassRoom, 0, true);
             this.addTeacherListToModel(model);
         }
         model.addObject(SAVED_PARAMETER, wasSaved);

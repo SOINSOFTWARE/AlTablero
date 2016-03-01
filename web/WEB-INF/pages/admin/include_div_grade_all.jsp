@@ -1,4 +1,6 @@
-<div class="form-group">
+<div id="divGrade" class="form-group">
+    <label id="lblGrade" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
+    <label for="grade">Curso</label>
     <select id="grade" name="grade" class="form-control">
         <option value="0">Todos</option>
         <c:forEach items="${grades}" var="grade">

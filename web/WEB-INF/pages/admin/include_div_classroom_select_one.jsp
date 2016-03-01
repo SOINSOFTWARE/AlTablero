@@ -1,4 +1,6 @@
-<div class="form-group">
+<div id="divClassroom" class="form-group">
+    <label id="lblClassRoom" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
+    <label for="classroom">Sal&oacute;n</label>
     <select id="classroom" name="classroom" class="form-control">
         <option value="0">Seleccione uno...</option>
         <c:forEach items="${classrooms}" var="classroom">

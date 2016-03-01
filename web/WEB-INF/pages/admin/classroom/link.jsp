@@ -30,30 +30,28 @@
                                           action="<c:url value='/admin/cursos/asociar?${_csrf.parameterName}=${_csrf.token}' />">
                                         <table style="width: 100%">
                                             <tr>
-                                                <th style="width: 20%;"></th>
-                                                <th style="width: 20%;">A&ntilde;o</th>
-                                                <th style="width: 20%;">Curso</th>                                                
-                                                <th style="width: 20%;">Sal&oacute;n</th>
-                                                <th style="width: 20%;"></th>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>
-                                                    <div class="form-group">
-                                                        <input id="year" name="year" value="${year}" type="text"
-                                                               maxlength="4" class="form-control" readonly="readonly" />
+                                                <td style="width: 15%;"></td>
+                                                <td style="width: 60%;">
+                                                    <div class="col-xs-2">
+                                                        <div class="form-group">
+                                                            <label for="year">A&ntilde;o</label>
+                                                            <input id="year" name="year" value="${year}" type="text"
+                                                                   maxlength="4" class="form-control" readonly="readonly" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-5">
+                                                        <%@include file="../include_div_grade_all.jsp" %>
+                                                    </div>
+                                                    <div class="col-xs-5">
+                                                        <%@include file="../include_div_classroom_all.jsp" %>
                                                     </div>
                                                 </td>
-                                                <td align="right">
-                                                    <%@include file="../include_div_grade_all.jsp" %>
-                                                </td>
-                                                <td>
-                                                    <%@include file="../include_div_classroom_all.jsp" %>
-                                                </td>
-                                                <td style="vertical-align: top;">
-                                                    <a href="#" id="search-link" class="btn btn-social-icon btn-dropbox" onclick="onSearchClick();">
-                                                        <i class="fa fa-search"></i>
-                                                    </a>
+                                                <td style="width: 25%; vertical-align: bottom;">
+                                                    <div class="form-group">
+                                                        <a href="#" id="search-link" class="btn btn-social-icon btn-dropbox" onclick="onSearchClick();">
+                                                            <i class="fa fa-search"></i>
+                                                        </a>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </table>

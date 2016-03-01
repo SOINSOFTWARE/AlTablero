@@ -32,17 +32,11 @@
                         <c:if test="${accessList.contains('PROCE')}">
                             <li><a href="<c:url value="/admin/profesores/edicion" />"><i class="fa fa-angle-double-right"></i> Crear</a></li>
                         </c:if>
-                        <c:if test="${accessList.contains('PROMA')}">
-                            <li><a href="pages/charts/flot.html"><i class="fa fa-angle-double-right"></i> Asociar a materia</a></li>
-                        </c:if>
                         <c:if test="${accessList.contains('PROCC')}">
                             <li><a href="pages/charts/morris.html"><i class="fa fa-angle-double-right"></i> Crear o editar notas</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('PROCA')}">
                             <li><a href="pages/charts/morris.html"><i class="fa fa-angle-double-right"></i> Tomar notas</a></li>
-                        </c:if>
-                        <c:if test="${accessList.contains('PRODE')}">
-                            <li><a href="pages/charts/inline.html"><i class="fa fa-angle-double-right"></i> Despedir</a></li>
                         </c:if>
                     </ul>
                 </li>

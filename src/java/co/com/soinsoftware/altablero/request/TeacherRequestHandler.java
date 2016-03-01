@@ -5,6 +5,7 @@
  */
 package co.com.soinsoftware.altablero.request;
 
+import co.com.soinsoftware.altablero.entity.ClassRoomBO;
 import co.com.soinsoftware.altablero.entity.SchoolBO;
 import co.com.soinsoftware.altablero.entity.UserBO;
 import co.com.soinsoftware.altablero.entity.UserTypeBO;
@@ -126,8 +127,14 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         try {
             model = this.buildModelAndView();
             model.setViewName(TEACHER_EDIT_MODEL);
-            if (user != null && user.getPhoto() != null && !user.getPhoto().equals("")) {
-                user.setPhoto(this.userController.getHttpPath(user, this.getIdSchool()));
+            if (user != null) {
+                if(user.getPhoto() != null && !user.getPhoto().equals("")) {
+                    user.setPhoto(this.userController.getHttpPath(user, this.getIdSchool()));
+                }
+                if (user.getId() != null && user.getId() > 0) {
+                    this.addClassListToModel(model, 0, user.getId(), false);
+                    model.addObject(CLASSROOM_PARAMETER, this.getGroupDirectorClassRoom(user));
+                }
             }
             model.addObject(USER_PARAMETER, user);
             model.addObject(SAVED_PARAMETER, wasSaved);
@@ -139,5 +146,21 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             model = LoginRequestHandler.buildRedirectLoginModel();
         }
         return model;
+    }
+    
+    private ClassRoomBO getGroupDirectorClassRoom(final UserBO user) throws IOException {
+        ClassRoomBO groupDirClassRoom = null;
+        final String currentYear = yearController.getCurrentYearString();
+        final Set<ClassRoomBO> classRoomSet = this.classRoomController.findClassRooms(
+                currentYear, 0, this.getIdSchool());
+        if (classRoomSet != null) {
+            for (final ClassRoomBO classRoom : classRoomSet) {
+                if (classRoom.getUserBO().equals(user)) {
+                    groupDirClassRoom = classRoom;
+                    break;
+                }
+            }
+        }
+        return groupDirClassRoom;
     }
 }

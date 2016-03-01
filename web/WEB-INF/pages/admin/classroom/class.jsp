@@ -30,26 +30,25 @@
                                           action="<c:url value='/admin/cursos/clases?${_csrf.parameterName}=${_csrf.token}' />">
                                         <table style="width: 100%">
                                             <tr>
-                                                <th style="width: 20%;"></th>
-                                                <th style="width: 20%;">Curso</th>
-                                                <th style="width: 20%;">Sal&oacute;n</th>
-                                                <th style="width: 20%;"></th>
-                                                <th style="width: 20%;"></th>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td align="right">
-                                                    <%@include file="../include_div_grade_all.jsp" %>
+                                                <td style="width: 20%;"></td>
+                                                <td style="width: 40%; vertical-align: bottom">
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <%@include file="../include_div_grade_all.jsp" %>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <%@include file="../include_div_classroom_select_one.jsp" %>
+                                                        </div>
+                                                    </div>
                                                 </td>
-                                                <td>
-                                                    <%@include file="../include_div_classroom_select_one.jsp" %>
+                                                <td style="width: 20%; vertical-align: bottom;">
+                                                    <div class="form-group">
+                                                        <a href="#" id="search-link" class="btn btn-social-icon btn-dropbox">
+                                                            <i class="fa fa-search"></i>
+                                                        </a>
+                                                    </div>
                                                 </td>
-                                                <td style="vertical-align: top;">
-                                                    <a href="#" id="search-link" class="btn btn-social-icon btn-dropbox">
-                                                        <i class="fa fa-search"></i>
-                                                    </a>
-                                                </td>
-                                                <td></td>
+                                                <td style="width: 20%;"></td>
                                             </tr>
                                         </table>
                                     </form>

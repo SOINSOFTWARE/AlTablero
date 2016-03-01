@@ -163,9 +163,11 @@ public abstract class AbstractRequestHandler {
                 classRoomController.findClassRooms(year, grade, this.getIdSchool()));
     }
 
-    protected void addClassListToModel(final ModelAndView model, final int idClassRoom)
+    protected void addClassListToModel(final ModelAndView model, final int idClassRoom,
+            final int idTeacher, final boolean addDefaultData)
             throws IOException {
-        final Set<ClassBO> classSet = classController.findClasses(this.getIdSchool(), idClassRoom);
+        final Set<ClassBO> classSet = classController.findClasses(this.getIdSchool(),
+                idClassRoom, idTeacher, addDefaultData);
         final List<ClassBO> classList = new ArrayList<>(classSet);
         Collections.sort(classList);
         model.addObject(CLASS_LIST_PARAMETER, classList);

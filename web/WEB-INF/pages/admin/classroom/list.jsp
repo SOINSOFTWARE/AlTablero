@@ -29,34 +29,32 @@
                                           action="<c:url value='/admin/cursos?${_csrf.parameterName}=${_csrf.token}' />">
                                        <table style="width: 100%">
                                             <tr>
-                                                <th style="width: 20%;"></th>
-                                                <th style="width: 20%;">A&ntilde;o</th>
-                                                <th style="width: 20%;">Curso</th>
-                                                <th style="width: 20%;"></th>
-                                                <th style="width: 20%;"></th>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td align="right">
-                                                    <div class="form-group">
-                                                        <select id="year" name="year" class="form-control">
-                                                            <c:forEach items="${years}" var="year">
-                                                                <option value="${year.name}" <c:if test="${param.year == year.name}">selected</c:if>>
-                                                                    ${year.name}
-                                                                </option>
-                                                            </c:forEach>
-                                                        </select>
+                                                <td style="width: 20%;"></td>
+                                                <td style="width: 40%;">
+                                                    <div class="col-xs-5">
+                                                        <div class="form-group">
+                                                            <label for="year">A&ntilde;o</label>
+                                                            <select id="year" name="year" class="form-control">
+                                                                <c:forEach items="${years}" var="year">
+                                                                    <option value="${year.name}" <c:if test="${param.year == year.name}">selected</c:if>>
+                                                                        ${year.name}
+                                                                    </option>
+                                                                </c:forEach>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-7">
+                                                        <%@include file="../include_div_grade_all.jsp" %>
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <%@include file="../include_div_grade_all.jsp" %>
+                                                <td style="width: 20%; vertical-align: bottom;">
+                                                    <div class="form-group">
+                                                        <a href="#" id="search-link" class="btn btn-social-icon btn-dropbox" onclick="onSearchClick();">
+                                                            <i class="fa fa-search"></i>
+                                                        </a>
+                                                    </div>                                                    
                                                 </td>
-                                                <td style="vertical-align: top;">
-                                                    <a href="#" id="search-link" class="btn btn-social-icon btn-dropbox" onclick="onSearchClick();">
-                                                        <i class="fa fa-search"></i>
-                                                    </a>
-                                                </td>
-                                                <td></td>
+                                                <td style="width: 20%;"></td>
                                             </tr>
                                         </table> 
                                     </form>

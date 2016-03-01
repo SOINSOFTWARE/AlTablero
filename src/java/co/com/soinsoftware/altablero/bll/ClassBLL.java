@@ -6,7 +6,6 @@
 package co.com.soinsoftware.altablero.bll;
 
 import co.com.soinsoftware.altablero.entity.ClassBO;
-import co.com.soinsoftware.altablero.entity.SubjectBO;
 import co.com.soinsoftware.altablero.json.mapper.ClassMapper;
 import java.io.IOException;
 import java.util.List;
@@ -25,13 +24,14 @@ public class ClassBLL extends AbstractBLL {
     @Autowired
     private ClassMapper classMapper;
 
-    public Set<ClassBO> findClasses(final int idSchool, final int idClassRoom)
-            throws IOException {
+    public Set<ClassBO> findClasses(final int idSchool, final int idClassRoom,
+            final int idTeacher) throws IOException {
         final StringBuilder builder = new StringBuilder(
                 MODULE_CLASS + PATH_BY);
         builder.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_CLASSROOM_ID,
                 idClassRoom));
         builder.append(buildRequestParameter(CONCAT, PARAMETER_SCHOOL_ID, idSchool));
+        builder.append(buildRequestParameter(CONCAT, PARAMETER_USER_ID, idTeacher));
         final String response = httpRequest.sendGet(builder.toString());
         return classMapper.getObjectSetFromJSON(response);
     }
