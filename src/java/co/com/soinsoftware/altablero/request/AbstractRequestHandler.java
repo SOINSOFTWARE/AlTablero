@@ -5,12 +5,24 @@
  */
 package co.com.soinsoftware.altablero.request;
 
-import co.com.soinsoftware.altablero.bll.UserBLL;
+import co.com.soinsoftware.altablero.controller.ClassController;
+import co.com.soinsoftware.altablero.controller.ClassRoomController;
+import co.com.soinsoftware.altablero.controller.GradeController;
+import co.com.soinsoftware.altablero.controller.SchoolController;
+import co.com.soinsoftware.altablero.controller.TimeController;
+import co.com.soinsoftware.altablero.controller.UserController;
+import co.com.soinsoftware.altablero.controller.UserTypeController;
+import co.com.soinsoftware.altablero.controller.YearController;
+import co.com.soinsoftware.altablero.entity.ClassBO;
 import co.com.soinsoftware.altablero.entity.SchoolBO;
 import co.com.soinsoftware.altablero.entity.UserBO;
+import co.com.soinsoftware.altablero.entity.UserTypeBO;
 import co.com.soinsoftware.altablero.utils.AuthenticationUtils;
 import co.com.soinsoftware.altablero.utils.RoleUtils;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,17 +37,77 @@ public abstract class AbstractRequestHandler {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractRequestHandler.class);
     
+    protected static final String CLASS_LIST_PARAMETER = "classes";
+    protected static final String CLASSROOM_PARAMETER = "classroom";
+    protected static final String CLASSROOM_LIST_PARAMETER = "classrooms";
+    protected static final String CURRENT_CLASSROOM_LIST_PARAMETER = "currentClassrooms";
+    protected static final String CURRENT_YEAR_PARAMETER = "currentYear";
+    protected static final String DEACTIVATED_PARAMETER = "deactivated";
+    protected static final String GRADE_PARAMETER = "grade";
+    protected static final String GRADE_LIST_PARAMETER = "grades";
     protected static final String HAS_SERVER_ERRORS_PARAMETER = "hasServerErrors";
+    protected static final String INVALIDCODE_PARAMETER = "invalidCode";
+    protected static final String SAVED_PARAMETER = "saved";
+    protected static final String STUDENT_LIST_PARAMETER = "students";
+    protected static final String TEACHER_LIST_PARAMETER = "teachers";
+    protected static final String TIME_LIST_PARAMETER = "times";
+    protected static final String USER_PARAMETER = "user";
+    protected static final String YEAR_PARAMETER = "year";
+    protected static final String YEAR_LIST_PARAMETER = "years";
+    
+    protected static final String ADDRESS_REQUEST_PARAM = "address";
+    protected static final String BORN_DATE_REQUEST_PARAM = "bornDate";
+    protected static final String CLASSROOM_REQUEST_PARAM = "classroom";
+    protected static final String CLASSROOM_ID_REQUEST_PARAM = "classroomId";
+    protected static final String CODE_REQUEST_PARAM = "code";
+    protected static final String COORDINATOR_REQUEST_PARAM = "coordinator";
+    protected static final String DIRECTOR_REQUEST_PARAM = "director";
+    protected static final String DOCUMENT_NUMBER_REQUEST_PARAM = "documentNumber";
+    protected static final String DOCUMENT_TYPE_REQUEST_PARAM = "documentType";
+    protected static final String FILE_UPLOAD_REQUEST_PARAM = "fileUpload";
+    protected static final String GENDER_REQUEST_PARAM = "gender";
+    protected static final String GRADE_REQUEST_PARAM = "grade";
+    protected static final String GRADE_ID_REQUEST_PARAM = "gradeId";
+    protected static final String LAST_NAME_REQUEST_PARAM = "lastName";
+    protected static final String NAME_REQUEST_PARAM = "name";
+    protected static final String OBJECT_AS_STRING_REQUEST_PARAM = "objectStr";
+    protected static final String PHONE1_REQUEST_PARAM = "phone1";
+    protected static final String PHONE2_REQUEST_PARAM = "phone2";
+    protected static final String TIME_REQUEST_PARAM = "time";
+    protected static final String USER_ID_REQUEST_PARAM = "userId";
+    protected static final String YEAR_REQUEST_PARAM = "year";
 
     @Autowired
     private RoleUtils roleUtils;
 
     @Autowired
-    private UserBLL userBLL;
+    protected ClassController classController;
+
+    @Autowired
+    protected ClassRoomController classRoomController;
+
+    @Autowired
+    protected GradeController gradeController;
+    
+    @Autowired
+    protected SchoolController schoolController;
+
+    @Autowired
+    protected TimeController timeController;
+
+    @Autowired
+    protected UserController userController;
+    
+    @Autowired
+    protected UserTypeController userTypeController;
+
+    @Autowired
+    protected YearController yearController;
 
     protected ModelAndView buildModelAndView() throws IOException {
         final String documentNumber = AuthenticationUtils.getDocumentNumberFromAuthentication();
-        final ModelAndView model = this.roleUtils.createModelWithUserDetails(documentNumber);
+        final ModelAndView model = this.roleUtils.createModelWithUserDetails(
+                documentNumber, this.getIdSchool());
         return model;
     }
 
@@ -43,7 +115,7 @@ public abstract class AbstractRequestHandler {
         final String documentNumber = AuthenticationUtils.getDocumentNumberFromAuthentication();
         UserBO user = null;
         try {
-            user = this.userBLL.findUserByDocument(documentNumber);
+            user = this.userController.findUserByDocument(documentNumber);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage());
         }
@@ -58,5 +130,64 @@ public abstract class AbstractRequestHandler {
             idSchool = school.getId();
         }
         return idSchool;
+    }
+    
+    protected void addYearListToModel(final ModelAndView model)
+            throws IOException {
+        model.addObject(YEAR_LIST_PARAMETER, yearController.findAll());
+    }
+
+    protected void addTimeListToModel(final ModelAndView model)
+            throws IOException {
+        model.addObject(TIME_LIST_PARAMETER, timeController.findAll());
+    }
+
+    protected void addGradeListToModel(final ModelAndView model)
+            throws IOException {
+        model.addObject(GRADE_LIST_PARAMETER, gradeController.findAll());
+    }
+
+    protected void addTeacherNotDirectorListToModel(final ModelAndView model,
+            final UserBO currentDirector) throws IOException {
+        final int idSchool = this.getIdSchool();
+        final List<UserBO> teacherList
+                = userController.findTeachersNotGroupDirector(idSchool, currentDirector);
+        model.addObject(TEACHER_LIST_PARAMETER, teacherList);
+    }
+
+    protected void addClassRoomListToModel(final ModelAndView model, final String year,
+            final Integer grade) throws IOException {
+        model.addObject(CLASSROOM_LIST_PARAMETER,
+                classRoomController.findClassRooms(year, grade, this.getIdSchool()));
+    }
+
+    protected void addClassListToModel(final ModelAndView model, final int idClassRoom)
+            throws IOException {
+        final Set<ClassBO> classSet = classController.findClasses(this.getIdSchool(), idClassRoom);
+        final List<ClassBO> classList = new ArrayList<>(classSet);
+        Collections.sort(classList);
+        model.addObject(CLASS_LIST_PARAMETER, classList);
+    }
+
+    protected void addTeacherListToModel(final ModelAndView model) throws IOException {
+        final int idSchool = this.getIdSchool();
+        final String teacherCode = UserTypeBO.getTeacherCode();
+        final List<UserBO> teacherList = userController.findUsersByUserType(idSchool, teacherCode);
+        model.addObject(TEACHER_LIST_PARAMETER, teacherList);
+    }
+
+    protected void addStudentsNotLinkedToModel(final ModelAndView model, final Integer idGrade,
+            final Integer idClassRoom) throws IOException {
+        final int idSchool = this.getIdSchool();
+        final List<UserBO> userList = userController.findStudentsNotLinked(idSchool, idGrade, idClassRoom);
+        model.addObject(STUDENT_LIST_PARAMETER, userList);
+    }
+    
+    protected UserBO findUserByIdentifier(final Integer idUser) throws IOException {
+        UserBO user = null;
+        if (idUser != null) {
+            user = this.userController.findUserByIdentifier(idUser);
+        }
+        return user;
     }
 }
