@@ -32,19 +32,19 @@
                            <c:set var="disabledForSelect" value='disabled="true"' />
                         </c:when>
                     </c:choose>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box box-primary">
-                                <div class="nav-tabs-custom">
-                                    <ul class="nav nav-tabs">
-                                        <li class="active"><a href="#tab_1" data-toggle="tab">Informaci&oacute;n</a></li>
-                                        <c:if test="${updateMode}">
-                                        <li><a href="#tab_2" data-toggle="tab">Estudiantes</a></li>
-                                        </c:if>
-                                    </ul>
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="tab_1">
-                                            <div class="box-header">
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab_1" data-toggle="tab">Informaci&oacute;n</a></li>
+                            <c:if test="${updateMode}">
+                                <li><a href="#tab_2" data-toggle="tab">Estudiantes</a></li>
+                            </c:if>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab_1">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="box box-solid">
+                                            <div class="box-body" >
                                                 <c:if test="${empty disabled}">
                                                     <%@include file="../include_save_link.jsp" %>
                                                 </c:if>
@@ -54,8 +54,6 @@
                                                     </a>
                                                 </c:if>
                                                 <%@include file="../include_return_link.jsp" %>
-                                            </div>
-                                            <div class="box-body">                                    	
                                                 <%@include file="../include_div_messages.jsp" %>
                                                 <c:if test="${invalidCode}">
                                                     <div class="alert alert-danger alert-dismissable">
@@ -71,111 +69,88 @@
                                                         <b>Eliminar!</b> El sal&oacute;n ha sido eliminado.
                                                     </div>
                                                 </c:if>
-                                                <form id="frmDeactivate" name="frmDeactivate" method="POST"
-                                                      action="<c:url value='/admin/cursos/edicion/desactivar?${_csrf.parameterName}=${_csrf.token}' />">
-                                                    <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
-                                                </form>
-                                                <form id="frmSave" name="frmSave" method="POST"
-                                                      action="<c:url value='/admin/cursos/edicion/guardar?${_csrf.parameterName}=${_csrf.token}' />">
-                                                    <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
-                                                    <table style="width: 35%">
-                                                        <tr>
-                                                            <th>A&ntilde;o:</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div id="divYear" class="form-group">
-                                                                    <input id="yearName" name="yearName" type="text" maxlength="4" class="form-control" placeholder="A&ntilde;o" 
-                                                                           value="<c:choose><c:when test="${not empty updateMode}">${classroom.yearBO.name}</c:when><c:otherwise>${currentYear.name}</c:otherwise></c:choose>"
-                                                                           autocomplete="off" disabled=true" />
-                                                                    <input type="hidden" id="year" name="year" value="<c:choose><c:when test="${not empty updateMode}">${classroom.yearBO.id}</c:when><c:otherwise>${currentYear.id}</c:otherwise></c:choose>" />
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Curso:</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div id="divGrade" class="form-group">
-                                                                    <label id="lblGrade" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
-                                                                    <select id="grade" name="grade" class="form-control" ${disabledForSelect}>
-                                                                        <option value="0">Seleccione uno...</option>
-                                                                        <c:forEach items="${grades}" var="grade">
-                                                                            <option value="${grade.id}" <c:if test="${classroom.gradeBO.id == grade.id || classroom.idGrade == grade.id}">selected</c:if>>
-                                                                                ${grade.name}
-                                                                            </option>
-                                                                        </c:forEach>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Jornada:</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div id="divTime" class="form-group">
-                                                                    <label id="lblTime" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
-                                                                    <select id="time" name="time" class="form-control" ${disabledForSelect}>
-                                                                        <option value="0">Seleccione uno...</option>
-                                                                        <c:forEach items="${times}" var="time">
-                                                                            <option value="${time.id}" <c:if test="${classroom.timeBO.id == time.id || classroom.idTime == time.id}">selected</c:if>>
-                                                                                ${time.name}
-                                                                            </option>
-                                                                        </c:forEach>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Director:</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div id="divDirector" class="form-group">
-                                                                    <label id="lblDirector" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
-                                                                    <select id="director" name="director" class="form-control" ${disabledForSelect}>
-                                                                        <option value="0">Seleccione uno...</option>
-                                                                        <c:forEach items="${teachers}" var="teacher">
-                                                                            <option value="${teacher.id}" <c:if test="${classroom.userBO.id == teacher.id || classroom.idUser == teacher.id}">selected</c:if>>
-                                                                                ${teacher.name} ${teacher.lastName}
-                                                                            </option>
-                                                                        </c:forEach>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>C&oacute;digo del sal&oacute;n:</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div id="divCode" class="form-group">
-                                                                    <label id="lblCode" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
-                                                                    <input id="code" name="code" type="text" maxlength="5" class="form-control" placeholder="C&oacute;digo" value="${classroom.code}" autocomplete="off" ${disabled} />
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Nombre del sal&oacute;n:</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div id="divName" class="form-group">
-                                                                    <label id="lblName" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
-                                                                    <input id="name" name="name" type="text" maxlength="50" class="form-control" placeholder="Sal&oacute;n" value="${classroom.name}" autocomplete="off" ${disabled} />
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </form>                                    
                                             </div>
-                                        </div><!-- tab pane 1  -->
-                                        <c:if test="${updateMode}">
-                                        <div class="tab-pane" id="tab_2">
+                                        </div>
+                                    </div>
+                                </div>
+                                <form id="frmDeactivate" name="frmDeactivate" method="POST"
+                                      action="<c:url value='/admin/cursos/edicion/desactivar?${_csrf.parameterName}=${_csrf.token}' />">
+                                    <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
+                                </form>
+                                <form id="frmSave" name="frmSave" method="POST"
+                                      action="<c:url value='/admin/cursos/edicion/guardar?${_csrf.parameterName}=${_csrf.token}' />">
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <div class="box box-solid box-info">
+                                                <div class="box-header">
+                                                    <h3 class="box-title">General</h3>
+                                                </div>
+                                                <div class="box-body">
+                                                    <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
+                                                    <div id="divYear" class="form-group">
+                                                        <label for="yearName">A&ntilde;o</label>
+                                                        <input id="yearName" name="yearName" type="text" maxlength="4" class="form-control" placeholder="A&ntilde;o" 
+                                                               value="<c:choose><c:when test="${not empty updateMode}">${classroom.yearBO.name}</c:when><c:otherwise>${currentYear.name}</c:otherwise></c:choose>"
+                                                               autocomplete="off" disabled=true" />
+                                                        <input type="hidden" id="year" name="year" value="<c:choose><c:when test="${not empty updateMode}">${classroom.yearBO.id}</c:when><c:otherwise>${currentYear.id}</c:otherwise></c:choose>" />
+                                                    </div>
+                                                    <div id="divGrade" class="form-group">
+                                                        <label id="lblGrade" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
+                                                        <label for="grade">Curso</label>
+                                                        <select id="grade" name="grade" class="form-control" ${disabledForSelect}>
+                                                               <option value="0">Seleccione uno...</option>
+                                                               <c:forEach items="${grades}" var="grade">
+                                                                   <option value="${grade.id}" <c:if test="${classroom.gradeBO.id == grade.id || classroom.idGrade == grade.id}">selected</c:if>>
+                                                                       ${grade.name}
+                                                                   </option>
+                                                               </c:forEach>
+                                                        </select>
+                                                    </div>
+                                                    <div id="divTime" class="form-group">
+                                                        <label id="lblTime" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
+                                                        <label for="time">Jornada</label>
+                                                        <select id="time" name="time" class="form-control" ${disabledForSelect}>
+                                                            <option value="0">Seleccione uno...</option>
+                                                            <c:forEach items="${times}" var="time">
+                                                                <option value="${time.id}" <c:if test="${classroom.timeBO.id == time.id || classroom.idTime == time.id}">selected</c:if>>
+                                                                    ${time.name}
+                                                                </option>
+                                                            </c:forEach>
+                                                        </select>
+                                                    </div>
+                                                    <div id="divDirector" class="form-group">
+                                                        <label id="lblDirector" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
+                                                        <label for="director">Director</label>
+                                                        <select id="director" name="director" class="form-control" ${disabledForSelect}>
+                                                            <option value="0">Seleccione uno...</option>
+                                                            <c:forEach items="${teachers}" var="teacher">
+                                                                <option value="${teacher.id}" <c:if test="${classroom.userBO.id == teacher.id || classroom.idUser == teacher.id}">selected</c:if>>
+                                                                    ${teacher.lastName} ${teacher.name}
+                                                                </option>
+                                                            </c:forEach>
+                                                        </select>
+                                                    </div>
+                                                    <div id="divCode" class="form-group">
+                                                        <label id="lblCode" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
+                                                        <label for="code">C&oacute;digo del sal&oacute;n</label>
+                                                        <input id="code" name="code" type="text" maxlength="5" class="form-control" placeholder="C&oacute;digo" value="${classroom.code}" autocomplete="off" ${disabled} />
+                                                    </div>
+                                                    <div id="divName" class="form-group">
+                                                        <label id="lblName" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
+                                                        <label for="name">Nombre del sal&oacute;n</label>
+                                                        <input id="name" name="name" type="text" maxlength="50" class="form-control" placeholder="Sal&oacute;n" value="${classroom.name}" autocomplete="off" ${disabled} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div><!-- tab pane 1  -->
+                            <c:if test="${updateMode}">
+                                <div class="tab-pane" id="tab_2">
+                                    <div class="row">
+                                        <div class="col-xs-12">
                                             <div class="box-body table-responsive">
-                                                <br/>
                                                 <table id="tblClass" class="table table-bordered table-striped">
                                                     <thead>
                                                         <tr>
@@ -198,11 +173,10 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        </c:if>
-                                    </div><!-- Tab Content -->
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </c:if>
+                        </div><!-- Tab Content -->
                     </div>
                 </section>
             </aside>

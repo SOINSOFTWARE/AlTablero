@@ -126,8 +126,10 @@ public abstract class AbstractRequestHandler {
         final UserBO user = this.getLogeduser();
         final Set<SchoolBO> schoolSet = (user != null) ? user.getSchoolSet() : null;
         int idSchool = 0;
-        for (final SchoolBO school : schoolSet) {
-            idSchool = school.getId();
+        if (schoolSet != null) {
+            for (final SchoolBO school : schoolSet) {
+                idSchool = school.getId();
+            }
         }
         return idSchool;
     }
