@@ -100,7 +100,8 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
                 userTypeSet.add(this.userTypeController.findBy(UserTypeBO.getCoordinatorCode()));
             }
             userTypeSet.add(this.userTypeController.findBy(UserTypeBO.getTeacherCode()));
-            final boolean isValidDocNumber = userController.isValidDocumentNumber(idUser, docNumber);
+            final boolean isValidDocNumber = userController.isValidDocumentNumber(
+                    idUser, docNumber, this.getIdSchool());
             UserBO user = this.userController.buildUserBO(idUser, docType, docNumber, name,
                     lastName, bornDate, address, phone1, phone2, gender, file, school, userTypeSet);
             boolean saved = false;

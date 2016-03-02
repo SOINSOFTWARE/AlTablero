@@ -76,9 +76,9 @@ public class UserController {
         return userList;
     }
 
-    public boolean isValidDocumentNumber(final Integer idUser, final String documentNumber)
-            throws IOException {
-        return userBLL.isValidDocumentNumber(idUser, documentNumber);
+    public boolean isValidDocumentNumber(final Integer idUser,
+            final String documentNumber, final int idSchool) throws IOException {
+        return userBLL.isValidDocumentNumber(idUser, documentNumber, idSchool);
     }
 
     public UserBO save(final UserBO user) throws IOException {

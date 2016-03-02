@@ -60,7 +60,7 @@
                                                                     <div class="alert alert-danger alert-dismissable">
                                                                         <i class="fa fa-ban"></i>
                                                                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                                                        <b>Error!</b> El n&uacute;mero de documento ${user.documentNumber} ya est&aacute; siendo usado.
+                                                                        <b>Error!</b> El n&uacute;mero de documento ${user.documentNumber} ya est&aacute; siendo usado por un usuario activo.
                                                                     </div>
                                                                 </c:if>
                                                                 <c:if test="${deactivated}">

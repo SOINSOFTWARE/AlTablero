@@ -251,10 +251,12 @@ public class UserBO extends AbstractBO implements Serializable,
 
     public boolean canViewGradeMenu() {
         boolean canViewMenu = false;
-        for (UserTypeBO userType : this.userTypeSet) {
-            canViewMenu = userType.canViewGradeMenu();
-            if (canViewMenu) {
-                break;
+        if (this.userTypeSet != null) {
+            for (UserTypeBO userType : this.userTypeSet) {
+                canViewMenu = userType.canViewGradeMenu();
+                if (canViewMenu) {
+                    break;
+                }
             }
         }
         return canViewMenu;
@@ -262,10 +264,12 @@ public class UserBO extends AbstractBO implements Serializable,
 
     public boolean canViewSubjectMenu() {
         boolean canViewMenu = false;
-        for (UserTypeBO userType : this.userTypeSet) {
-            canViewMenu = userType.canViewSubjectMenu();
-            if (canViewMenu) {
-                break;
+        if (this.userTypeSet != null) {
+            for (UserTypeBO userType : this.userTypeSet) {
+                canViewMenu = userType.canViewSubjectMenu();
+                if (canViewMenu) {
+                    break;
+                }
             }
         }
         return canViewMenu;
@@ -273,10 +277,12 @@ public class UserBO extends AbstractBO implements Serializable,
 
     public boolean canViewTeacherMenu() {
         boolean canViewMenu = false;
-        for (UserTypeBO userType : this.userTypeSet) {
-            canViewMenu = userType.canViewTeacherMenu();
-            if (canViewMenu) {
-                break;
+        if (this.userTypeSet != null) {
+            for (UserTypeBO userType : this.userTypeSet) {
+                canViewMenu = userType.canViewTeacherMenu();
+                if (canViewMenu) {
+                    break;
+                }
             }
         }
         return canViewMenu;
@@ -284,10 +290,12 @@ public class UserBO extends AbstractBO implements Serializable,
 
     public boolean canViewStudentMenu() {
         boolean canViewMenu = false;
-        for (UserTypeBO userType : this.userTypeSet) {
-            canViewMenu = userType.canViewStudentMenu();
-            if (canViewMenu) {
-                break;
+        if (this.userTypeSet != null) {
+            for (UserTypeBO userType : this.userTypeSet) {
+                canViewMenu = userType.canViewStudentMenu();
+                if (canViewMenu) {
+                    break;
+                }
             }
         }
         return canViewMenu;

@@ -8,9 +8,6 @@ package co.com.soinsoftware.altablero.bll;
 import co.com.soinsoftware.altablero.entity.UserBO;
 import co.com.soinsoftware.altablero.json.mapper.UserMapper;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,14 +64,15 @@ public class UserBLL extends AbstractBLL {
         return this.sendGetToReceiveSet(methodAndParameters);
     }
     
-    public boolean isValidDocumentNumber(final Integer idUser, final String documentNumber)
-            throws IOException {
+    public boolean isValidDocumentNumber(final Integer idUser, final String documentNumber, 
+            final int idSchool) throws IOException {
         final String method = MODULE_USER + PATH_VALIDATE;
         final StringBuilder urlMethod = new StringBuilder(method);
         urlMethod.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_USER_ID,
                 (idUser == null) ? 0 : idUser));
         urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_DOCUMENT_NUMBER,
                 documentNumber));
+        urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_SCHOOL_ID, idSchool));
         final String response = httpRequest.sendGet(urlMethod.toString());
         return Boolean.valueOf(response);
     }

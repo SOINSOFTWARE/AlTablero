@@ -67,9 +67,11 @@ public class RoleUtils {
 
     public Set<String> getAccessCodeList(final UserBO user) {
         Set<String> accessList = new HashSet();
-        for (UserTypeBO userType : user.getUserTypeSet()) {
-            final Set<String> accessCodeList = this.getAccessCodeList(userType);
-            accessList.addAll(accessCodeList);
+        if (user.getUserTypeSet() != null) {
+            for (UserTypeBO userType : user.getUserTypeSet()) {
+                final Set<String> accessCodeList = this.getAccessCodeList(userType);
+                accessList.addAll(accessCodeList);
+            }
         }
         return accessList;
     }

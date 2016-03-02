@@ -39,7 +39,7 @@ public class ClassController {
             classSet = new HashSet<>();
         }
         final List<SubjectBO> subjectList = (addDefaultData) ? subjectController
-                .findExcludingClass(idClassRoom) : null;        
+                .findExcludingClass(idClassRoom) : new ArrayList<>();        
         for (final SubjectBO subject : subjectList) {
             final ClassBO classBO = new ClassBO(0, subject.getName(), false,
                     new Date(), new Date());
