@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +42,10 @@ public class YearController {
     }
 
     public List<YearBO> findAll() throws IOException {
-        List<YearBO> yearBOList = yearBOList = new ArrayList<>(yearBLL.findAll());
-        Collections.sort(yearBOList);
-        return yearBOList;
+        final Set<YearBO> yearSet = yearBLL.findAll();
+        final List<YearBO> yearList = (yearSet != null)
+                ? new ArrayList<>(yearSet) : new ArrayList<>();
+        Collections.sort(yearList);
+        return yearList;
     }
 }

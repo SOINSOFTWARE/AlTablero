@@ -216,8 +216,6 @@ public class ClassRoomBO extends AbstractWithCodeBO implements Comparable<ClassR
 
     @Override
     public int compareTo(ClassRoomBO other) {
-        final GradeBO itsGrade = this.gradeBO;
-        final GradeBO otherGrade = other.getGradeBO();
-        return (itsGrade.compareTo(otherGrade) * this.name.compareTo(other.getName())) * -1;
+        return (this.gradeBO.compareTo(other.getGradeBO()) * this.name.compareTo(other.getName())) * -1;
     }
 }

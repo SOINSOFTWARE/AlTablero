@@ -20,8 +20,6 @@ import co.com.soinsoftware.altablero.entity.UserTypeBO;
 import co.com.soinsoftware.altablero.utils.AuthenticationUtils;
 import co.com.soinsoftware.altablero.utils.RoleUtils;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -166,10 +164,8 @@ public abstract class AbstractRequestHandler {
     protected void addClassListToModel(final ModelAndView model, final int idClassRoom,
             final int idTeacher, final boolean addDefaultData)
             throws IOException {
-        final Set<ClassBO> classSet = classController.findClasses(this.getIdSchool(),
+        final List<ClassBO> classList = classController.findClasses(this.getIdSchool(),
                 idClassRoom, idTeacher, addDefaultData);
-        final List<ClassBO> classList = new ArrayList<>(classSet);
-        Collections.sort(classList);
         model.addObject(CLASS_LIST_PARAMETER, classList);
     }
 

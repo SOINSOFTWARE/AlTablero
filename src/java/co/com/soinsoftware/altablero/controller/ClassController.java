@@ -7,11 +7,10 @@ package co.com.soinsoftware.altablero.controller;
 
 import co.com.soinsoftware.altablero.bll.ClassBLL;
 import co.com.soinsoftware.altablero.entity.ClassBO;
-import co.com.soinsoftware.altablero.entity.ClassRoomBO;
 import co.com.soinsoftware.altablero.entity.SubjectBO;
-import co.com.soinsoftware.altablero.entity.UserBO;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -33,23 +32,23 @@ public class ClassController {
     @Autowired
     private ClassBLL classBLL;
 
-    public Set<ClassBO> findClasses(final int idSchool, final int idClassRoom,
+    public List<ClassBO> findClasses(final int idSchool, final int idClassRoom,
             final int idTeacher, final boolean addDefaultData) throws IOException {
         Set<ClassBO> classSet = classBLL.findClasses(idSchool, idClassRoom, idTeacher);
         if (classSet == null) {
             classSet = new HashSet<>();
         }
-        final Set<SubjectBO> subjectSet = (addDefaultData) ? subjectController
-                .findExcludingClass(idClassRoom) : null;
-        if (subjectSet != null && !subjectSet.isEmpty()) {
-            for (SubjectBO subject : subjectSet) {
-                final ClassBO classBO = new ClassBO(0, subject.getName(), false,
-                        new Date(), new Date());
-                classBO.setSubject(subject);
-                classSet.add(classBO);
-            }
+        final List<SubjectBO> subjectList = (addDefaultData) ? subjectController
+                .findExcludingClass(idClassRoom) : null;        
+        for (final SubjectBO subject : subjectList) {
+            final ClassBO classBO = new ClassBO(0, subject.getName(), false,
+                    new Date(), new Date());
+            classBO.setSubject(subject);
+            classSet.add(classBO);
         }
-        return classSet;
+        final List<ClassBO> classList = new ArrayList<>(classSet);
+        Collections.sort(classList);
+        return classList;
     }
 
     public Set<ClassBO> saveClasses(final List<ClassBO> classList)

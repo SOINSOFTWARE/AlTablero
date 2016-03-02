@@ -336,7 +336,7 @@ public class UserBO extends AbstractBO implements Serializable,
 
     @Override
     public int compareTo(UserBO o) {
-        return this.lastName.compareToIgnoreCase(o.getLastName()) 
-                * this.name.compareToIgnoreCase(o.getName());
+        return (this.lastName.compareToIgnoreCase(o.getLastName()) 
+                * this.name.compareToIgnoreCase(o.getName()));
     }
 }

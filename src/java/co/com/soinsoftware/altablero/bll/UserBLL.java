@@ -67,12 +67,6 @@ public class UserBLL extends AbstractBLL {
         return this.sendGetToReceiveSet(methodAndParameters);
     }
     
-    public List<UserBO> sortUserSet(final Set<UserBO> userSet) {
-        List<UserBO> userList = new ArrayList<>(userSet);
-        Collections.sort(userList);
-        return userList;
-    }
-    
     public boolean isValidDocumentNumber(final Integer idUser, final String documentNumber)
             throws IOException {
         final String method = MODULE_USER + PATH_VALIDATE;

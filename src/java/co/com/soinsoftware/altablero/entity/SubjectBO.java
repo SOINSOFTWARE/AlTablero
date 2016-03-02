@@ -13,8 +13,9 @@ import java.util.Date;
  * @since 03/02/2016
  * @version 1.0
  */
-public class SubjectBO extends AbstractWithCodeBO implements Serializable {
-    
+public class SubjectBO extends AbstractWithCodeBO
+        implements Serializable, Comparable<SubjectBO> {
+
     private static final long serialVersionUID = -3541220834853035946L;
 
     public SubjectBO() {
@@ -31,5 +32,10 @@ public class SubjectBO extends AbstractWithCodeBO implements Serializable {
         return "SubjectBO [id=" + id + ", code=" + code + ", name=" + name
                 + ", creation=" + creation + ", updated=" + updated
                 + ", enabled=" + enabled + "]";
+    }
+
+    @Override
+    public int compareTo(SubjectBO other) {
+        return this.name.compareToIgnoreCase(other.name);
     }
 }

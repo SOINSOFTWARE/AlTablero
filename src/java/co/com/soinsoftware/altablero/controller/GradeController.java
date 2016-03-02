@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,10 @@ public class GradeController {
     private GradeBLL gradeBLL;
 
     public List<GradeBO> findAll() throws IOException {
-        List<GradeBO> gradeBOList = new ArrayList<>(gradeBLL.findAll());
-        Collections.sort(gradeBOList);
-        return gradeBOList;
+        final Set<GradeBO> gradeSet = gradeBLL.findAll();
+        final List<GradeBO> gradeList = (gradeSet != null )
+                ? new ArrayList<>(gradeSet) : new ArrayList<>();
+        Collections.sort(gradeList);
+        return gradeList;
     }
 }

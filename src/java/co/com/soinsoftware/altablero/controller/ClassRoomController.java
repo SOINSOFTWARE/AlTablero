@@ -10,6 +10,7 @@ import co.com.soinsoftware.altablero.entity.ClassRoomBO;
 import co.com.soinsoftware.altablero.entity.UserBO;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -55,11 +56,15 @@ public class ClassRoomController {
         return classRoomBO;
     }
 
-    public Set<ClassRoomBO> findClassRooms(final String year,
+    public List<ClassRoomBO> findClassRooms(final String year,
             final Integer grade, final int idSchool) throws IOException {
         final String defYear = (year == null || year.isEmpty())
                 ? yearController.getCurrentYearString() : year;
-        return this.findClassRooms(idSchool, defYear, grade);
+        final Set<ClassRoomBO> classRoomSet = this.findClassRooms(idSchool, defYear, grade);
+        final List<ClassRoomBO> classRoomList = (classRoomSet != null)
+                ? new ArrayList<>(classRoomSet) : new ArrayList<>();
+        Collections.sort(classRoomList);
+        return classRoomList;
     }
 
     public boolean isValidCode(final int idSchool, final int idClassRoom,

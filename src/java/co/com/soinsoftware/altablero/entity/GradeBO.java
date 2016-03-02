@@ -38,9 +38,9 @@ public class GradeBO extends AbstractWithCodeBO implements Serializable,
 
     @Override
     public int compareTo(GradeBO other) {
-        Integer thisCode = Integer.parseInt(this.code);
+        Integer itsCode = Integer.parseInt(this.code);
         Integer otherCode = Integer.parseInt(other.getCode());
-        return thisCode.compareTo(otherCode);
+        return itsCode.compareTo(otherCode);
     }
 
 }

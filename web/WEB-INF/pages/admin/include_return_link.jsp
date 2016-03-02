@@ -1,1 +1,1 @@
-<a href="#" id="cancel-link" class="btn btn-app"><i class="fa fa-angle-left"></i> Volver</a>
+<a href="#" id="cancel-link" class="btn btn-app"><i class="fa fa-angle-left"></i> Listado</a>

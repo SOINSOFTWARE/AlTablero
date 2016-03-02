@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,10 @@ public class TimeController {
     private TimeBLL timeBLL;
 
     public List<TimeBO> findAll() throws IOException {
-        List<TimeBO> timeBOList = timeBOList = new ArrayList<>(timeBLL.findAll());
-        Collections.sort(timeBOList);
-        return timeBOList;
+        final Set<TimeBO> timeSet = timeBLL.findAll();
+        final List<TimeBO> timeList = (timeSet != null)
+                ? new ArrayList<>(timeSet) : new ArrayList<>();
+        Collections.sort(timeList);
+        return timeList;
     }
 }

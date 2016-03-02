@@ -13,6 +13,7 @@ import static co.com.soinsoftware.altablero.request.AbstractRequestHandler.LOGGE
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class TeacherRequestHandler extends AbstractRequestHandler {
 
+    private static final String TEACHER_DEACTIVATE_PAGE = "/admin/profesores/edicion/desactivar";
     private static final String TEACHER_EDIT_PAGE = "/admin/profesores/edicion";
     private static final String TEACHER_PAGE = "/admin/profesores";
     private static final String TEACHER_SAVE_PAGE = "/admin/profesores/edicion/guardar";
@@ -37,7 +39,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
     private static final String TEACHER_EDIT_MODEL = "admin/teacher/edit";
 
     @RequestMapping(value = TEACHER_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView listTeachers() {
+    public ModelAndView list() {
         ModelAndView model = null;
         try {
             model = this.buildModelAndView();
@@ -51,7 +53,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
     }
 
     @RequestMapping(value = TEACHER_EDIT_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView editTeacher(@RequestParam(value = USER_ID_REQUEST_PARAM, required = false)
+    public ModelAndView edit(@RequestParam(value = USER_ID_REQUEST_PARAM, required = false)
             final Integer idUser) {
         ModelAndView model = null;
         try {
@@ -65,7 +67,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
     }
 
     @RequestMapping(value = TEACHER_SAVE_PAGE, method = RequestMethod.POST)
-    public ModelAndView saveInformation(
+    public ModelAndView save(
             @RequestParam(value = USER_ID_REQUEST_PARAM, required = true)
             final Integer idUser,
             @RequestParam(value = DOCUMENT_TYPE_REQUEST_PARAM, required = true)
@@ -95,7 +97,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             final SchoolBO school = this.schoolController.findByIdentifier(this.getIdSchool());
             final Set<UserTypeBO> userTypeSet = new HashSet<>();
             if (coordinator != null) {
-                    userTypeSet.add(this.userTypeController.findBy(UserTypeBO.getCoordinatorCode()));
+                userTypeSet.add(this.userTypeController.findBy(UserTypeBO.getCoordinatorCode()));
             }
             userTypeSet.add(this.userTypeController.findBy(UserTypeBO.getTeacherCode()));
             final boolean isValidDocNumber = userController.isValidDocumentNumber(idUser, docNumber);
@@ -120,6 +122,30 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         return model;
     }
 
+    @RequestMapping(value = TEACHER_DEACTIVATE_PAGE, method = RequestMethod.POST)
+    public ModelAndView deactivate(
+            @RequestParam(value = USER_ID_REQUEST_PARAM, required = true)
+            final Integer idUser) {
+        ModelAndView model = null;
+        try {
+            UserBO user = this.findUserToBeFired(idUser);
+            final UserBO savedUser = this.userController.save(user);
+            boolean saved = false;
+            boolean hasServerErrors = false;
+            if (savedUser != null) {
+                saved = true;
+                user = savedUser;
+            } else {
+                hasServerErrors = true;
+            }
+            model = this.buildEditPageModel(user, false, saved, hasServerErrors, false);
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            model = this.buildEditPageModel(null, false, false, true, false);
+        }
+        return model;
+    }
+
     private ModelAndView buildEditPageModel(final UserBO user, final boolean wasSaved,
             final boolean wasDeactivated, final boolean hasServerErrors,
             final boolean invalidDocNumber) {
@@ -128,7 +154,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             model = this.buildModelAndView();
             model.setViewName(TEACHER_EDIT_MODEL);
             if (user != null) {
-                if(user.getPhoto() != null && !user.getPhoto().equals("")) {
+                if (user.getPhoto() != null && !user.getPhoto().equals("")) {
                     user.setPhoto(this.userController.getHttpPath(user, this.getIdSchool()));
                 }
                 if (user.getId() != null && user.getId() > 0) {
@@ -147,20 +173,34 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
-    
+
     private ClassRoomBO getGroupDirectorClassRoom(final UserBO user) throws IOException {
         ClassRoomBO groupDirClassRoom = null;
         final String currentYear = yearController.getCurrentYearString();
-        final Set<ClassRoomBO> classRoomSet = this.classRoomController.findClassRooms(
-                currentYear, 0, this.getIdSchool());
-        if (classRoomSet != null) {
-            for (final ClassRoomBO classRoom : classRoomSet) {
-                if (classRoom.getUserBO().equals(user)) {
-                    groupDirClassRoom = classRoom;
+        final List<ClassRoomBO> classRoomList = this.classRoomController.findClassRooms(
+                currentYear, 0, this.getIdSchool());        
+        for (final ClassRoomBO classRoom : classRoomList) {
+            if (classRoom.getUserBO().equals(user)) {
+                groupDirClassRoom = classRoom;
+                break;
+            }
+        }
+        return groupDirClassRoom;
+    }
+    
+    private UserBO findUserToBeFired(final int idUser) throws IOException {
+        final SchoolBO school = this.schoolController.findByIdentifier(
+                this.getIdSchool());
+        final UserBO user = this.findUserByIdentifier(idUser);
+        if (user != null && user.getSchoolSet() != null && school != null
+                && user.getSchoolSet().contains(school)) {
+            for (final SchoolBO schoolFromUser : user.getSchoolSet()) {
+                if (schoolFromUser.equals(school)) {
+                    schoolFromUser.setEnabled(false);
                     break;
                 }
             }
         }
-        return groupDirClassRoom;
+        return user;
     }
 }

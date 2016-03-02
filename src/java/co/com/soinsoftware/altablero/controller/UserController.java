@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,39 +39,26 @@ public class UserController {
 
     public List<UserBO> findTeachersNotGroupDirector(final int idSchool,
             final UserBO currentDirector) throws IOException {
-        List<UserBO> userList = null;
-        final Set<UserBO> teacherAvailableSet = userBLL.findTeacherNoDirectors(idSchool);
-        userList = new ArrayList<>();
-        if (teacherAvailableSet != null) {
-            userList.addAll(teacherAvailableSet);
-        }
+        Set<UserBO> teacherAvailableSet = this.userBLL.findTeacherNoDirectors(idSchool);
         if (currentDirector != null) {
-            userList.add(currentDirector);
+            if (teacherAvailableSet == null) {
+                teacherAvailableSet = new HashSet<>();
+            }
+            teacherAvailableSet.add(currentDirector);
         }
-        Collections.sort(userList);
-        return userList;
+        return sortUserSet(teacherAvailableSet);
     }
 
     public List<UserBO> findUsersByUserType(final int idSchool, final String cdUserType)
             throws IOException {
-        List<UserBO> userList = new ArrayList<>();
         final Set<UserBO> userSet = userBLL.findUsersByUserType(idSchool, cdUserType);
-        if (userSet != null) {
-            userList = new ArrayList<>(userSet);
-            Collections.sort(userList);
-        }
-        return userList;
+        return sortUserSet(userSet);
     }
 
     public List<UserBO> findStudentsNotLinked(final int idSchool, final Integer idGrade,
             final Integer idClassRoom) throws IOException {
-        List<UserBO> userList = new ArrayList<>();
         final Set<UserBO> userSet = userBLL.findStudentsNotLinked(idSchool, idGrade, idClassRoom);
-        if (userSet != null) {
-            userList = new ArrayList<>(userSet);
-            Collections.sort(userList);
-        }
-        return userList;
+        return sortUserSet(userSet);
     }
 
     public UserBO findUserByDocument(final String documentNumber) throws IOException {
@@ -82,7 +70,10 @@ public class UserController {
     }
 
     public List<UserBO> sortUserSet(final Set<UserBO> userSet) {
-        return userBLL.sortUserSet(userSet);
+        final List<UserBO> userList = (userSet != null)
+                ? new ArrayList<>(userSet) : new ArrayList<>();
+        Collections.sort(userList);
+        return userList;
     }
 
     public boolean isValidDocumentNumber(final Integer idUser, final String documentNumber)
