@@ -84,16 +84,16 @@
             </c:if>
             <c:if test="${canViewStudentMenu}">
                 <li id="liStudent" class="treeview">
-                    <a href="#">
+                    <a id="refStudent" href="#">
                         <i class="fa fa-male"></i> <span>Estudiantes</span>
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <c:if test="${accessList.contains('ESTVE')}">
-                            <li><a href="pages/UI/general.html"><i class="fa fa-angle-double-right"></i> Ver</a></li>
+                            <li><a href="<c:url value="/admin/estudiantes" />"><i class="fa fa-angle-double-right"></i> Ver</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('ESTCE')}">
-                            <li><a href="pages/UI/general.html"><i class="fa fa-angle-double-right"></i> Crear o editar</a></li>
+                            <li><a href="pages/UI/general.html"><i class="fa fa-angle-double-right"></i> Crear</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('ESTCU')}">
                             <li><a href="pages/UI/icons.html"><i class="fa fa-angle-double-right"></i> Asociar a curso</a></li>
