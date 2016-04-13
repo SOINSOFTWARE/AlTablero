@@ -32,8 +32,8 @@
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#tab_1" data-toggle="tab">Informaci&oacute;n</a></li>
-                            <c:if test="${updateMode && not deactivated}">
-                                <li><a href="#tab_2" data-toggle="tab">Notas</a></li>
+                            <c:if test="${updateMode && not deactivated && accessList.contains('ESTCA')}">
+                                <li><a href="#tab_2" data-toggle="tab">Calificaciones</a></li>
                             </c:if>
                         </ul>
                         <div class="tab-content">
@@ -84,6 +84,9 @@
                                                         <ul class="nav nav-tabs">
                                                             <li class="active"><a href="#tab_11" data-toggle="tab">Estudiante</a></li>
                                                             <li><a href="#tab_12" data-toggle="tab">Acudientes</a></li>
+                                                            <c:if test="${updateMode && not deactivated && accessList.contains('ESTCU')}">
+                                                                <li><a href="#tab_13" data-toggle="tab">Sal&oacute;n</a></li>
+                                                            </c:if>
                                                         </ul>
                                                         <div class="tab-content">
                                                             <div class="tab-pane active" id="tab_11">
@@ -236,6 +239,11 @@
                                                             <div class="tab-pane" id="tab_12">
                                                                 <%@include file="include_guardians.jsp" %>
                                                             </div>
+                                                            <c:if test="${updateMode && not deactivated && accessList.contains('ESTCU')}">
+                                                                <div class="tab-pane" id="tab_13">
+                                                                    <%@include file="include_classroom.jsp" %>
+                                                                </div>
+                                                            </c:if>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -331,6 +339,10 @@
                 event.preventDefault();
             });
             
+            $("#grade").on("change", function(){
+                filterClassRoom();
+            });
+            
             function validateRequiredFields() {
                 var phone1 = $("#phone1").val();
                 phone1 = phone1.replace('(','').replace(')','').replace('-','').replace(' ','');
@@ -386,7 +398,8 @@
                         || phone2 !== '${user.phone2}'
                         || countFiles === 1
                         || isDataChangedGuardian1()
-                        || isDataChangedGuardian2());
+                        || isDataChangedGuardian2()
+                        || ($("#classroom").val() !== '0' && $("#classroom").val() !== '${param.classroomId}'));
             }
             
             function isDataChangedGuardian1() {
@@ -480,6 +493,85 @@
                     display = "none";
                 }
                 changeClassNameAndStyle(div, label, className, display);
+            }
+
+            function filterClassRoom() {
+                $('#classroom option:gt(0)').remove();
+                if ($("#grade").val() === '0') {
+                    <c:forEach items="${classrooms}" var="classroom">
+                        addClassRoom("${classroom.id}", "${classroom.name}");
+                    </c:forEach>
+                } else if ($("#grade").val() === '1') {
+                    <c:forEach items="${classrooms}" var="classroom">
+                        <c:if test="${classroom.gradeBO.id eq 1}">
+                            addClassRoom("${classroom.id}", "${classroom.name}");
+                        </c:if>
+                    </c:forEach>
+                } else if ($("#grade").val() === '2') {
+                    <c:forEach items="${classrooms}" var="classroom">
+                        <c:if test="${classroom.gradeBO.id eq 2}">
+                           addClassRoom("${classroom.id}", "${classroom.name}");
+                        </c:if>
+                    </c:forEach>
+                } else if ($("#grade").val() === '3') {
+                    <c:forEach items="${classrooms}" var="classroom">
+                        <c:if test="${classroom.gradeBO.id eq 3}">
+                            addClassRoom("${classroom.id}", "${classroom.name}");
+                        </c:if>
+                    </c:forEach>
+                } else if ($("#grade").val() === '4') {
+                    <c:forEach items="${classrooms}" var="classroom">
+                        <c:if test="${classroom.gradeBO.id eq 4}">
+                            addClassRoom("${classroom.id}", "${classroom.name}");
+                        </c:if>
+                    </c:forEach>
+                } else if ($("#grade").val() === '5') {
+                    <c:forEach items="${classrooms}" var="classroom">
+                        <c:if test="${classroom.gradeBO.id eq 5}">
+                            addClassRoom("${classroom.id}", "${classroom.name}");
+                        </c:if>
+                    </c:forEach>
+                } else if ($("#grade").val() === '6') {
+                    <c:forEach items="${classrooms}" var="classroom">
+                        <c:if test="${classroom.gradeBO.id eq 6}">
+                            addClassRoom("${classroom.id}", "${classroom.name}");
+                        </c:if>
+                    </c:forEach>
+                } else if ($("#grade").val() === '7') {
+                    <c:forEach items="${classrooms}" var="classroom">
+                        <c:if test="${classroom.gradeBO.id eq 7}">
+                            addClassRoom("${classroom.id}", "${classroom.name}");
+                        </c:if>
+                    </c:forEach>
+                } else if ($("#grade").val() === '8') {
+                    <c:forEach items="${classrooms}" var="classroom">
+                        <c:if test="${classroom.gradeBO.id eq 8}">
+                            addClassRoom("${classroom.id}", "${classroom.name}");
+                        </c:if>
+                    </c:forEach>
+                } else if ($("#grade").val() === '9') {
+                    <c:forEach items="${classrooms}" var="classroom">
+                        <c:if test="${classroom.gradeBO.id eq 9}">
+                            addClassRoom("${classroom.id}", "${classroom.name}");
+                        </c:if>
+                    </c:forEach>
+                } else if ($("#grade").val() === '10') {
+                    <c:forEach items="${classrooms}" var="classroom">
+                        <c:if test="${classroom.gradeBO.id eq 10}">
+                            addClassRoom("${classroom.id}", "${classroom.name}");
+                        </c:if>
+                    </c:forEach>
+                } else if ($("#grade").val() === '11') {
+                    <c:forEach items="${classrooms}" var="classroom">
+                        <c:if test="${classroom.gradeBO.id eq 11}">
+                            addClassRoom("${classroom.id}", "${classroom.name}");
+                        </c:if>
+                    </c:forEach>
+                }
+            }
+
+            function addClassRoom(id, name) {
+                $('#classroom').append($("<option></option>").attr("value", id).text(name));
             }
         </script>
     </body>

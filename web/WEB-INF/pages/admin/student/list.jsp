@@ -78,6 +78,7 @@
                                                     <td style="vertical-align: top;" align="center">
                                                         <form id="frmEdit${student.id}" name="frmEdit${student.id}" method="POST"
                                                               action="<c:url value='/admin/estudiantes/edicion?${_csrf.parameterName}=${_csrf.token}' />">
+                                                            <input id="classroomId" name="classroomId" type="hidden" value="${param.classroom}" />
                                                             <input id="userId" name="userId" type="hidden" value="${student.id}" />
                                                             <a href="#" id="edit-link${student.id}" class="btn btn-social-icon btn-dropbox">
                                                                 <i class="fa fa-edit"></i>

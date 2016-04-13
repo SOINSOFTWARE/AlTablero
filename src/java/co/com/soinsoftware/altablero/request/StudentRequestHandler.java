@@ -13,8 +13,10 @@ import static co.com.soinsoftware.altablero.request.AbstractRequestHandler.LOGGE
 import static co.com.soinsoftware.altablero.request.AbstractRequestHandler.USER_ID_REQUEST_PARAM;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,8 +69,11 @@ public class StudentRequestHandler extends AbstractRequestHandler {
     }
     
     @RequestMapping(value = STUDENT_EDIT_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView edit(@RequestParam(value = USER_ID_REQUEST_PARAM, required = false)
-            final Integer idUser) {
+    public ModelAndView edit(
+            @RequestParam(value = USER_ID_REQUEST_PARAM, required = false)
+            final Integer idUser,
+            @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = false)
+            final Integer idClassRoom) {
         ModelAndView model = null;
         try {
             final UserBO user = this.findUserByIdentifier(idUser);
@@ -139,7 +144,9 @@ public class StudentRequestHandler extends AbstractRequestHandler {
             @RequestParam(value = GUARDIAN2_PHONE2_REQUEST_PARAM, required = true)
             final String phone2Guardian2,
             @RequestParam(value = GUARDIAN2_GENDER_REQUEST_PARAM, required = true)
-            final String genderGuardian2) {
+            final String genderGuardian2,
+            @RequestParam(value = CLASSROOM_REQUEST_PARAM, required = false)
+            final Integer idClassRoom) {
         ModelAndView model = null;
         try {
             final SchoolBO school = this.schoolController.findByIdentifier(this.getIdSchool());
@@ -167,6 +174,10 @@ public class StudentRequestHandler extends AbstractRequestHandler {
                 } else {
                     hasServerErrors = true;
                 }
+            }
+            if (saved && idClassRoom != null && idClassRoom > 0) {
+                saved = this.saveStudentXClassroom(idClassRoom, user);
+                hasServerErrors = !saved;
             }
             model = this.buildEditPageModel(user, saved, false, hasServerErrors, !isValidDocNumber);
         } catch (IOException | ParseException ex) {
@@ -218,6 +229,9 @@ public class StudentRequestHandler extends AbstractRequestHandler {
             model.addObject(DEACTIVATED_PARAMETER, wasDeactivated);
             model.addObject(HAS_SERVER_ERRORS_PARAMETER, hasServerErrors);
             model.addObject(INVALIDCODE_PARAMETER, invalidDocNumber);
+            final String currentYear = yearController.getCurrentYearString();
+            this.addClassRoomListToModel(model, currentYear, 0);
+            this.addGradeListToModel(model);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
             model = LoginRequestHandler.buildRedirectLoginModel();
@@ -252,5 +266,23 @@ public class StudentRequestHandler extends AbstractRequestHandler {
         user.setUserTypeSet(userTypeSet);
         user.setEnabled(true);
         return user;
+    }
+    
+    private boolean saveStudentXClassroom(final int idClassRoom, final UserBO user)
+            throws IOException {
+        boolean saved = true;
+        final Set<UserBO> studentSet = new HashSet<>();
+        studentSet.add(user);
+        ClassRoomBO classRoom = new ClassRoomBO();
+        classRoom.setId(idClassRoom);
+        classRoom.setStudentSet(studentSet);
+        final List<ClassRoomBO> classRoomList = new ArrayList<>();
+        classRoomList.add(classRoom);
+        final Set<ClassRoomBO> classRoomSet = 
+                classRoomController.saveClassRoomXStudent(classRoomList);
+        if (classRoomSet == null || classRoomSet.size() > classRoomList.size()) {
+            saved = false;
+        }
+        return saved;
     }
 }

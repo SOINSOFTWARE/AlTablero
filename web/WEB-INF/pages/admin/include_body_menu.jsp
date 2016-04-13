@@ -95,12 +95,6 @@
                         <c:if test="${accessList.contains('ESTCE')}">
                             <li><a href="<c:url value="/admin/estudiantes/edicion" />"><i class="fa fa-angle-double-right"></i> Crear</a></li>
                         </c:if>
-                        <c:if test="${accessList.contains('ESTCU')}">
-                            <li><a href="pages/UI/icons.html"><i class="fa fa-angle-double-right"></i> Asociar a curso</a></li>
-                        </c:if>
-                        <c:if test="${accessList.contains('ESTCA')}">
-                            <li><a href="pages/UI/icons.html"><i class="fa fa-angle-double-right"></i> Ver notas</a></li>
-                        </c:if>
                     </ul>
                 </li>
             </c:if>
