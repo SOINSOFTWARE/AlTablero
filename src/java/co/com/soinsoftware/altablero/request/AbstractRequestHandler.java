@@ -66,6 +66,24 @@ public abstract class AbstractRequestHandler {
     protected static final String GENDER_REQUEST_PARAM = "gender";
     protected static final String GRADE_REQUEST_PARAM = "grade";
     protected static final String GRADE_ID_REQUEST_PARAM = "gradeId";
+    protected static final String GUARDIAN1_ADDRESS_REQUEST_PARAM = "guardian1Address";
+    protected static final String GUARDIAN1_DOCUMENT_NUMBER_REQUEST_PARAM = "guardian1DocumentNumber";
+    protected static final String GUARDIAN1_DOCUMENT_TYPE_REQUEST_PARAM = "guardian1DocType";
+    protected static final String GUARDIAN1_GENDER_REQUEST_PARAM = "guardian1Gender";
+    protected static final String GUARDIAN1_LAST_NAME_REQUEST_PARAM = "guardian1LastName";
+    protected static final String GUARDIAN1_NAME_REQUEST_PARAM = "guardian1Name";
+    protected static final String GUARDIAN1_PHONE1_REQUEST_PARAM = "guardian1Phone1";
+    protected static final String GUARDIAN1_PHONE2_REQUEST_PARAM = "guardian1Phone2";
+    protected static final String GUARDIAN1_USER_ID_REQUEST_PARAM = "guardian1Id";
+    protected static final String GUARDIAN2_ADDRESS_REQUEST_PARAM = "guardian2Address";
+    protected static final String GUARDIAN2_DOCUMENT_NUMBER_REQUEST_PARAM = "guardian2DocumentNumber";
+    protected static final String GUARDIAN2_DOCUMENT_TYPE_REQUEST_PARAM = "guardian2DocType";
+    protected static final String GUARDIAN2_GENDER_REQUEST_PARAM = "guardian2Gender";
+    protected static final String GUARDIAN2_LAST_NAME_REQUEST_PARAM = "guardian2LastName";
+    protected static final String GUARDIAN2_NAME_REQUEST_PARAM = "guardian2Name";
+    protected static final String GUARDIAN2_PHONE1_REQUEST_PARAM = "guardian2Phone1";
+    protected static final String GUARDIAN2_PHONE2_REQUEST_PARAM = "guardian2Phone2";
+    protected static final String GUARDIAN2_USER_ID_REQUEST_PARAM = "guardian2Id";
     protected static final String LAST_NAME_REQUEST_PARAM = "lastName";
     protected static final String NAME_REQUEST_PARAM = "name";
     protected static final String OBJECT_AS_STRING_REQUEST_PARAM = "objectStr";
@@ -187,6 +205,22 @@ public abstract class AbstractRequestHandler {
         UserBO user = null;
         if (idUser != null) {
             user = this.userController.findUserByIdentifier(idUser);
+        }
+        return user;
+    }
+    
+    protected UserBO findUserToBeDeactivated(final int idUser) throws IOException {
+        final SchoolBO school = this.schoolController.findByIdentifier(
+                this.getIdSchool());
+        final UserBO user = this.findUserByIdentifier(idUser);
+        if (user != null && user.getSchoolSet() != null && school != null
+                && user.getSchoolSet().contains(school)) {
+            for (final SchoolBO schoolFromUser : user.getSchoolSet()) {
+                if (schoolFromUser.equals(school)) {
+                    schoolFromUser.setEnabled(false);
+                    break;
+                }
+            }
         }
         return user;
     }

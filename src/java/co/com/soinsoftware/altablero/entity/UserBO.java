@@ -316,7 +316,7 @@ public class UserBO extends AbstractBO implements Serializable,
     
     public String getBornDateInFormat() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        return dateFormat.format(born);
+        return (born != null) ? dateFormat.format(born) : "";
     }
 
     @Override

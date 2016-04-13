@@ -38,7 +38,7 @@ function showDeactivateDialog() {
         modal: true,
         resizable: false,
         buttons: [{
-            text: "Eliminar",
+            text: "Continuar",
             click: function() {
                 $( this ).dialog("close");
                 showLoadingImage();

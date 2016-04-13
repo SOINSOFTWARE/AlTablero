@@ -17,7 +17,7 @@
                     <h1>Estudiantes<small>Ver</small></h1>
                     <ol class="breadcrumb">
                         <li><a href="<c:url value="/admin/general" />"><i class="fa fa-dashboard"></i> Inicio</a></li>
-                        <li><i class="fa fa-edit"></i> Estudiantes</li>
+                        <li><i class="fa fa-male"></i> Estudiantes</li>
                         <li class="active">Ver</li>
                     </ol>
                 </section>

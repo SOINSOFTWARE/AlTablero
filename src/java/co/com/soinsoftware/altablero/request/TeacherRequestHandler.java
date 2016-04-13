@@ -129,7 +129,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             final Integer idUser) {
         ModelAndView model = null;
         try {
-            UserBO user = this.findUserToBeFired(idUser);
+            UserBO user = this.findUserToBeDeactivated(idUser);
             final UserBO savedUser = this.userController.save(user);
             boolean saved = false;
             boolean hasServerErrors = false;
@@ -187,21 +187,5 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             }
         }
         return groupDirClassRoom;
-    }
-    
-    private UserBO findUserToBeFired(final int idUser) throws IOException {
-        final SchoolBO school = this.schoolController.findByIdentifier(
-                this.getIdSchool());
-        final UserBO user = this.findUserByIdentifier(idUser);
-        if (user != null && user.getSchoolSet() != null && school != null
-                && user.getSchoolSet().contains(school)) {
-            for (final SchoolBO schoolFromUser : user.getSchoolSet()) {
-                if (schoolFromUser.equals(school)) {
-                    schoolFromUser.setEnabled(false);
-                    break;
-                }
-            }
-        }
-        return user;
     }
 }
