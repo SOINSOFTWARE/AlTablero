@@ -81,7 +81,14 @@
                                                             <input id="classroomId" name="classroomId" type="hidden" value="${param.classroom}" />
                                                             <input id="userId" name="userId" type="hidden" value="${student.id}" />
                                                             <a href="#" id="edit-link${student.id}" class="btn btn-social-icon btn-dropbox">
-                                                                <i class="fa fa-edit"></i>
+                                                                <c:choose>
+                                                                    <c:when test="${accessList.contains('ESTCE')}">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <i class="fa fa-search"></i>
+                                                                    </c:otherwise>    
+                                                                </c:choose>
                                                             </a>
                                                         </form>
                                                     </td>

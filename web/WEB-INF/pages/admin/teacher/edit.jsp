@@ -25,7 +25,7 @@
                     <c:if test="${not empty user && user.id > 0}">
                         <c:set var="updateMode" value="true" />
                     </c:if>
-                    <c:if test="${deactivated}">
+                    <c:if test="${deactivated || not accessList.contains('PROCE')}">
                         <c:set var="disabled" value='readonly="readonly"' />
                         <c:set var="disabledForSelect" value='disabled="true"' />
                     </c:if>
@@ -46,7 +46,7 @@
                                                     <div class="col-xs-12">
                                                         <div class="box box-solid">
                                                             <div class="box-body" >
-                                                                <c:if test="${not deactivated}">
+                                                                <c:if test="${not deactivated && accessList.contains('PROCE')}">
                                                                     <%@include file="../include_save_link.jsp" %>
                                                                 </c:if>
                                                                 <c:if test="${accessList.contains('PRODE') && updateMode && not deactivated}">

@@ -48,7 +48,14 @@
                                                               action="<c:url value='/admin/profesores/edicion?${_csrf.parameterName}=${_csrf.token}' />">
                                                             <input id="userId" name="userId" type="hidden" value="${teacher.id}" />
                                                             <a href="#" id="edit-link${teacher.id}" class="btn btn-social-icon btn-dropbox">
-                                                                <i class="fa fa-edit"></i>
+                                                                <c:choose>
+                                                                    <c:when test="${accessList.contains('PROCE')}">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <i class="fa fa-search"></i>
+                                                                    </c:otherwise>    
+                                                                </c:choose>
                                                             </a>
                                                         </form>
                                                     </td>
