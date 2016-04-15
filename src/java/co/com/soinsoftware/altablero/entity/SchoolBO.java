@@ -16,20 +16,40 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "schools")
 public class SchoolBO extends AbstractWithCodeBO implements Serializable {
-    
+
+    private String photo;
+
+    private NoteConfigurationBO note;
+
     public SchoolBO() {
         super();
     }
-    
+
     public SchoolBO(final int id, final String code, final String name,
             final boolean enabled, final Date creation, final Date updated) {
         super(id, code, name, enabled, creation, updated);
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public NoteConfigurationBO getNote() {
+        return note;
+    }
+
+    public void setNote(NoteConfigurationBO note) {
+        this.note = note;
     }
 
     @Override
     public String toString() {
         return "SchoolBO [id=" + id + ", code=" + code + ", name=" + name
                 + ", creation=" + creation + ", updated=" + updated
-                + ", enabled=" + enabled + "]";
+                + ", enabled=" + enabled + "photo=" + photo + ", note=" + note + "]";
     }
 }
