@@ -10,7 +10,7 @@ package co.com.soinsoftware.altablero.entity;
  * @since 03/02/2016
  * @version 1.0
  */
-public class PeriodBO extends AbstractBO {
+public class PeriodBO extends AbstractWithCodeBO implements Comparable<PeriodBO> {
 
     private static final long serialVersionUID = -6503035896094998534L;
 
@@ -30,8 +30,15 @@ public class PeriodBO extends AbstractBO {
 
     @Override
     public String toString() {
-        return "PeriodBO [year=" + year + ", id=" + id + ", name=" + name
-                + ", creation=" + creation + ", updated=" + updated
-                + ", enabled=" + enabled + "]";
+        return "PeriodBO [year=" + year + ", id=" + id + ", code=" + code
+                + ", name=" + name + ", creation=" + creation
+                + ", updated=" + updated + ", enabled=" + enabled + "]";
+    }
+
+    @Override
+    public int compareTo(final PeriodBO other) {
+         Integer itsCode = Integer.parseInt(this.code);
+        Integer otherCode = Integer.parseInt(other.getCode());
+        return itsCode.compareTo(otherCode);
     }
 }

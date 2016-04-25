@@ -8,12 +8,14 @@ package co.com.soinsoftware.altablero.request;
 import co.com.soinsoftware.altablero.controller.ClassController;
 import co.com.soinsoftware.altablero.controller.ClassRoomController;
 import co.com.soinsoftware.altablero.controller.GradeController;
+import co.com.soinsoftware.altablero.controller.PeriodController;
 import co.com.soinsoftware.altablero.controller.SchoolController;
 import co.com.soinsoftware.altablero.controller.TimeController;
 import co.com.soinsoftware.altablero.controller.UserController;
 import co.com.soinsoftware.altablero.controller.UserTypeController;
 import co.com.soinsoftware.altablero.controller.YearController;
 import co.com.soinsoftware.altablero.entity.ClassBO;
+import co.com.soinsoftware.altablero.entity.PeriodBO;
 import co.com.soinsoftware.altablero.entity.SchoolBO;
 import co.com.soinsoftware.altablero.entity.UserBO;
 import co.com.soinsoftware.altablero.entity.UserTypeBO;
@@ -35,6 +37,7 @@ public abstract class AbstractRequestHandler {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractRequestHandler.class);
     
+    protected static final String CLASS_PARAMETER = "classBO";
     protected static final String CLASS_LIST_PARAMETER = "classes";
     protected static final String CLASSROOM_PARAMETER = "classroom";
     protected static final String CLASSROOM_LIST_PARAMETER = "classrooms";
@@ -45,6 +48,8 @@ public abstract class AbstractRequestHandler {
     protected static final String GRADE_LIST_PARAMETER = "grades";
     protected static final String HAS_SERVER_ERRORS_PARAMETER = "hasServerErrors";
     protected static final String INVALIDCODE_PARAMETER = "invalidCode";
+    protected static final String PERIOD_PARAMETER = "period";
+    protected static final String PERIOD_LIST_PARAMETER = "periods";
     protected static final String SAVED_PARAMETER = "saved";
     protected static final String STUDENT_LIST_PARAMETER = "students";
     protected static final String TEACHER_LIST_PARAMETER = "teachers";
@@ -55,6 +60,8 @@ public abstract class AbstractRequestHandler {
     
     protected static final String ADDRESS_REQUEST_PARAM = "address";
     protected static final String BORN_DATE_REQUEST_PARAM = "bornDate";
+    protected static final String CLASS_REQUEST_PARAM = "classBO";
+    protected static final String CLASS_ID_REQUEST_PARAM = "classId";
     protected static final String CLASSROOM_REQUEST_PARAM = "classroom";
     protected static final String CLASSROOM_ID_REQUEST_PARAM = "classroomId";
     protected static final String CODE_REQUEST_PARAM = "code";
@@ -87,6 +94,8 @@ public abstract class AbstractRequestHandler {
     protected static final String LAST_NAME_REQUEST_PARAM = "lastName";
     protected static final String NAME_REQUEST_PARAM = "name";
     protected static final String OBJECT_AS_STRING_REQUEST_PARAM = "objectStr";
+    protected static final String PERIOD_REQUEST_PARAM = "period";
+    protected static final String PERIOD_ID_REQUEST_PARAM = "periodId";
     protected static final String PHONE1_REQUEST_PARAM = "phone1";
     protected static final String PHONE2_REQUEST_PARAM = "phone2";
     protected static final String TIME_REQUEST_PARAM = "time";
@@ -104,6 +113,9 @@ public abstract class AbstractRequestHandler {
 
     @Autowired
     protected GradeController gradeController;
+    
+    @Autowired
+    protected PeriodController periodController;
     
     @Autowired
     protected SchoolController schoolController;
@@ -223,5 +235,9 @@ public abstract class AbstractRequestHandler {
             }
         }
         return user;
+    }
+    
+    protected List<PeriodBO> findPeriodListBySchool() throws IOException {
+        return periodController.findAll(this.getIdSchool());
     }
 }

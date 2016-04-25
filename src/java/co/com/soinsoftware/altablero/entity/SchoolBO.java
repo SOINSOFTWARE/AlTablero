@@ -18,6 +18,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class SchoolBO extends AbstractWithCodeBO implements Serializable {
 
     private String photo;
+    
+    private Integer period;
 
     private NoteConfigurationBO note;
 
@@ -36,6 +38,14 @@ public class SchoolBO extends AbstractWithCodeBO implements Serializable {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+    
+    public Integer getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(Integer period) {
+        this.period = period;
     }
 
     public NoteConfigurationBO getNote() {
