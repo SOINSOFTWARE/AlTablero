@@ -5,6 +5,7 @@
  */
 package co.com.soinsoftware.altablero.entity;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -21,11 +22,29 @@ public class NoteDefinitionBO extends AbstractBO {
     private Integer value;
 
     private PeriodBO period;
+    
+    private int idClass;
+    
+    private int idPeriod;
 
     private Set<NoteValueBO> noteValueSet;
 
     public NoteDefinitionBO() {
         super();
+    }
+    
+    public NoteDefinitionBO(final int id, final String name, final String description,
+            final int value, final boolean enabled, final int idClass, final int idPeriod) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.value = value;
+        this.creation = new Date();
+        this.updated = new Date();
+        this.enabled = enabled;
+        this.idClass = idClass;
+        this.idPeriod = idPeriod;
     }
 
     public String getDescription() {
@@ -58,6 +77,22 @@ public class NoteDefinitionBO extends AbstractBO {
 
     public void setNoteValueSet(Set<NoteValueBO> noteValueSet) {
         this.noteValueSet = noteValueSet;
+    }
+    
+    public int getIdClass() {
+        return idClass;
+    }
+
+    public void setIdClass(int idClass) {
+        this.idClass = idClass;
+    }
+
+    public int getIdPeriod() {
+        return idPeriod;
+    }
+
+    public void setIdPeriod(int idPeriod) {
+        this.idPeriod = idPeriod;
     }
 
     @Override

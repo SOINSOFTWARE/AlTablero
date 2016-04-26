@@ -8,6 +8,7 @@ package co.com.soinsoftware.altablero.request;
 import co.com.soinsoftware.altablero.controller.ClassController;
 import co.com.soinsoftware.altablero.controller.ClassRoomController;
 import co.com.soinsoftware.altablero.controller.GradeController;
+import co.com.soinsoftware.altablero.controller.NoteDefinitionController;
 import co.com.soinsoftware.altablero.controller.PeriodController;
 import co.com.soinsoftware.altablero.controller.SchoolController;
 import co.com.soinsoftware.altablero.controller.TimeController;
@@ -114,6 +115,9 @@ public abstract class AbstractRequestHandler {
 
     @Autowired
     protected GradeController gradeController;
+    
+    @Autowired
+    protected NoteDefinitionController noteDefController;
     
     @Autowired
     protected PeriodController periodController;

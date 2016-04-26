@@ -59,11 +59,30 @@ public class ClassBLL extends AbstractBLL {
         final String response = httpRequest.sendGet(builder.toString());
         return noteDefMapper.getObjectSetFromJSON(response);
     }
+    
+    public ClassBO saveNoteDefinitionByClass(final List<NoteDefinitionBO> noteDefList)
+            throws IOException {
+        final String jsonObject = this.writeNoteDefinitionValueAsString(noteDefList);
+        final String method = MODULE_CLASS + PATH_SAVE_NOTEDEFINITION_BY_CLASS;
+        final String response = httpRequest.sendPost(method, jsonObject);
+        return this.classMapper.getObjectFromJSON(response);
+    }
 
     private String writeValueAsString(final List<ClassBO> classList) {
         String jsonObject = null;
         try {
             jsonObject = ClassMapper.JSON_WRITER.writeValueAsString(classList);
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+        return jsonObject;
+    }
+    
+    private String writeNoteDefinitionValueAsString(
+            final List<NoteDefinitionBO> noteDefList) {
+        String jsonObject = null;
+        try {
+            jsonObject = NoteDefinitionMapper.JSON_WRITER.writeValueAsString(noteDefList);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
         }

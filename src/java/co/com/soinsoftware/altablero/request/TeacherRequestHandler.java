@@ -164,7 +164,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             final Integer idPeriod) {
         ModelAndView model = null;
         try {
-            model = this.buildActivityPageModel(idClass, idPeriod);
+            model = this.buildActivityPageModel(idClass, idPeriod, false, false);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
             model = LoginRequestHandler.buildRedirectLoginModel();
@@ -174,15 +174,28 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
     
     @RequestMapping(value = TEACHER_ACTIVITY_SAVE_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView saveActivityList(
-            @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = false)
+            @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = true)
             final Integer idClassRoom,
-            @RequestParam(value = CLASS_ID_REQUEST_PARAM, required = false)
+            @RequestParam(value = CLASS_ID_REQUEST_PARAM, required = true)
             final Integer idClass,
-            @RequestParam(value = PERIOD_ID_REQUEST_PARAM, required = false)
-            final Integer idPeriod) {
+            @RequestParam(value = PERIOD_ID_REQUEST_PARAM, required = true)
+            final Integer idPeriod,
+            @RequestParam(value = OBJECT_AS_STRING_REQUEST_PARAM, required = true)
+            final String objectStr) {
         ModelAndView model = null;
         try {
-            model = this.buildActivityPageModel(idClass, idPeriod);
+            final List<NoteDefinitionBO> noteDefList = this.noteDefController
+                    .buildNoteDefinitionListFromString(idClass, idPeriod, objectStr);
+            final ClassBO classBO = this.classController.saveNoteDefinitionByClass(noteDefList);
+            boolean saved = false;
+            boolean hasServerErrors = false;
+            if (classBO != null && classBO.getNoteDefinitionSet() != null 
+                    && !classBO.getNoteDefinitionSet().isEmpty()) {
+                saved = true;
+            } else {
+                hasServerErrors = true;
+            }
+            model = this.buildActivityPageModel(idClass, idPeriod, saved, hasServerErrors);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
             model = LoginRequestHandler.buildRedirectLoginModel();
@@ -233,7 +246,8 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
     }
     
     private ModelAndView buildActivityPageModel(final Integer idClass,
-            final Integer idPeriod) throws IOException {
+            final Integer idPeriod, final boolean wasSaved,
+            final boolean hasServerErrors) throws IOException {
         ModelAndView model = this.buildModelAndView();
         model.setViewName(TEACHER_ACTIVITY_MODEL);
         final List<ClassBO> classList = classController.findClasses(
@@ -244,6 +258,8 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         model.addObject(CLASSROOM_LIST_PARAMETER, classRoomList);
         model.addObject(CLASS_LIST_PARAMETER, classList);
         model.addObject(PERIOD_LIST_PARAMETER, periodList);
+        model.addObject(SAVED_PARAMETER, wasSaved);
+        model.addObject(HAS_SERVER_ERRORS_PARAMETER, hasServerErrors);
         this.addClassToModel(model, classList, idClass);
         this.addPeriodToModel(model, periodList, idPeriod);
         this.addNoteDefinitionToModel(model, idClass, idPeriod);

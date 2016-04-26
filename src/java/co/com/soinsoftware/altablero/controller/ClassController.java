@@ -61,6 +61,11 @@ public class ClassController {
             final int idPeriod) throws IOException {
         return this.classBLL.findNoteDefinitionByClass(idClass, idPeriod);
     }
+    
+    public ClassBO saveNoteDefinitionByClass(final List<NoteDefinitionBO> noteDefList)
+            throws IOException {
+        return this.classBLL.saveNoteDefinitionByClass(noteDefList);
+    }
 
     public List<ClassBO> buildClassBOListFromString(final int idClassRoom,
             String objectsStr) {

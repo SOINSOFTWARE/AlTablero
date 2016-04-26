@@ -91,6 +91,7 @@
                                                         <input id="classroomId" name="classroomId" value="${classroom.id}" type="hidden" />
                                                         <input id="classId" name="classId" value="${classBO.id}" type="hidden" />
                                                         <input id="periodId" name="periodId" value="${period.id}" type="hidden" />
+                                                        <input id="objectStr" name="objectStr" type="hidden" />
                                                         <table id="tblActivity" class="table table-bordered table-striped">
                                                             <thead>
                                                                 <tr>
@@ -205,18 +206,34 @@
             });
             <c:forEach var="count" begin="1" end="${end}">
                 $("#newActivate${count}").on("ifChecked", function(event) {
-                    enableInputs(${count}, false);
+                    enableNewInputs(${count}, false);
                 });
                 
                 $("#newActivate${count}").on("ifUnchecked", function(event) {
-                    enableInputs(${count}, true);
+                    enableNewInputs(${count}, true);
+                });
+            </c:forEach>
+            
+            function enableNewInputs(id, disabled) {
+                $("#newName" + id).prop("disabled", disabled);
+                $("#newDescription" + id).prop("disabled", disabled);
+                $("#newValue" + id).prop("disabled", disabled);
+            }
+            
+            <c:forEach items="${activities}" var="activity">
+                $("#activate${activity.id}").on("ifChecked", function(event) {
+                    enableInputs(${activity.id}, false);
+                });
+                
+                $("#activate${activity.id}").on("ifUnchecked", function(event) {
+                    enableInputs(${activity.id}, true);
                 });
             </c:forEach>
             
             function enableInputs(id, disabled) {
-                $("#newName" + id).prop("disabled", disabled);
-                $("#newDescription" + id).prop("disabled", disabled);
-                $("#newValue" + id).prop("disabled", disabled);
+                $("#name" + id).prop("disabled", disabled);
+                $("#description" + id).prop("disabled", disabled);
+                $("#value" + id).prop("disabled", disabled);
             }
             
             $("#classroom").on("change", function(){
@@ -241,6 +258,7 @@
             $( "#save-link" ).click(function( event ) {
                 if (validateRequiredFields()) {
                     if (isDataChanged() && validateValueColumn()) {
+                        buildObject();
                         showSaveDialog();
                     }
                 } else {
@@ -390,6 +408,45 @@
                     }]
                 });
                 $("#value-dialog").dialog("open");
+            }
+            
+            function buildObject() {
+                var objectStr = "{";
+                <c:forEach items="${activities}" var="activity">
+                    if ($("#activate${activity.id}").is(":checked")) {
+                        objectStr += buildObjectAsString(${activity.id}, true);
+                    } else {
+                        objectStr += buildObjectAsString(${activity.id}, false);
+                    }
+                </c:forEach>
+                <c:forEach var="count" begin="1" end="${end}">
+                    if ($("#newActivate${count}").is(":checked")) {
+                        objectStr += buildNewObjectAsString(${count}, true);
+                    }
+                </c:forEach>
+                objectStr += "}";
+                $("#objectStr").val(objectStr);
+            }
+            
+            function buildObjectAsString(id, enabled) {
+                var objectStr = "[";
+                objectStr += "idNoteDefinition=" + $("#activity" + id).val() + ";";
+                objectStr += "name=" + $("#name" + id).val() + ";";
+                objectStr += "description=" + $("#description" + id).val() + ";";
+                objectStr += "value=" + $("#value" + id).val() + ";";
+                objectStr += "enabled=" + enabled;
+                objectStr += "]";
+                return objectStr;
+            }
+            
+            function buildNewObjectAsString(id, enabled) {
+                var objectStr = "[";
+                objectStr += "name=" + $("#newName" + id).val() + ";";
+                objectStr += "description=" + $("#newDescription" + id).val() + ";";
+                objectStr += "value=" + $("#newValue" + id).val() + ";";
+                objectStr += "enabled=" + enabled;
+                objectStr += "]";
+                return objectStr;
             }
         </script>
     </body>
