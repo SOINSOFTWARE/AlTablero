@@ -7,6 +7,7 @@ package co.com.soinsoftware.altablero.controller;
 
 import co.com.soinsoftware.altablero.bll.ClassBLL;
 import co.com.soinsoftware.altablero.entity.ClassBO;
+import co.com.soinsoftware.altablero.entity.NoteDefinitionBO;
 import co.com.soinsoftware.altablero.entity.SubjectBO;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,6 +55,11 @@ public class ClassController {
     public Set<ClassBO> saveClasses(final List<ClassBO> classList)
             throws IOException {
         return classBLL.saveClasses(classList);
+    }
+    
+    public Set<NoteDefinitionBO> findNoteDefinitionByClass(final int idClass,
+            final int idPeriod) throws IOException {
+        return this.classBLL.findNoteDefinitionByClass(idClass, idPeriod);
     }
 
     public List<ClassBO> buildClassBOListFromString(final int idClassRoom,

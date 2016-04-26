@@ -7,6 +7,7 @@ package co.com.soinsoftware.altablero.request;
 
 import co.com.soinsoftware.altablero.entity.ClassBO;
 import co.com.soinsoftware.altablero.entity.ClassRoomBO;
+import co.com.soinsoftware.altablero.entity.NoteDefinitionBO;
 import co.com.soinsoftware.altablero.entity.PeriodBO;
 import co.com.soinsoftware.altablero.entity.SchoolBO;
 import co.com.soinsoftware.altablero.entity.UserBO;
@@ -237,6 +238,20 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         model.setViewName(TEACHER_ACTIVITY_MODEL);
         final List<ClassBO> classList = classController.findClasses(
                 this.getIdSchool(), 0, this.getLogeduser().getId(), false);
+        final List<ClassRoomBO> classRoomList = this.
+                buildClassRoomListFromClassList(classList);
+        final List<PeriodBO> periodList = this.findPeriodListBySchool();
+        model.addObject(CLASSROOM_LIST_PARAMETER, classRoomList);
+        model.addObject(CLASS_LIST_PARAMETER, classList);
+        model.addObject(PERIOD_LIST_PARAMETER, periodList);
+        this.addClassToModel(model, classList, idClass);
+        this.addPeriodToModel(model, periodList, idPeriod);
+        this.addNoteDefinitionToModel(model, idClass, idPeriod);
+        return model;
+    }
+    
+    private List<ClassRoomBO> buildClassRoomListFromClassList(
+            final List<ClassBO> classList) {
         final List<ClassRoomBO> classRoomList = new ArrayList<>();
         for (final ClassBO classBO : classList) {
             final ClassRoomBO classRoom = classBO.getClassRoom();
@@ -244,10 +259,11 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
                 classRoomList.add(classRoom);
             }
         }
-        final List<PeriodBO> periodList = this.findPeriodListBySchool();
-        model.addObject(CLASSROOM_LIST_PARAMETER, classRoomList);
-        model.addObject(CLASS_LIST_PARAMETER, classList);
-        model.addObject(PERIOD_LIST_PARAMETER, periodList);
+        return classRoomList;
+    }
+    
+    private void addClassToModel(final ModelAndView model,
+            final List<ClassBO> classList, final Integer idClass) {
         if (idClass != null && idClass > 0) {
             for (final ClassBO classBO : classList) {
                 if (classBO.getId().equals(idClass)) {
@@ -257,6 +273,10 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
                 }
             }
         }
+    }
+    
+    private void addPeriodToModel(final ModelAndView model,
+            final List<PeriodBO> periodList, final Integer idPeriod) {
         if (idPeriod != null && idPeriod > 0) {
             for (final PeriodBO period : periodList) {
                 if (period.getId().equals(idPeriod)) {
@@ -265,6 +285,14 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
                 }
             }
         }
-        return model;
+    }
+    
+    private void addNoteDefinitionToModel(final ModelAndView model,
+            final Integer idClass, final Integer idPeriod) throws IOException {
+        if (idClass != null && idClass > 0 && idPeriod != null && idPeriod > 0) {
+            final Set<NoteDefinitionBO> noteDefSet = this.classController
+                    .findNoteDefinitionByClass(idClass, idPeriod);
+            model.addObject(ACTIVITY_LIST_PARAMETER, noteDefSet);
+        }
     }
 }

@@ -37,6 +37,7 @@ public abstract class AbstractRequestHandler {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractRequestHandler.class);
     
+    protected static final String ACTIVITY_LIST_PARAMETER = "activities";
     protected static final String CLASS_PARAMETER = "classBO";
     protected static final String CLASS_LIST_PARAMETER = "classes";
     protected static final String CLASSROOM_PARAMETER = "classroom";

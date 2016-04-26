@@ -104,25 +104,25 @@
                                                                 <c:forEach items="${activities}" var="activity">
                                                                     <tr>
                                                                         <td style="vertical-align: middle; text-align: center">
-                                                                            <input id="activate${activity.id}" name="activate${activity.id}" type="checkbox" />
+                                                                            <input id="activate${activity.id}" name="activate${activity.id}" type="checkbox" checked="checked" />
                                                                         </td>
                                                                         <td style="vertical-align: middle; text-align: center">
                                                                             <input id="activity${activity.id}" name="activity${activity.id}" value="${activity.id}" type="hidden" />
                                                                             <div id="divName${activity.id}">
                                                                                 <label id="lblName${activity.id}" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
-                                                                                <input id="name${activity.id}" name="name${activity.id}" value="${activity.name}" type="text" />
+                                                                                <input id="name${activity.id}" name="name${activity.id}" value="${activity.name}" style="width: 100%" type="text" />
                                                                             </div>
                                                                         </td>
                                                                         <td style="vertical-align: middle; text-align: center">
                                                                             <div id="divDescription${activity.id}">
                                                                                 <label id="lblDescription${activity.id}" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
-                                                                                <input id="description${activity.id}" name="description${activity.id}" value="${activity.description}" type="text" />
+                                                                                <input id="description${activity.id}" name="description${activity.id}" value="${activity.description}" style="width: 100%" type="text" />
                                                                             </div>
                                                                         </td>
                                                                         <td style="vertical-align: middle; text-align: center">
                                                                             <div id="divValue${activity.id}">
                                                                                 <label id="lblValue${activity.id}" style="display: none" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Campo requerido</label>
-                                                                                <input id="value${activity.id}" name="value${activity.id}" value="${activity.value}" type="text" data-inputmask='"mask": "999"' />
+                                                                                <input id="value${activity.id}" name="value${activity.id}" value="${activity.value}" style="width: 100%" type="text" data-inputmask='"mask": "999"' data-mask />
                                                                             </div>
                                                                         </td>
                                                                     </tr>

@@ -33,7 +33,7 @@
                             <li><a href="<c:url value="/admin/profesores/edicion" />"><i class="fa fa-angle-double-right"></i> Crear</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('PROCC')}">
-                            <li><a href="<c:url value="/admin/profesores/actividades" />"><i class="fa fa-angle-double-right"></i> Actividades</a></li>
+                            <li><a href="<c:url value="/admin/profesores/actividades" />"><i class="fa fa-angle-double-right"></i> Crear actividades</a></li>
                         </c:if>
                         <c:if test="${accessList.contains('PROCA')}">
                             <li><a href="pages/charts/morris.html"><i class="fa fa-angle-double-right"></i> Tomar notas</a></li>

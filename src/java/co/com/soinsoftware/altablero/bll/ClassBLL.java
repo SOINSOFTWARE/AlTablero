@@ -6,7 +6,9 @@
 package co.com.soinsoftware.altablero.bll;
 
 import co.com.soinsoftware.altablero.entity.ClassBO;
+import co.com.soinsoftware.altablero.entity.NoteDefinitionBO;
 import co.com.soinsoftware.altablero.json.mapper.ClassMapper;
+import co.com.soinsoftware.altablero.json.mapper.NoteDefinitionMapper;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +25,9 @@ public class ClassBLL extends AbstractBLL {
 
     @Autowired
     private ClassMapper classMapper;
+    
+    @Autowired
+    private NoteDefinitionMapper noteDefMapper;
 
     public Set<ClassBO> findClasses(final int idSchool, final int idClassRoom,
             final int idTeacher) throws IOException {
@@ -42,6 +47,17 @@ public class ClassBLL extends AbstractBLL {
         final String method = MODULE_CLASS + PATH_SAVE;
         final String response = httpRequest.sendPost(method, jsonObject);
         return classMapper.getObjectSetFromJSON(response);
+    }
+    
+    public Set<NoteDefinitionBO> findNoteDefinitionByClass(final int idClass,
+            final int idPeriod) throws IOException {
+        final StringBuilder builder = new StringBuilder(
+                MODULE_CLASS + PATH_NOTEDEFINITION_BY_CLASS);
+        builder.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_CLASS_ID,
+                idClass));
+        builder.append(buildRequestParameter(CONCAT, PARAMETER_PERIOD_ID, idPeriod));
+        final String response = httpRequest.sendGet(builder.toString());
+        return noteDefMapper.getObjectSetFromJSON(response);
     }
 
     private String writeValueAsString(final List<ClassBO> classList) {
