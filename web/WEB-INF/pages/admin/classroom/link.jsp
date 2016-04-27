@@ -79,8 +79,8 @@
                                             <thead>
                                                 <tr>
                                                     <th style="width: 8%; text-align: center">Matricular</th>
-                                                    <th style="width: 16%">Apellidos</th>
-                                                    <th style="width: 16%">Nombre</th>
+                                                    <th style="width: 16%">Apellido(s)</th>
+                                                    <th style="width: 16%">Nombre(s)</th>
                                                     <th style="width: 15%">&Uacute;ltimo curso</th>
                                                     <th style="width: 15%">&Uacute;ltimo sal&oacute;n</th>
                                                     <th style="width: 15%">Curso</th>

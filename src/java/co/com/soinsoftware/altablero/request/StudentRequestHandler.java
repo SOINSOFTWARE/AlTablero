@@ -56,10 +56,10 @@ public class StudentRequestHandler extends AbstractRequestHandler {
             this.addGradeListToModel(model);
             final int idSchool = this.getIdSchool();
             final ClassRoomBO classRoom = (idClassRoom != null && idClassRoom > 0)
-                    ? classRoomController.findClassRoom(idSchool, idClassRoom) : null;
+                    ? this.findClassRoom(idSchool, idClassRoom) : null;
             if (classRoom != null && classRoom.getStudentSet() != null) {
                 model.addObject(STUDENT_LIST_PARAMETER,
-                        this.userController.sortUserSet(classRoom.getStudentSet()));
+                        this.sortUserSet(classRoom.getStudentSet()));
             }
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);

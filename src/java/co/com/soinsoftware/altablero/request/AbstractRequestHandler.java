@@ -16,6 +16,7 @@ import co.com.soinsoftware.altablero.controller.UserController;
 import co.com.soinsoftware.altablero.controller.UserTypeController;
 import co.com.soinsoftware.altablero.controller.YearController;
 import co.com.soinsoftware.altablero.entity.ClassBO;
+import co.com.soinsoftware.altablero.entity.ClassRoomBO;
 import co.com.soinsoftware.altablero.entity.PeriodBO;
 import co.com.soinsoftware.altablero.entity.SchoolBO;
 import co.com.soinsoftware.altablero.entity.UserBO;
@@ -39,6 +40,7 @@ public abstract class AbstractRequestHandler {
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractRequestHandler.class);
     
     protected static final String ACTIVITY_LIST_PARAMETER = "activities";
+    protected static final String ACTIVITY_VALUE_LIST_PARAMETER = "values";
     protected static final String CLASS_PARAMETER = "classBO";
     protected static final String CLASS_LIST_PARAMETER = "classes";
     protected static final String CLASSROOM_PARAMETER = "classroom";
@@ -244,5 +246,14 @@ public abstract class AbstractRequestHandler {
     
     protected List<PeriodBO> findPeriodListBySchool() throws IOException {
         return periodController.findAll(this.getIdSchool());
+    }
+    
+    protected ClassRoomBO findClassRoom(final int idSchool, final Integer idClassRoom)
+            throws IOException {
+        return this.classRoomController.findClassRoom(idSchool, idClassRoom);
+    }
+    
+    protected List<UserBO> sortUserSet(final Set<UserBO> userSet) {
+        return this.userController.sortUserSet(userSet);
     }
 }

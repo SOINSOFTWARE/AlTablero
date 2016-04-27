@@ -66,7 +66,7 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
         try {
             final int idSchool = this.getIdSchool();
             classRoomBO = (idClassRoom != null && idClassRoom > 0)
-                    ? classRoomController.findClassRoom(idSchool, idClassRoom) : null;
+                    ? this.findClassRoom(idSchool, idClassRoom) : null;
             model = this.buildEditPageModel(classRoomBO, false, false, false, false);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
@@ -105,7 +105,7 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
                 saved = true;
             } else {
                 invalidCode = true;
-                savedClassRoom = classRoomController.findClassRoom(this.getIdSchool(), idClassRoomForSave);
+                savedClassRoom = this.findClassRoom(this.getIdSchool(), idClassRoomForSave);
                 classRoomBO.setClassSet(savedClassRoom.getClassSet());
                 classRoomBO.setYearBO(savedClassRoom.getYearBO());
                 classRoomBO.setStudentSet(savedClassRoom.getStudentSet());
@@ -128,7 +128,7 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
         final int idSchool = this.getIdSchool();
         ClassRoomBO classRoomBO = null;
         try {
-            classRoomBO = classRoomController.findClassRoom(idSchool, idClassRoom);
+            classRoomBO = this.findClassRoom(idSchool, idClassRoom);
             classRoomBO.setEnabled(false);
             final ClassRoomBO savedClassRoom = classRoomController.saveClassRoom(classRoomBO);
             model = this.buildEditPageModel(savedClassRoom, false, true, false, false);
@@ -238,7 +238,7 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
                 model.addObject(CLASSROOM_PARAMETER, classRoomBO);
                 if (classRoomBO.getStudentSet() != null) {
                     model.addObject(STUDENT_LIST_PARAMETER,
-                            userController.sortUserSet(classRoomBO.getStudentSet()));
+                            this.sortUserSet(classRoomBO.getStudentSet()));
                 }
             }
             this.addTeacherNotDirectorListToModel(model, currentDirector);

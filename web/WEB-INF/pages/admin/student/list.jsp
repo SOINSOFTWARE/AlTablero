@@ -64,8 +64,8 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 25%">N&uacute;mero de documento</th>
-                                                <th style="width: 25%">Apellidos</th>
-                                                <th style="width: 25%">Nombres</th>
+                                                <th style="width: 25%">Apellido(s)</th>
+                                                <th style="width: 25%">Nombre(s)</th>
                                                 <th style="width: 25%"></th>
                                             </tr>
                                         </thead>
