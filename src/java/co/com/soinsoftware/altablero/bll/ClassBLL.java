@@ -7,8 +7,10 @@ package co.com.soinsoftware.altablero.bll;
 
 import co.com.soinsoftware.altablero.entity.ClassBO;
 import co.com.soinsoftware.altablero.entity.NoteDefinitionBO;
+import co.com.soinsoftware.altablero.entity.NoteValueBO;
 import co.com.soinsoftware.altablero.json.mapper.ClassMapper;
 import co.com.soinsoftware.altablero.json.mapper.NoteDefinitionMapper;
+import co.com.soinsoftware.altablero.json.mapper.NoteValueMapper;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +30,9 @@ public class ClassBLL extends AbstractBLL {
     
     @Autowired
     private NoteDefinitionMapper noteDefMapper;
+    
+    @Autowired
+    private NoteValueMapper noteValueMapper;
 
     public Set<ClassBO> findClasses(final int idSchool, final int idClassRoom,
             final int idTeacher) throws IOException {
@@ -62,8 +67,16 @@ public class ClassBLL extends AbstractBLL {
     
     public ClassBO saveNoteDefinitionByClass(final List<NoteDefinitionBO> noteDefList)
             throws IOException {
-        final String jsonObject = this.writeNoteDefinitionValueAsString(noteDefList);
+        final String jsonObject = this.writeNoteDefinitionAsString(noteDefList);
         final String method = MODULE_CLASS + PATH_SAVE_NOTEDEFINITION_BY_CLASS;
+        final String response = httpRequest.sendPost(method, jsonObject);
+        return this.classMapper.getObjectFromJSON(response);
+    }
+    
+    public ClassBO saveNoteValue(final List<NoteValueBO> noteValueList)
+            throws IOException {
+        final String jsonObject = this.writeNoteValueAsString(noteValueList);
+        final String method = MODULE_CLASS + PATH_SAVE_NOTEVALUE;
         final String response = httpRequest.sendPost(method, jsonObject);
         return this.classMapper.getObjectFromJSON(response);
     }
@@ -78,11 +91,20 @@ public class ClassBLL extends AbstractBLL {
         return jsonObject;
     }
     
-    private String writeNoteDefinitionValueAsString(
-            final List<NoteDefinitionBO> noteDefList) {
+    private String writeNoteDefinitionAsString(final List<NoteDefinitionBO> noteDefList) {
         String jsonObject = null;
         try {
             jsonObject = NoteDefinitionMapper.JSON_WRITER.writeValueAsString(noteDefList);
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+        return jsonObject;
+    }
+    
+    private String writeNoteValueAsString(final List<NoteValueBO> noteDefList) {
+        String jsonObject = null;
+        try {
+            jsonObject = NoteValueMapper.JSON_WRITER.writeValueAsString(noteDefList);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
         }

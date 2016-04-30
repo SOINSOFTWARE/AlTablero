@@ -37,6 +37,7 @@ public abstract class AbstractBLL {
     protected static final String PATH_SAVE = "save";
     protected static final String PATH_SAVE_CLASSROOM_X_STUDENT = "saveClassRoomxStudent";
     protected static final String PATH_SAVE_NOTEDEFINITION_BY_CLASS = "saveNoteDefByClass";
+    protected static final String PATH_SAVE_NOTEVALUE = "saveNoteValue";
     protected static final String PATH_STUDENTS_NOT_LINKED = "studentsNotLinked";
     protected static final String PATH_TEACHER_NOT_DIRECTORS = "teacherNotDirectors";
     protected static final String PATH_VALIDATE = "validate";

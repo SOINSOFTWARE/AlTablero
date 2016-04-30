@@ -91,11 +91,11 @@
                                                         <table id="tblStudent" class="table table-bordered table-striped">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>N&uacute;mero de documento</th>
-                                                                    <th>Apellido(s)</th>
-                                                                    <th>Nombre(s)</th>
+                                                                    <th style="width: 5%">N&uacute;mero de documento</th>
+                                                                    <th style="width: 10%">Apellido(s)</th>
+                                                                    <th style="width: 10%">Nombre(s)</th>
                                                                     <c:forEach items="${activities}" var="activity">
-                                                                        <th>${activity.name}</th>
+                                                                        <th style="width: 10%">${activity.name}</th>
                                                                     </c:forEach>
                                                                 </tr>
                                                             </thead>
@@ -106,13 +106,19 @@
                                                                         <td style="vertical-align: middle;">${student.lastName}</td>
                                                                         <td style="vertical-align: middle;">${student.name}</td>
                                                                         <c:forEach items="${activities}" var="activity">
-                                                                            <td>
-                                                                                <input id="${activity.name}" name="${activity.name}" 
-                                                                                       <c:forEach items="${values}" var="value">
-                                                                                           <c:if test="${value.idNoteDefinition eq activity.id && value.idStudent eq student.id}">
-                                                                                               value="${value.value}"
-                                                                                           </c:if>
-                                                                                       </c:forEach> type="text">
+                                                                            <td style="vertical-align: middle;">
+                                                                                <input id="value_${student.id}_${activity.id}" name="value_${student.id}_${activity.id}" type="number"
+                                                                                    <c:forEach items="${values}" var="value">
+                                                                                       <c:if test="${value.idNoteDefinition eq activity.id && value.idStudent eq student.id}">
+                                                                                           value="${value.value}"
+                                                                                       </c:if>
+                                                                                    </c:forEach> min="0" max="10" step="0.01" style="width: 60px"
+                                                                                    onkeydown="return (event.ctrlKey || event.altKey 
+                                                                                            || (47 < event.keyCode && event.keyCode < 58 && event.shiftKey === false) 
+                                                                                            || (95 < event.keyCode && event.keyCode < 106)
+                                                                                            || (event.keyCode === 8) || (event.keyCode === 9) 
+                                                                                            || (event.keyCode > 34 && event.keyCode <= 40) 
+                                                                                            || (event.keyCode === 46))"/>
                                                                             </td>
                                                                         </c:forEach>
                                                                     </tr>
@@ -134,7 +140,9 @@
         <div id="save-dialog" title="Guardar" style="display: none">
             <p>Las calificaciones ser&aacute;n guardadas, ¿Deseas continuar con la acci&oacute;n?</p>
         </div>
-        <%@include file="../include_required_dialog.jsp" %>
+        <div id="value-dialog" title="Error" style="display: none">
+            <p>Las calificaciones deben estar dentro del rango de 0 a 10</p>
+        </div>
         <%@include file="../include_body_jscript.jsp" %>
         <%@include file="../include_inputmask_jscript.jsp" %>
         <%@include file="../include_datatable_jscript.jsp" %>
@@ -174,6 +182,106 @@
                         }
                     </c:forEach>
                 }
+            }
+            $( "#save-link" ).click(function( event ) {
+                if (validateColumnValues()) {
+                    if (isDataChanged()) {
+                        buildObject();
+                        showSaveDialog();
+                    }
+                } else {
+                    showValueDialog();
+                }
+                event.preventDefault();
+            });
+            function validateColumnValues() {
+                var valid = true;
+                <c:forEach items="${students}" var="student">
+                    <c:forEach items="${activities}" var="activity">
+                        var noteValue = $.trim($("#value_${student.id}_${activity.id}").val());
+                        if (noteValue !== '' && (parseFloat(noteValue) < 0 || parseFloat(noteValue) > 10)) {
+                            valid = false;
+                        }
+                    </c:forEach>
+                </c:forEach>
+                return valid;
+            }
+            function isDataChanged() {
+                var dataChanged = false;
+                var noteValue = 0;
+                <c:forEach items="${students}" var="student">
+                    <c:forEach items="${activities}" var="activity">
+                        noteValue = $.trim($("#value_${student.id}_${activity.id}").val());
+                        <c:set var="previous" value='false' />
+                        <c:forEach items="${values}" var="value">
+                            <c:if test="${value.idNoteDefinition eq activity.id && value.idStudent eq student.id}">
+                                if ((noteValue !== '' && '${value.value}' !== '' && parseFloat(noteValue) !== ${value.value})
+                                        || (noteValue !== '' && '${value.value}' === '')
+                                        || (noteValue === '' && '${value.value}' !== '')) {
+                                    dataChanged = true;
+                                }
+                                <c:set var="previous" value='true' />
+                            </c:if>
+                        </c:forEach>
+                        <c:if test="${previous eq false}">
+                            if (noteValue !== '') {
+                                dataChanged = true;
+                            }
+                        </c:if>
+                    </c:forEach>                        
+                </c:forEach>
+                return dataChanged;
+            }
+            function showValueDialog() {
+                $("#value-dialog").dialog({
+                    autoOpen: false,
+                    width: 400,
+                    modal: true,
+                    resizable: false,
+                    buttons: [{
+                        text: "Volver",
+                        click: function() {
+                            $(this).dialog("close");
+                        }
+                    }]
+                });
+                $("#value-dialog").dialog("open");
+            }
+            function buildObject() {
+                var objectStr = "{";
+                var noteValue = 0;
+                <c:forEach items="${students}" var="student">
+                    <c:forEach items="${activities}" var="activity">
+                        noteValue = $.trim($("#value_${student.id}_${activity.id}").val());
+                        <c:set var="previous" value='false' />
+                        <c:forEach items="${values}" var="value">
+                            <c:if test="${value.idNoteDefinition eq activity.id && value.idStudent eq student.id}">
+                                if ((noteValue !== '' && '${value.value}' !== '' && parseFloat(noteValue) !== ${value.value})
+                                        || (noteValue !== '' && '${value.value}' === '')) {
+                                    objectStr += buildObjectAsString(${student.id}, ${activity.id}, parseFloat(noteValue));
+                                } else if (noteValue === '' && '${value.value}' !== '') {
+                                    objectStr += buildObjectAsString(${student.id}, ${activity.id}, 0);
+                                }   
+                                <c:set var="previous" value='true' />
+                            </c:if>
+                        </c:forEach>
+                        <c:if test="${previous eq false}">
+                            if (noteValue !== '') {
+                                objectStr += buildObjectAsString(${student.id}, ${activity.id}, parseFloat(noteValue));
+                            }
+                        </c:if>
+                    </c:forEach>                        
+                </c:forEach>
+                objectStr += "}";
+                $("#objectStr").val(objectStr);
+            }
+            function buildObjectAsString(idStudent, idNoteDefinition, value) {
+                var objectStr = "[";
+                objectStr += "idStudent=" + idStudent + ";";
+                objectStr += "idNoteDefinition=" + idNoteDefinition + ";";
+                objectStr += "value=" + value;
+                objectStr += "]";
+                return objectStr;
             }
         </script>
     </body>

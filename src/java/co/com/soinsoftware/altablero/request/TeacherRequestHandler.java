@@ -227,6 +227,38 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
+    
+    @RequestMapping(value = TEACHER_EVALUATE_SAVE_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView saveEvaluation(
+            @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = false)
+            final Integer idClassRoom,
+            @RequestParam(value = CLASS_ID_REQUEST_PARAM, required = false)
+            final Integer idClass,
+            @RequestParam(value = PERIOD_ID_REQUEST_PARAM, required = false)
+            final Integer idPeriod,
+            @RequestParam(value = OBJECT_AS_STRING_REQUEST_PARAM, required = true)
+            final String objectStr) {
+        ModelAndView model = null;
+        try {
+            final List<NoteValueBO> noteValueList = this.noteValueController
+                    .buildNoteValueListFromString(objectStr);
+            final ClassBO classBO = this.classController.saveNoteValue(noteValueList);
+            boolean saved = false;
+            boolean hasServerErrors = false;
+            if (classBO != null && classBO.getNoteDefinitionSet() != null 
+                    && !classBO.getNoteDefinitionSet().isEmpty()) {
+                saved = true;
+            } else {
+                hasServerErrors = true;
+            }
+            model = this.buildActivityPageModel(TEACHER_EVALUATE_MODEL, idClass,
+                    idPeriod, saved, hasServerErrors);
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            model = LoginRequestHandler.buildRedirectLoginModel();
+        }
+        return model;
+    }
 
     private ModelAndView buildEditPageModel(final UserBO user, final boolean wasSaved,
             final boolean wasDeactivated, final boolean hasServerErrors,

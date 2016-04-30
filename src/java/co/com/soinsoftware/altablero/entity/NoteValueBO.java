@@ -33,6 +33,16 @@ public class NoteValueBO implements Serializable {
     public NoteValueBO() {
         super();
     }
+    
+    public NoteValueBO(final int idNoteDefinition, final int idStudent, final BigDecimal value) {
+        super();
+        this.idNoteDefinition = idNoteDefinition;
+        this.idStudent = idStudent;
+        this.value = value;
+        this.creation = new Date();
+        this.updated = new Date();
+        this.enabled = true;
+    }
 
     public int getIdStudent() {
         return idStudent;
