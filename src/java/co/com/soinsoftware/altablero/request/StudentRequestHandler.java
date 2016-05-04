@@ -51,15 +51,12 @@ public class StudentRequestHandler extends AbstractRequestHandler {
         try {
             model = this.buildModelAndView();
             model.setViewName(STUDENT_MODEL);
-            final String currentYear = this.yearController.getCurrentYearString();
-            this.addClassRoomListToModel(model, currentYear, 0);
-            this.addGradeListToModel(model);
-            final int idSchool = this.getIdSchool();
-            final ClassRoomBO classRoom = (idClassRoom != null && idClassRoom > 0)
-                    ? this.findClassRoom(idSchool, idClassRoom) : null;
-            if (classRoom != null && classRoom.getStudentSet() != null) {
-                model.addObject(STUDENT_LIST_PARAMETER,
-                        this.sortUserSet(classRoom.getStudentSet()));
+            if (this.isStudent()) {
+                this.buildListPageModelForStudent(model);
+            } else if (this.isGuardian() && !this.isTeacher()) {
+                this.buildListPageModelForGuardian(model);
+            } else {
+                this.buildListPageModelForNonStudents(model, idClassRoom);
             }
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
@@ -210,6 +207,37 @@ public class StudentRequestHandler extends AbstractRequestHandler {
             model = this.buildEditPageModel(null, false, false, true, false);
         }
         return model;
+    }
+    
+    private void buildListPageModelForNonStudents(final ModelAndView model,
+            final Integer idClassRoom) throws IOException {
+        final String currentYear = this.yearController.getCurrentYearString();
+        this.addClassRoomListToModel(model, currentYear, 0);
+        this.addGradeListToModel(model);
+        final int idSchool = this.getIdSchool();
+        final ClassRoomBO classRoom = (idClassRoom != null && idClassRoom > 0)
+                ? this.findClassRoom(idSchool, idClassRoom) : null;
+        if (classRoom != null && classRoom.getStudentSet() != null) {
+            model.addObject(STUDENT_LIST_PARAMETER,
+                    this.sortUserSet(classRoom.getStudentSet()));
+        }
+        model.addObject(SHOW_SEARCH_PARAMETER, false);
+    }
+    
+    private void buildListPageModelForStudent(final ModelAndView model) {
+        final List<UserBO> userList = new ArrayList<>();
+        userList.add(this.getLogeduser());
+        model.addObject(STUDENT_LIST_PARAMETER, userList);
+        model.addObject(SHOW_SEARCH_PARAMETER, true);
+    }
+    
+    private void buildListPageModelForGuardian(final ModelAndView model)
+            throws IOException {
+        final UserBO user = this.getLogeduser();
+        final List<UserBO> userList = this.userController.findStudentsByGuardian(
+                user.getId());        
+        model.addObject(STUDENT_LIST_PARAMETER, userList);
+        model.addObject(SHOW_SEARCH_PARAMETER, true);
     }
     
     private ModelAndView buildEditPageModel(final UserBO user, final boolean wasSaved,

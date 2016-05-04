@@ -18,6 +18,7 @@ import co.com.soinsoftware.altablero.controller.UserTypeController;
 import co.com.soinsoftware.altablero.controller.YearController;
 import co.com.soinsoftware.altablero.entity.ClassBO;
 import co.com.soinsoftware.altablero.entity.ClassRoomBO;
+import co.com.soinsoftware.altablero.entity.NoteValueConfigurationBO;
 import co.com.soinsoftware.altablero.entity.PeriodBO;
 import co.com.soinsoftware.altablero.entity.SchoolBO;
 import co.com.soinsoftware.altablero.entity.UserBO;
@@ -25,6 +26,8 @@ import co.com.soinsoftware.altablero.entity.UserTypeBO;
 import co.com.soinsoftware.altablero.utils.AuthenticationUtils;
 import co.com.soinsoftware.altablero.utils.RoleUtils;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -53,9 +56,11 @@ public abstract class AbstractRequestHandler {
     protected static final String GRADE_LIST_PARAMETER = "grades";
     protected static final String HAS_SERVER_ERRORS_PARAMETER = "hasServerErrors";
     protected static final String INVALIDCODE_PARAMETER = "invalidCode";
+    protected static final String MAX_EVALUATION_PARAMETER = "maxEvaluation";
     protected static final String PERIOD_PARAMETER = "period";
     protected static final String PERIOD_LIST_PARAMETER = "periods";
     protected static final String SAVED_PARAMETER = "saved";
+    protected static final String SHOW_SEARCH_PARAMETER = "showSearch";
     protected static final String STUDENT_LIST_PARAMETER = "students";
     protected static final String TEACHER_LIST_PARAMETER = "teachers";
     protected static final String TIME_LIST_PARAMETER = "times";
@@ -173,6 +178,22 @@ public abstract class AbstractRequestHandler {
         return idSchool;
     }
     
+    protected double getMaxEvaluation() {
+        final UserBO user = this.getLogeduser();
+        final Set<SchoolBO> schoolSet = (user != null) ? user.getSchoolSet() : null;
+        BigDecimal maxEvaluation = null;
+        if (schoolSet != null) {
+            for (final SchoolBO school : schoolSet) {
+                for(final NoteValueConfigurationBO noteValue : school.getNote().getNoteValueSet()) {
+                    if (maxEvaluation == null 
+                            || maxEvaluation.doubleValue() < noteValue.getRangeEnd().doubleValue())
+                    maxEvaluation = noteValue.getRangeEnd();
+                }
+            }
+        }
+        return maxEvaluation.doubleValue();
+    }
+    
     protected void addYearListToModel(final ModelAndView model)
             throws IOException {
         model.addObject(YEAR_LIST_PARAMETER, yearController.findAll());
@@ -213,7 +234,13 @@ public abstract class AbstractRequestHandler {
     protected void addTeacherListToModel(final ModelAndView model) throws IOException {
         final int idSchool = this.getIdSchool();
         final String teacherCode = UserTypeBO.getTeacherCode();
-        final List<UserBO> teacherList = userController.findUsersByUserType(idSchool, teacherCode);
+        List<UserBO> teacherList = null;
+        if (this.isTeacher() && !this.isCoordinator()) {
+            teacherList = new ArrayList<>();
+            teacherList.add(this.getLogeduser());
+        } else {
+            teacherList = userController.findUsersByUserType(idSchool, teacherCode);
+        }
         model.addObject(TEACHER_LIST_PARAMETER, teacherList);
     }
 
@@ -259,5 +286,61 @@ public abstract class AbstractRequestHandler {
     
     protected List<UserBO> sortUserSet(final Set<UserBO> userSet) {
         return this.userController.sortUserSet(userSet);
+    }
+    
+    protected boolean isTeacher() {
+        boolean isTeacher = false;
+        final UserBO user = this.getLogeduser();
+        if (user != null && user.getUserTypeSet() != null) {
+            for (final UserTypeBO userType : user.getUserTypeSet()) {
+                if (userType.isTeacher()) {
+                    isTeacher = true;
+                    break;
+                }
+            }
+        }
+        return isTeacher;
+    }
+    
+    protected boolean isCoordinator() {
+        boolean isCoordinator = false;
+        final UserBO user = this.getLogeduser();
+        if (user != null && user.getUserTypeSet() != null) {
+            for (final UserTypeBO userType : user.getUserTypeSet()) {
+                if (userType.isCoordinator()) {
+                    isCoordinator = true;
+                    break;
+                }
+            }
+        }
+        return isCoordinator;
+    }
+    
+    protected boolean isStudent() {
+        boolean isStudent = false;
+        final UserBO user = this.getLogeduser();
+        if (user != null && user.getUserTypeSet() != null) {
+            for (final UserTypeBO userType : user.getUserTypeSet()) {
+                if (userType.isStudent()) {
+                    isStudent = true;
+                    break;
+                }
+            }
+        }
+        return isStudent;
+    }
+    
+    protected boolean isGuardian() {
+        boolean isGuardian = false;
+        final UserBO user = this.getLogeduser();
+        if (user != null && user.getUserTypeSet() != null) {
+            for (final UserTypeBO userType : user.getUserTypeSet()) {
+                if (userType.isGuardian()) {
+                    isGuardian = true;
+                    break;
+                }
+            }
+        }
+        return isGuardian;
     }
 }

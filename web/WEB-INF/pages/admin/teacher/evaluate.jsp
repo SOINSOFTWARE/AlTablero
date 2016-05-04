@@ -112,7 +112,7 @@
                                                                                        <c:if test="${value.idNoteDefinition eq activity.id && value.idStudent eq student.id}">
                                                                                            value="${value.value}"
                                                                                        </c:if>
-                                                                                    </c:forEach> min="0" max="10" step="0.01" style="width: 60px"
+                                                                                    </c:forEach> min="0" max="${maxEvaluation}" step="0.01" style="width: 60px"
                                                                                     onkeydown="return (event.ctrlKey || event.altKey 
                                                                                             || (47 < event.keyCode && event.keyCode < 58 && event.shiftKey === false) 
                                                                                             || (95 < event.keyCode && event.keyCode < 106)
@@ -141,7 +141,7 @@
             <p>Las calificaciones ser&aacute;n guardadas, ¿Deseas continuar con la acci&oacute;n?</p>
         </div>
         <div id="value-dialog" title="Error" style="display: none">
-            <p>Las calificaciones deben estar dentro del rango de 0 a 10</p>
+            <p>Las calificaciones deben estar dentro del rango de 0 a ${maxEvaluation}</p>
         </div>
         <%@include file="../include_body_jscript.jsp" %>
         <%@include file="../include_inputmask_jscript.jsp" %>
@@ -199,7 +199,7 @@
                 <c:forEach items="${students}" var="student">
                     <c:forEach items="${activities}" var="activity">
                         var noteValue = $.trim($("#value_${student.id}_${activity.id}").val());
-                        if (noteValue !== '' && (parseFloat(noteValue) < 0 || parseFloat(noteValue) > 10)) {
+                        if (noteValue !== '' && (parseFloat(noteValue) < 0 || parseFloat(noteValue) > ${maxEvaluation})) {
                             valid = false;
                         }
                     </c:forEach>

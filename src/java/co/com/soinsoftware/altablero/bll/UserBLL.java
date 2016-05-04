@@ -82,7 +82,13 @@ public class UserBLL extends AbstractBLL {
         final String method = MODULE_USER + PATH_SAVE;
         final String response = httpRequest.sendPost(method, jsonObject);
         return this.userMapper.getObjectFromJSON(response);
-    } 
+    }
+    
+    public Set<UserBO> findStudentsByGuardian(final int idUser) throws IOException {
+        final String methodAndParameters = this.buildStudentsByGuardianUrlMethod(
+            idUser);
+        return this.sendGetToReceiveSet(methodAndParameters);
+    }
     
     private Set<UserBO> sendGetToReceiveSet(final String methodAndParameters)
             throws IOException {
@@ -121,6 +127,14 @@ public class UserBLL extends AbstractBLL {
         if (idClassRoom != null && idClassRoom > 0) {
             urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_CLASSROOM_ID, idClassRoom));
         }
+        return urlMethod.toString();
+    }
+    
+    private String buildStudentsByGuardianUrlMethod(final int idUser) {
+        final String method = MODULE_USER + PATH_STUDENTS_BY_GUARDIAN;
+        final StringBuilder urlMethod = new StringBuilder(method);
+        urlMethod.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_USER_ID,
+                idUser));
         return urlMethod.toString();
     }
     

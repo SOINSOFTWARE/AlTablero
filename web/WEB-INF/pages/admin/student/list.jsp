@@ -22,40 +22,42 @@
                     </ol>
                 </section>
                 <section class="content">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box box-tools">
-                                <div class="box-body">
-                                    <form id="frmSearch" name="frmSearch" method="POST"
-                                          action="<c:url value='/admin/estudiantes?${_csrf.parameterName}=${_csrf.token}' />">
-                                        <table style="width: 100%">
-                                            <tr>
-                                                <td style="width: 20%;"></td>
-                                                <td style="width: 40%; vertical-align: bottom">
-                                                    <div class="row">
-                                                        <div class="col-xs-6">
-                                                            <%@include file="../include_div_grade_all.jsp" %>
+                    <c:if test="${showSearch eq false}">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="box box-tools">
+                                    <div class="box-body">
+                                        <form id="frmSearch" name="frmSearch" method="POST"
+                                              action="<c:url value='/admin/estudiantes?${_csrf.parameterName}=${_csrf.token}' />">
+                                            <table style="width: 100%">
+                                                <tr>
+                                                    <td style="width: 20%;"></td>
+                                                    <td style="width: 40%; vertical-align: bottom">
+                                                        <div class="row">
+                                                            <div class="col-xs-6">
+                                                                <%@include file="../include_div_grade_all.jsp" %>
+                                                            </div>
+                                                            <div class="col-xs-6">
+                                                                <%@include file="../include_div_classroom_select_one.jsp" %>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-xs-6">
-                                                            <%@include file="../include_div_classroom_select_one.jsp" %>
+                                                    </td>
+                                                    <td style="width: 20%; vertical-align: bottom;">
+                                                        <div class="form-group">
+                                                            <a href="#" id="search-link" class="btn btn-social-icon btn-dropbox">
+                                                                <i class="fa fa-search"></i>
+                                                            </a>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td style="width: 20%; vertical-align: bottom;">
-                                                    <div class="form-group">
-                                                        <a href="#" id="search-link" class="btn btn-social-icon btn-dropbox">
-                                                            <i class="fa fa-search"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                                <td style="width: 20%;"></td>
-                                            </tr>
-                                        </table>
-                                    </form>
+                                                    </td>
+                                                    <td style="width: 20%;"></td>
+                                                </tr>
+                                            </table>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </c:if>
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box box-primary">

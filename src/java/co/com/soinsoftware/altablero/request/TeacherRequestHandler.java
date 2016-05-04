@@ -317,6 +317,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         model.addObject(PERIOD_LIST_PARAMETER, periodList);
         model.addObject(SAVED_PARAMETER, wasSaved);
         model.addObject(HAS_SERVER_ERRORS_PARAMETER, hasServerErrors);
+        model.addObject(MAX_EVALUATION_PARAMETER, this.getMaxEvaluation());
         this.addClassToModel(model, classList, idClass);
         this.addPeriodToModel(model, periodList, idPeriod);
         this.addNoteDefinitionToModel(model, idClass, idPeriod);

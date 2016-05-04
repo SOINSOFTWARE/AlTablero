@@ -60,6 +60,11 @@ public class UserController {
         final Set<UserBO> userSet = userBLL.findStudentsNotLinked(idSchool, idGrade, idClassRoom);
         return sortUserSet(userSet);
     }
+    
+    public List<UserBO> findStudentsByGuardian(final int idUser) throws IOException {
+        final Set<UserBO> userSet = userBLL.findStudentsByGuardian(idUser);
+        return sortUserSet(userSet);
+    }
 
     public UserBO findUserByDocument(final String documentNumber) throws IOException {
         return userBLL.findUserByDocument(documentNumber);
