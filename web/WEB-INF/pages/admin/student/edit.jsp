@@ -254,7 +254,7 @@
                             </div><!-- tab pane 1  -->
                             <c:if test="${updateMode}">
                                 <div class="tab-pane" id="tab_2">
-                                    
+                                    <%@include file="include_notevalue.jsp" %>
                                 </div>
                             </c:if>
                         </div>
@@ -279,6 +279,7 @@
         <%@include file="../include_body_jscript.jsp" %>
         <%@include file="../include_inputmask_jscript.jsp" %>
         <%@include file="../include_datatable_jscript.jsp" %>
+        <script src="<c:url value="/res/javascript/plugins/jqueryKnob/jquery.knob.js" />" type="text/javascript"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 $("#refStudent").trigger("click");
@@ -287,6 +288,44 @@
             $(function () {
                 $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
                 $("[data-mask]").inputmask();
+                $(".knob").knob({
+                    draw: function() {
+                        if (this.$.data('skin') === 'tron') {
+                            var a = this.angle(this.cv)  // Angle
+                                    , sa = this.startAngle          // Previous start angle
+                                    , sat = this.startAngle         // Start angle
+                                    , ea                            // Previous end angle
+                                    , eat = sat + a                 // End angle
+                                    , r = true;
+                            this.g.lineWidth = this.lineWidth;
+                            this.o.cursor
+                                    && (sat = eat - 0.3)
+                                    && (eat = eat + 0.3);
+                            if (this.o.displayPrevious) {
+                                ea = this.startAngle + this.angle(this.value);
+                                this.o.cursor
+                                        && (sa = ea - 0.3)
+                                        && (ea = ea + 0.3);
+                                this.g.beginPath();
+                                this.g.strokeStyle = this.previousColor;
+                                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false);
+                                this.g.stroke();
+                            }
+                            this.g.beginPath();
+                            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
+                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false);
+                            this.g.stroke();
+
+                            this.g.lineWidth = 2;
+                            this.g.beginPath();
+                            this.g.strokeStyle = this.o.fgColor;
+                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+                            this.g.stroke();
+
+                            return false;
+                        }
+                    }
+                });
             });
             
             $("#fileUpload").on('change', function () {

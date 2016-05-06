@@ -5,11 +5,16 @@
  */
 package co.com.soinsoftware.altablero.request;
 
+import co.com.soinsoftware.altablero.entity.ClassBO;
 import co.com.soinsoftware.altablero.entity.ClassRoomBO;
+import co.com.soinsoftware.altablero.entity.NoteDefinitionBO;
+import co.com.soinsoftware.altablero.entity.NoteValueBO;
+import co.com.soinsoftware.altablero.entity.PeriodBO;
 import co.com.soinsoftware.altablero.entity.SchoolBO;
 import co.com.soinsoftware.altablero.entity.UserBO;
 import co.com.soinsoftware.altablero.entity.UserTypeBO;
 import static co.com.soinsoftware.altablero.request.AbstractRequestHandler.LOGGER;
+import static co.com.soinsoftware.altablero.request.AbstractRequestHandler.PERIOD_LIST_PARAMETER;
 import static co.com.soinsoftware.altablero.request.AbstractRequestHandler.USER_ID_REQUEST_PARAM;
 import java.io.IOException;
 import java.text.ParseException;
@@ -247,17 +252,24 @@ public class StudentRequestHandler extends AbstractRequestHandler {
         try {
             model = this.buildModelAndView();
             model.setViewName(STUDENT_EDIT_MODEL);
+            final String currentYear = yearController.getCurrentYearString();
+            final List<ClassRoomBO> classRoomList = this.classRoomController
+                    .findClassRooms(currentYear, 0, this.getIdSchool());
             if (user != null) {
                 if (user.getPhoto() != null && !user.getPhoto().equals("")) {
                     user.setPhoto(this.userController.getHttpPath(user, this.getIdSchool()));
                 }
+                this.addClassListToModel(model, classRoomList, user);
+                final List<PeriodBO> periodList = this.findPeriodListBySchool();
+                model.addObject(PERIOD_LIST_PARAMETER, periodList);
+                model.addObject(MAX_EVALUATION_PARAMETER, this.getMaxEvaluation());
             }
             model.addObject(USER_PARAMETER, user);
             model.addObject(SAVED_PARAMETER, wasSaved);
             model.addObject(DEACTIVATED_PARAMETER, wasDeactivated);
             model.addObject(HAS_SERVER_ERRORS_PARAMETER, hasServerErrors);
             model.addObject(INVALIDCODE_PARAMETER, invalidDocNumber);
-            final String currentYear = yearController.getCurrentYearString();
+            model.addObject(CLASSROOM_LIST_PARAMETER, classRoomList);
             this.addClassRoomListToModel(model, currentYear, 0);
             this.addGradeListToModel(model);
         } catch (IOException ex) {
@@ -312,5 +324,55 @@ public class StudentRequestHandler extends AbstractRequestHandler {
             saved = false;
         }
         return saved;
+    }
+    
+    private void addClassListToModel(final ModelAndView model,
+            final List<ClassRoomBO> classRoomList, final UserBO user) {
+        final List<ClassBO> classList = new ArrayList<>();
+        if (classRoomList != null) {
+            for(final ClassRoomBO classRoom : classRoomList) {
+                if (this.isUserInClassRoom(classRoom, user)) {
+                    model.addObject(CLASSROOM_PARAMETER, classRoom);
+                    if(classRoom.getClassSet() != null) {
+                        for(final ClassBO classBO : classRoom.getClassSet()) {
+                            if (classBO.getNoteDefinitionSet() != null) {
+                                for (final NoteDefinitionBO noteDef 
+                                        : classBO.getNoteDefinitionSet()) {
+                                    if (noteDef.getNoteValueSet() != null) {
+                                        NoteValueBO noteValue = null;
+                                        for (final NoteValueBO noteValueInDef 
+                                                : noteDef.getNoteValueSet()) {
+                                            if (noteValueInDef.getIdStudent() == user.getId()) {
+                                                noteValue = noteValueInDef;
+                                                break;
+                                            }
+                                        }
+                                        noteDef.getNoteValueSet().clear();
+                                        if (noteValue != null) {
+                                            noteDef.getNoteValueSet().add(noteValue);
+                                        }
+                                    }
+                                }
+                            }
+                            classList.add(classBO);
+                        }
+                    }
+                }
+            }
+        }
+        model.addObject(CLASS_LIST_PARAMETER, classList);
+    }
+    
+    private boolean isUserInClassRoom(final ClassRoomBO classRoom, final UserBO user) {
+        boolean isInClassRoom = false;
+        if (classRoom.getStudentSet() != null) {
+            for(final UserBO student : classRoom.getStudentSet()) {
+                if (student.equals(user)) {
+                    isInClassRoom = true;
+                    break;
+                }
+            }
+        }
+        return isInClassRoom;
     }
 }

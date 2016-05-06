@@ -178,7 +178,7 @@ public abstract class AbstractRequestHandler {
         return idSchool;
     }
     
-    protected double getMaxEvaluation() {
+    protected BigDecimal getMaxEvaluation() {
         final UserBO user = this.getLogeduser();
         final Set<SchoolBO> schoolSet = (user != null) ? user.getSchoolSet() : null;
         BigDecimal maxEvaluation = null;
@@ -191,7 +191,7 @@ public abstract class AbstractRequestHandler {
                 }
             }
         }
-        return maxEvaluation.doubleValue();
+        return maxEvaluation;
     }
     
     protected void addYearListToModel(final ModelAndView model)
