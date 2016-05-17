@@ -38,6 +38,9 @@
                         <c:if test="${accessList.contains('PROCA')}">
                             <li><a href="<c:url value="/admin/profesores/calificar" />"><i class="fa fa-angle-double-right"></i> Calificar</a></li>
                         </c:if>
+                        <c:if test="${groupDirector eq true}">
+                            <li><a href="<c:url value="/admin/profesores/boletines" />"><i class="fa fa-angle-double-right"></i> Boletines</a></li>
+                        </c:if>
                     </ul>
                 </li>
             </c:if>

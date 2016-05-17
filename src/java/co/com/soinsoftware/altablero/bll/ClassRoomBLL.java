@@ -30,7 +30,7 @@ public class ClassRoomBLL extends AbstractBLL {
         final String methodAndParameters
                 = this.buildFindClassRoomsByUrlMethod(
                         idSchool, year, idGrade, idTime, idClassRoom);
-        final String response = httpRequest.sendGet(methodAndParameters);
+        final String response = (String) httpRequest.sendGet(methodAndParameters);
         return classRoomMapper.getObjectSetFromJSON(response);
     }
 
@@ -38,7 +38,7 @@ public class ClassRoomBLL extends AbstractBLL {
             throws IOException {
         final String jsonObject = this.writeValueAsString(classRoom);
         final String method = MODULE_CLASSROOM + PATH_SAVE;
-        final String response = httpRequest.sendPost(method, jsonObject);
+        final String response = (String) httpRequest.sendPost(method, jsonObject);
         return classRoomMapper.getObjectFromJSON(response);
     }
 
@@ -51,7 +51,7 @@ public class ClassRoomBLL extends AbstractBLL {
         urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_CODE, code));
         urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_CLASSROOM_ID,
                 idClassRoom));
-        final String response = httpRequest.sendGet(urlMethod.toString());
+        final String response = (String) httpRequest.sendGet(urlMethod.toString());
         return Boolean.valueOf(response);
     }
     
@@ -59,7 +59,7 @@ public class ClassRoomBLL extends AbstractBLL {
             throws IOException {
         final String jsonObject = this.writeValueAsString(classRoomList);
         final String method = MODULE_CLASSROOM + PATH_SAVE_CLASSROOM_X_STUDENT;
-        final String response = httpRequest.sendPost(method, jsonObject);
+        final String response = (String) httpRequest.sendPost(method, jsonObject);
         return classRoomMapper.getObjectSetFromJSON(response);
     }
     

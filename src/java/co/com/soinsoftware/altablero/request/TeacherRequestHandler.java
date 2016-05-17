@@ -15,11 +15,14 @@ import co.com.soinsoftware.altablero.entity.UserBO;
 import co.com.soinsoftware.altablero.entity.UserTypeBO;
 import static co.com.soinsoftware.altablero.request.AbstractRequestHandler.LOGGER;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,12 +45,15 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
     private static final String TEACHER_EVALUATE_PAGE = "/admin/profesores/calificar";
     private static final String TEACHER_EVALUATE_SAVE_PAGE = "/admin/profesores/calificar/guardar";
     private static final String TEACHER_PAGE = "/admin/profesores";
+    private static final String TEACHER_REPORT_PAGE = "/admin/profesores/boletines";
+    private static final String TEACHER_REPORT_GENERATE_PAGE = "/admin/profesores/boletines/generar";
     private static final String TEACHER_SAVE_PAGE = "/admin/profesores/edicion/guardar";
 
     private static final String TEACHER_ACTIVITY_MODEL = "admin/teacher/activity";
-    private static final String TEACHER_MODEL = "admin/teacher/list";
     private static final String TEACHER_EDIT_MODEL = "admin/teacher/edit";
     private static final String TEACHER_EVALUATE_MODEL = "admin/teacher/evaluate";
+    private static final String TEACHER_MODEL = "admin/teacher/list";
+    private static final String TEACHER_REPORT_MODEL = "admin/teacher/report";
 
     @RequestMapping(value = TEACHER_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView list() {
@@ -157,7 +163,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
-    
+
     @RequestMapping(value = TEACHER_ACTIVITY_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView activityList(
             @RequestParam(value = CLASSROOM_REQUEST_PARAM, required = false)
@@ -176,7 +182,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
-    
+
     @RequestMapping(value = TEACHER_ACTIVITY_SAVE_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView saveActivityList(
             @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = true)
@@ -194,7 +200,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             final ClassBO classBO = this.classController.saveNoteDefinitionByClass(noteDefList);
             boolean saved = false;
             boolean hasServerErrors = false;
-            if (classBO != null && classBO.getNoteDefinitionSet() != null 
+            if (classBO != null && classBO.getNoteDefinitionSet() != null
                     && !classBO.getNoteDefinitionSet().isEmpty()) {
                 saved = true;
             } else {
@@ -208,7 +214,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
-    
+
     @RequestMapping(value = TEACHER_EVALUATE_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView evaluate(
             @RequestParam(value = CLASSROOM_REQUEST_PARAM, required = false)
@@ -227,7 +233,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
-    
+
     @RequestMapping(value = TEACHER_EVALUATE_SAVE_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView saveEvaluation(
             @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = false)
@@ -245,7 +251,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             final ClassBO classBO = this.classController.saveNoteValue(noteValueList);
             boolean saved = false;
             boolean hasServerErrors = false;
-            if (classBO != null && classBO.getNoteDefinitionSet() != null 
+            if (classBO != null && classBO.getNoteDefinitionSet() != null
                     && !classBO.getNoteDefinitionSet().isEmpty()) {
                 saved = true;
             } else {
@@ -258,6 +264,41 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             model = LoginRequestHandler.buildRedirectLoginModel();
         }
         return model;
+    }
+
+    @RequestMapping(value = TEACHER_REPORT_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView report() {
+        ModelAndView model = null;
+        try {
+            model = this.buildModelAndView();
+            model.setViewName(TEACHER_REPORT_MODEL);
+            final List<PeriodBO> periodList = this.findPeriodListBySchool();
+            final UserBO teacher = this.getLogeduser();
+            final ClassRoomBO classRoom = this.getGroupDirectorClassRoom(teacher);
+            model.addObject(PERIOD_LIST_PARAMETER, periodList);
+            model.addObject(CLASSROOM_PARAMETER, classRoom);
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            model = LoginRequestHandler.buildRedirectLoginModel();
+        }
+        return model;
+    }
+    
+    @RequestMapping(value = TEACHER_REPORT_GENERATE_PAGE, method = RequestMethod.POST)
+    public void generateReports(
+            @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = false)
+            final Integer idClassRoom,
+            @RequestParam(value = PERIOD_REQUEST_PARAM, required = false)
+            final Integer idPeriod,
+            HttpServletResponse response) {
+        try {
+            InputStream is = this.generateReports(this.getIdSchool(), idClassRoom, idPeriod);
+            response.setHeader("Content-Disposition", "attachment; filename=boletines.zip");
+            IOUtils.copy(is, response.getOutputStream());
+            response.flushBuffer();
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
     }
 
     private ModelAndView buildEditPageModel(final UserBO user, final boolean wasSaved,
@@ -288,21 +329,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         return model;
     }
 
-    private ClassRoomBO getGroupDirectorClassRoom(final UserBO user) throws IOException {
-        ClassRoomBO groupDirClassRoom = null;
-        final String currentYear = yearController.getCurrentYearString();
-        final List<ClassRoomBO> classRoomList = this.classRoomController.findClassRooms(
-                currentYear, 0, this.getIdSchool());        
-        for (final ClassRoomBO classRoom : classRoomList) {
-            if (classRoom.getUserBO().equals(user)) {
-                groupDirClassRoom = classRoom;
-                break;
-            }
-        }
-        return groupDirClassRoom;
-    }
-    
-    private ModelAndView buildActivityPageModel(final String viewName, 
+    private ModelAndView buildActivityPageModel(final String viewName,
             final Integer idClass, final Integer idPeriod, final boolean wasSaved,
             final boolean hasServerErrors) throws IOException {
         ModelAndView model = this.buildModelAndView();
@@ -323,7 +350,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         this.addNoteDefinitionToModel(model, idClass, idPeriod);
         return model;
     }
-    
+
     private List<ClassRoomBO> buildClassRoomListFromClassList(
             final List<ClassBO> classList) {
         final List<ClassRoomBO> classRoomList = new ArrayList<>();
@@ -335,7 +362,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         }
         return classRoomList;
     }
-    
+
     private void addClassToModel(final ModelAndView model,
             final List<ClassBO> classList, final Integer idClass) {
         if (idClass != null && idClass > 0) {
@@ -344,14 +371,14 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
                     model.addObject(CLASS_PARAMETER, classBO);
                     final ClassRoomBO classRoom = classBO.getClassRoom();
                     model.addObject(CLASSROOM_PARAMETER, classRoom);
-                    model.addObject(STUDENT_LIST_PARAMETER, 
+                    model.addObject(STUDENT_LIST_PARAMETER,
                             this.sortUserSet(classRoom.getStudentSet()));
                     break;
                 }
             }
         }
     }
-    
+
     private void addPeriodToModel(final ModelAndView model,
             final List<PeriodBO> periodList, final Integer idPeriod) {
         if (idPeriod != null && idPeriod > 0) {
@@ -363,7 +390,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             }
         }
     }
-    
+
     private void addNoteDefinitionToModel(final ModelAndView model,
             final Integer idClass, final Integer idPeriod) throws IOException {
         if (idClass != null && idClass > 0 && idPeriod != null && idPeriod > 0) {
@@ -372,9 +399,10 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             model.addObject(ACTIVITY_LIST_PARAMETER, noteDefSet);
             final Set<NoteValueBO> noteValueSet = new HashSet<>();
             if (noteDefSet != null) {
-                for(final NoteDefinitionBO noteDefinition : noteDefSet) {
-                    if (noteDefinition.getNoteValueSet() != null)
-                    noteValueSet.addAll(noteDefinition.getNoteValueSet());
+                for (final NoteDefinitionBO noteDefinition : noteDefSet) {
+                    if (noteDefinition.getNoteValueSet() != null) {
+                        noteValueSet.addAll(noteDefinition.getNoteValueSet());
+                    }
                 }
             }
             model.addObject(ACTIVITY_VALUE_LIST_PARAMETER, noteValueSet);

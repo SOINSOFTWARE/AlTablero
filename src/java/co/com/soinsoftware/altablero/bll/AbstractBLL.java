@@ -21,6 +21,7 @@ public abstract class AbstractBLL {
     protected static final String MODULE_CLASSROOM = "classroom/";
     protected static final String MODULE_GRADE = "grade/";
     protected static final String MODULE_PERIOD = "period/";
+    protected static final String MODULE_REPORT = "report/";
     protected static final String MODULE_SCHOOL = "school/";
     protected static final String MODULE_SUBJECT = "subject/";
     protected static final String MODULE_TIME = "time/";

@@ -25,7 +25,7 @@ public class UserTypeBLL extends AbstractBLL {
     public UserTypeBO findBy(final String code) throws IOException {
         final StringBuilder method = new StringBuilder(MODULE_USERTYPE + PATH_BY);
         method.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_CODE, code));
-        final String response = httpRequest.sendGet(method.toString());
+        final String response = (String) httpRequest.sendGet(method.toString());
         return userTypeMapper.getObjectFromJSON(response);
     }
 }

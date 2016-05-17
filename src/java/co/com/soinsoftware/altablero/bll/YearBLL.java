@@ -26,13 +26,13 @@ public class YearBLL extends AbstractBLL {
 
     public Set<YearBO> findAll() throws IOException {
         final String method = MODULE_YEAR + PATH_ALL;
-        final String response = httpRequest.sendGet(method);
+        final String response = (String) httpRequest.sendGet(method);
         return yearMapper.getObjectSetFromJSON(response);
     }
 
     public YearBO findCurrentYear() throws IOException {
         final String method = MODULE_YEAR + PATH_CURRENT_YEAR;
-        final String response = httpRequest.sendGet(method);
+        final String response = (String) httpRequest.sendGet(method);
         return yearMapper.getObjectFromJSON(response);
     }
 }

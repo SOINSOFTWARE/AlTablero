@@ -5,7 +5,9 @@
  */
 package co.com.soinsoftware.altablero.utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -30,18 +33,18 @@ import org.springframework.stereotype.Service;
  * @since 08/05/2015
  */
 @Service
-public class HttpRequest implements ResponseHandler<String>{
+public class HttpRequest implements ResponseHandler<Object>{
     
     private static final String URL = "http://localhost:1517/schoolmanagement/";
     private static final String EXCEPTION_MESSAGE = "Unexpected response status: ";
     
-    public String sendGet(String methodAndParams) throws IOException {
+    public Object sendGet(String methodAndParams) throws IOException {
         String completeUrl = URL + methodAndParams;
         HttpGet httpget = new HttpGet(completeUrl);
         return this.getResponse(httpget);
     }
     
-    public String sendPost(String method, String object) throws IOException {
+    public Object sendPost(String method, String object) throws IOException {
         String completeUrl = URL + method;
         HttpPost httppost = new HttpPost(completeUrl);
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -50,17 +53,27 @@ public class HttpRequest implements ResponseHandler<String>{
         return this.getResponse(httppost);
     }
     
-    private String getResponse(HttpRequestBase httpRequest) throws IOException {
+    private Object getResponse(HttpRequestBase httpRequest) throws IOException {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             return httpclient.execute(httpRequest, this);
         }
     }
     
     @Override
-    public String handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+    public Object handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
         int status = response.getStatusLine().getStatusCode();
         if (status >= 200 && status < 300) {
             HttpEntity entity = response.getEntity();
+            final ContentType contentType = ContentType.getOrDefault(entity);
+            if (contentType.getMimeType()
+                    .equals(ContentType.APPLICATION_OCTET_STREAM.getMimeType())) {
+                InputStream inputStream = null;
+                byte[] zipInBytes = EntityUtils.toByteArray(entity);
+                if (zipInBytes != null) {
+                    inputStream = new ByteArrayInputStream(zipInBytes); 
+                }
+                return inputStream;
+            }
             return entity != null ? EntityUtils.toString(entity) : null;
         } else {
             throw new ClientProtocolException(EXCEPTION_MESSAGE + status);

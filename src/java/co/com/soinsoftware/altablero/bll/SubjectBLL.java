@@ -29,7 +29,7 @@ public class SubjectBLL extends AbstractBLL {
                 MODULE_SUBJECT + PATH_EXCLUDING_CLASS);
         builder.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_CLASSROOM_ID,
                 idClassRoom));
-        final String response = httpRequest.sendGet(builder.toString());
+        final String response = (String) httpRequest.sendGet(builder.toString());
         return subjectMapper.getObjectSetFromJSON(response);
     }
 }

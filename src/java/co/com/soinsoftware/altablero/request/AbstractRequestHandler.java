@@ -11,6 +11,7 @@ import co.com.soinsoftware.altablero.controller.GradeController;
 import co.com.soinsoftware.altablero.controller.NoteDefinitionController;
 import co.com.soinsoftware.altablero.controller.NoteValueController;
 import co.com.soinsoftware.altablero.controller.PeriodController;
+import co.com.soinsoftware.altablero.controller.ReportController;
 import co.com.soinsoftware.altablero.controller.SchoolController;
 import co.com.soinsoftware.altablero.controller.TimeController;
 import co.com.soinsoftware.altablero.controller.UserController;
@@ -26,6 +27,7 @@ import co.com.soinsoftware.altablero.entity.UserTypeBO;
 import co.com.soinsoftware.altablero.utils.AuthenticationUtils;
 import co.com.soinsoftware.altablero.utils.RoleUtils;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +56,7 @@ public abstract class AbstractRequestHandler {
     protected static final String DEACTIVATED_PARAMETER = "deactivated";
     protected static final String GRADE_PARAMETER = "grade";
     protected static final String GRADE_LIST_PARAMETER = "grades";
+    protected static final String GROUP_DIRECTOR_PARAMETER = "groupDirector";
     protected static final String HAS_SERVER_ERRORS_PARAMETER = "hasServerErrors";
     protected static final String INVALIDCODE_PARAMETER = "invalidCode";
     protected static final String MAX_EVALUATION_PARAMETER = "maxEvaluation";
@@ -134,6 +137,9 @@ public abstract class AbstractRequestHandler {
     protected PeriodController periodController;
     
     @Autowired
+    protected ReportController reportController;
+    
+    @Autowired
     protected SchoolController schoolController;
 
     @Autowired
@@ -152,6 +158,11 @@ public abstract class AbstractRequestHandler {
         final String documentNumber = AuthenticationUtils.getDocumentNumberFromAuthentication();
         final ModelAndView model = this.roleUtils.createModelWithUserDetails(
                 documentNumber, this.getIdSchool());
+        boolean isGroupDirector = false;
+        if (documentNumber != null && this.isTeacher() && this.isGroupDirector()) {
+            isGroupDirector = true;
+        }
+        model.addObject(GROUP_DIRECTOR_PARAMETER, isGroupDirector);
         return model;
     }
 
@@ -342,5 +353,30 @@ public abstract class AbstractRequestHandler {
             }
         }
         return isGuardian;
+    }
+    
+    protected ClassRoomBO getGroupDirectorClassRoom(final UserBO user) throws IOException {
+        ClassRoomBO groupDirClassRoom = null;
+        final String currentYear = yearController.getCurrentYearString();
+        final List<ClassRoomBO> classRoomList = this.classRoomController.findClassRooms(
+                currentYear, 0, this.getIdSchool());        
+        for (final ClassRoomBO classRoom : classRoomList) {
+            if (classRoom.getUserBO().equals(user)) {
+                groupDirClassRoom = classRoom;
+                break;
+            }
+        }
+        return groupDirClassRoom;
+    }
+    
+    protected InputStream generateReports(final int idSchool, final int idClassRoom,
+            final int idPeriod) throws IOException {
+        return this.reportController.generateReports(idSchool, idClassRoom, idPeriod);
+    }
+    
+    protected boolean isGroupDirector() throws IOException {
+        final UserBO user = this.getLogeduser();
+        final ClassRoomBO groupDirClassRoom = this.getGroupDirectorClassRoom(user);
+        return groupDirClassRoom != null;
     }
 }

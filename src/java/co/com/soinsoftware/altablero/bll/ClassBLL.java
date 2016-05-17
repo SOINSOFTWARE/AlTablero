@@ -30,9 +30,6 @@ public class ClassBLL extends AbstractBLL {
     
     @Autowired
     private NoteDefinitionMapper noteDefMapper;
-    
-    @Autowired
-    private NoteValueMapper noteValueMapper;
 
     public Set<ClassBO> findClasses(final int idSchool, final int idClassRoom,
             final int idTeacher) throws IOException {
@@ -42,7 +39,7 @@ public class ClassBLL extends AbstractBLL {
                 idClassRoom));
         builder.append(buildRequestParameter(CONCAT, PARAMETER_SCHOOL_ID, idSchool));
         builder.append(buildRequestParameter(CONCAT, PARAMETER_USER_ID, idTeacher));
-        final String response = httpRequest.sendGet(builder.toString());
+        final String response = (String) httpRequest.sendGet(builder.toString());
         return classMapper.getObjectSetFromJSON(response);
     }
 
@@ -50,7 +47,7 @@ public class ClassBLL extends AbstractBLL {
             throws IOException {
         final String jsonObject = this.writeValueAsString(classList);
         final String method = MODULE_CLASS + PATH_SAVE;
-        final String response = httpRequest.sendPost(method, jsonObject);
+        final String response = (String) httpRequest.sendPost(method, jsonObject);
         return classMapper.getObjectSetFromJSON(response);
     }
     
@@ -61,7 +58,7 @@ public class ClassBLL extends AbstractBLL {
         builder.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_CLASS_ID,
                 idClass));
         builder.append(buildRequestParameter(CONCAT, PARAMETER_PERIOD_ID, idPeriod));
-        final String response = httpRequest.sendGet(builder.toString());
+        final String response = (String) httpRequest.sendGet(builder.toString());
         return noteDefMapper.getObjectSetFromJSON(response);
     }
     
@@ -69,7 +66,7 @@ public class ClassBLL extends AbstractBLL {
             throws IOException {
         final String jsonObject = this.writeNoteDefinitionAsString(noteDefList);
         final String method = MODULE_CLASS + PATH_SAVE_NOTEDEFINITION_BY_CLASS;
-        final String response = httpRequest.sendPost(method, jsonObject);
+        final String response = (String) httpRequest.sendPost(method, jsonObject);
         return this.classMapper.getObjectFromJSON(response);
     }
     
@@ -77,7 +74,7 @@ public class ClassBLL extends AbstractBLL {
             throws IOException {
         final String jsonObject = this.writeNoteValueAsString(noteValueList);
         final String method = MODULE_CLASS + PATH_SAVE_NOTEVALUE;
-        final String response = httpRequest.sendPost(method, jsonObject);
+        final String response = (String) httpRequest.sendPost(method, jsonObject);
         return this.classMapper.getObjectFromJSON(response);
     }
 

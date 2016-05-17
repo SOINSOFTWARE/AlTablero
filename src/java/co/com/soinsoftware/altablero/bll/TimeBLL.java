@@ -25,7 +25,7 @@ public class TimeBLL extends AbstractBLL {
     
     public Set<TimeBO> findAll() throws IOException {
         final String method = MODULE_TIME + PATH_ALL;
-        final String response = httpRequest.sendGet(method);
+        final String response = (String) httpRequest.sendGet(method);
         return timeMapper.getObjectSetFromJSON(response);
     }    
 }

@@ -28,7 +28,7 @@ public class PeriodBLL extends AbstractBLL {
         methodBuilder.append(MODULE_PERIOD + PATH_ALL);
         methodBuilder.append(
                 this.buildRequestParameter(ADD_PARAMETERS, PARAMETER_SCHOOL_ID, idSchool));
-        final String response = httpRequest.sendGet(methodBuilder.toString());
+        final String response = (String) httpRequest.sendGet(methodBuilder.toString());
         return this.mapper.getObjectSetFromJSON(response);
     }
 }

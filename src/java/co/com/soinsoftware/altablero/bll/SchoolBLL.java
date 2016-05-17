@@ -25,7 +25,7 @@ public class SchoolBLL extends AbstractBLL {
     public SchoolBO findByIdentifier(final int identifier) throws IOException {
         final StringBuilder method = new StringBuilder(MODULE_SCHOOL + PATH_BY);
         method.append(this.buildRequestParameter(ADD_PARAMETERS, PARAMETER_SCHOOL_ID, identifier));
-        final String response = httpRequest.sendGet(method.toString());
+        final String response = (String) httpRequest.sendGet(method.toString());
         return schoolMapper.getObjectFromJSON(response);
     }
 }

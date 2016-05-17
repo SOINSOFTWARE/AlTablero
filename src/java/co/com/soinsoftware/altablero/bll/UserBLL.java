@@ -29,7 +29,7 @@ public class UserBLL extends AbstractBLL {
         method.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_DOCUMENT_NUMBER,
                 documentNumber));
         final String methodAndParameters = method.toString();
-        final String response = httpRequest.sendGet(methodAndParameters);
+        final String response = (String) httpRequest.sendGet(methodAndParameters);
         return userMapper.getObjectFromJSON(response);
     }
     
@@ -39,7 +39,7 @@ public class UserBLL extends AbstractBLL {
         method.append(buildRequestParameter(ADD_PARAMETERS, PARAMETER_USER_ID,
                 idUser));
         final String methodAndParameters = method.toString();
-        final String response = httpRequest.sendGet(methodAndParameters);
+        final String response = (String) httpRequest.sendGet(methodAndParameters);
         return userMapper.getObjectFromJSON(response);
     }
 
@@ -73,14 +73,14 @@ public class UserBLL extends AbstractBLL {
         urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_DOCUMENT_NUMBER,
                 documentNumber));
         urlMethod.append(buildRequestParameter(CONCAT, PARAMETER_SCHOOL_ID, idSchool));
-        final String response = httpRequest.sendGet(urlMethod.toString());
+        final String response = (String) httpRequest.sendGet(urlMethod.toString());
         return Boolean.valueOf(response);
     }
     
     public UserBO save(final UserBO user) throws IOException {
         final String jsonObject = this.writeValueAsString(user);
         final String method = MODULE_USER + PATH_SAVE;
-        final String response = httpRequest.sendPost(method, jsonObject);
+        final String response = (String) httpRequest.sendPost(method, jsonObject);
         return this.userMapper.getObjectFromJSON(response);
     }
     
@@ -92,7 +92,7 @@ public class UserBLL extends AbstractBLL {
     
     private Set<UserBO> sendGetToReceiveSet(final String methodAndParameters)
             throws IOException {
-        final String response = httpRequest.sendGet(methodAndParameters);
+        final String response = (String) httpRequest.sendGet(methodAndParameters);
         return userMapper.getObjectSetFromJSON(response);
     }
 
