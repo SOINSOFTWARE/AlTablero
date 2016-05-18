@@ -7,6 +7,7 @@ package co.com.soinsoftware.altablero.utils;
 
 import co.com.soinsoftware.altablero.controller.UserController;
 import co.com.soinsoftware.altablero.entity.AccessBO;
+import co.com.soinsoftware.altablero.entity.SchoolBO;
 import co.com.soinsoftware.altablero.entity.UserBO;
 import static co.com.soinsoftware.altablero.entity.UserBO.femaleAvatar;
 import static co.com.soinsoftware.altablero.entity.UserBO.maleAvatar;
@@ -26,6 +27,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Service
 public class RoleUtils {
 
+    private static final String SCHOOL_NAME_ATTRIBUTE = "schoolName";
+    private static final String SCHOOL_PHOTO_ATTRIBUTE = "schoolImg";
     private static final String USER_FIRST_NAME_ATTRIBUTE = "userFirstName";
     private static final String USER_NAME_ATTRIBUTE = "username";
     private static final String USER_PHOTO_ATTRIBUTE = "avatar";
@@ -41,14 +44,15 @@ public class RoleUtils {
     private UserController userController;
 
     public ModelAndView createModelWithUserDetails(final UserBO user,
-            final int idSchool) throws IOException {
+            final SchoolBO school) throws IOException {
         if (user == null) {
             throw new IOException("User not found");
         }
-        return this.buildModelUsingUserBO(user, idSchool);
+        return this.buildModelUsingUserBO(user, school);
     }
 
-    private ModelAndView buildModelUsingUserBO(final UserBO user, final int idSchool) {
+    private ModelAndView buildModelUsingUserBO(final UserBO user,
+            final SchoolBO school) {
         ModelAndView model = new ModelAndView();
         if (user != null) {
             final String fullName = user.getName() + " " + user.getLastName();
@@ -59,7 +63,12 @@ public class RoleUtils {
             model.addObject(MENU_SUBJECT_ATTRIBUTE, user.canViewSubjectMenu());
             model.addObject(MENU_TEACHER_ATTRIBUTE, user.canViewTeacherMenu());
             model.addObject(MENU_STUDENT_ATTRIBUTE, user.canViewStudentMenu());
-            this.addUserPhotoToModel(model, user, idSchool);
+            if (school != null) {
+                final String schoolPhoto = this.userController.getHttpPath(school.getId());
+                model.addObject(SCHOOL_PHOTO_ATTRIBUTE, schoolPhoto);
+                model.addObject(SCHOOL_NAME_ATTRIBUTE, school.getName());
+                this.addUserPhotoToModel(model, user, school.getId());
+            }
         }
         return model;
     }

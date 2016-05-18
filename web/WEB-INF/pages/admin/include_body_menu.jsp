@@ -4,13 +4,9 @@
     <section class="sidebar">
         <div class="user-panel">
             <div class="pull-left image">
-                <c:choose>
-                    <c:when test="${isAvatar}"><c:set var="imgSrc" value="/res/img/${avatar}.png"></c:set></c:when>
-                    <c:otherwise><c:set var="imgSrc" value="${avatar}"></c:set></c:otherwise>
-                </c:choose>
-                <img src="<c:url value='${imgSrc}' />" class="img-circle" alt="Imagen de usuario" />
+                <img src="<c:url value='${schoolImg}' />" class="img-circle" alt="colegio" />
             </div>
-            <div class="pull-left info"><p>Hola ${userFirstName}</p></div>
+            <div class="pull-left info"><p>${schoolName}</p></div>
         </div>
 
         <ul class="sidebar-menu">
@@ -66,7 +62,23 @@
                     </ul>
                 </li>
             </c:if>
-            <c:if test="${canViewSubjectMenu}">
+            <c:if test="${canViewStudentMenu}">
+                <li id="liStudent" class="treeview">
+                    <a id="refStudent" href="#">
+                        <i class="fa fa-male"></i> <span>Estudiantes</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <c:if test="${accessList.contains('ESTVE')}">
+                            <li><a href="<c:url value="/admin/estudiantes" />"><i class="fa fa-angle-double-right"></i> Ver</a></li>
+                        </c:if>
+                        <c:if test="${accessList.contains('ESTCE')}">
+                            <li><a href="<c:url value="/admin/estudiantes/edicion" />"><i class="fa fa-angle-double-right"></i> Crear</a></li>
+                        </c:if>
+                    </ul>
+                </li>
+            </c:if>
+            <!--<c:if test="${canViewSubjectMenu}">
                 <li id="liSubject" class="treeview">
                     <a href="#">
                         <i class="fa fa-book"></i> <span>Materias</span>
@@ -84,23 +96,7 @@
                         </c:if>
                     </ul>
                 </li>
-            </c:if>
-            <c:if test="${canViewStudentMenu}">
-                <li id="liStudent" class="treeview">
-                    <a id="refStudent" href="#">
-                        <i class="fa fa-male"></i> <span>Estudiantes</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <c:if test="${accessList.contains('ESTVE')}">
-                            <li><a href="<c:url value="/admin/estudiantes" />"><i class="fa fa-angle-double-right"></i> Ver</a></li>
-                        </c:if>
-                        <c:if test="${accessList.contains('ESTCE')}">
-                            <li><a href="<c:url value="/admin/estudiantes/edicion" />"><i class="fa fa-angle-double-right"></i> Crear</a></li>
-                        </c:if>
-                    </ul>
-                </li>
-            </c:if>
+            </c:if>-->
         </ul>
     </section>
 </aside>

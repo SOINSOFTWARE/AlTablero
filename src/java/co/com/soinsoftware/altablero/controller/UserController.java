@@ -130,6 +130,14 @@ public class UserController {
                 idSchool, user.getDocumentType(), user.getGender(), "/");
         return this.fileUtils.getHttpPath() + photoName;
     }
+    
+    public String getHttpPath(final int idSchool) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(idSchool);
+        builder.append(".png");
+        final String photoName = builder.toString();
+        return this.fileUtils.getHttpPath() + photoName;
+    }
 
     private String getPhotoName(final String docNumber, final int idSchool,
             final String documentType, final String gender, final String separator) {

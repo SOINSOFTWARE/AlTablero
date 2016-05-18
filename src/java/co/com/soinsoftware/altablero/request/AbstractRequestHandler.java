@@ -156,7 +156,7 @@ public abstract class AbstractRequestHandler {
 
     protected ModelAndView buildModelAndView(final UserBO user) throws IOException {
         final ModelAndView model = this.roleUtils.createModelWithUserDetails(
-                user, this.getIdSchool(user));
+                user, this.getSchool(user));
         boolean isGroupDirector = false;
         if (user != null && this.isTeacher(user) && this.isGroupDirector(user)) {
             isGroupDirector = true;
@@ -185,6 +185,16 @@ public abstract class AbstractRequestHandler {
             }
         }
         return idSchool;
+    }
+    
+    protected SchoolBO getSchool(final UserBO user) {
+        final Set<SchoolBO> schoolSet = (user != null) ? user.getSchoolSet() : null;
+        if (schoolSet != null) {
+            for (final SchoolBO school : schoolSet) {
+                return school;
+            }
+        }
+        return null;
     }
 
     protected BigDecimal getMaxEvaluation(final UserBO user) {

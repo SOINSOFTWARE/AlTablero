@@ -65,7 +65,7 @@ public class LoginRequestHandler extends AbstractRequestHandler {
         ModelAndView model;
         try {
             final UserBO user = this.getLogeduser();
-            model = roleUtils.createModelWithUserDetails(user, 0);
+            model = roleUtils.createModelWithUserDetails(user, null);
             model.setViewName(LOCKSCREEN_PAGE);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage());
@@ -80,7 +80,7 @@ public class LoginRequestHandler extends AbstractRequestHandler {
         if (!AuthenticationUtils.isAnonymusAuthentication()) {
             try {
                 final UserBO user = this.getLogeduser();
-                model = roleUtils.createModelWithUserDetails(user, 0);
+                model = roleUtils.createModelWithUserDetails(user, null);
                 model.setViewName(NOT_FOUND_PAGE);
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());
