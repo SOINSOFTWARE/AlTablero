@@ -33,6 +33,11 @@ public class FileUtils {
         final String fileName = PATH + name;
         if (file != null && !file.isEmpty()) {
             try {
+                final String directory = fileName.substring(0, fileName.lastIndexOf(File.separator));
+                final File dirFile = new File(directory);
+                if (!dirFile.exists()) {
+                    dirFile.mkdirs();
+                }
                 final byte[] bytes = file.getBytes();
                 final OutputStream os = new FileOutputStream(new File(fileName));
                 try (final BufferedOutputStream stream = new BufferedOutputStream(os)) {

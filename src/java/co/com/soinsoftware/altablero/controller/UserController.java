@@ -116,7 +116,8 @@ public class UserController {
         user.addSchoolToSet(school);
         user.setUserTypeSet(userTypeSet);
         user.setEnabled(true);
-        final String photoName = this.getPhotoName(docNumber, school.getId(), File.separator);
+        final String photoName = this.getPhotoName(docNumber, school.getId(),
+                docType, gender, File.separator);
         if (fileUtils.savePhotoInServer(file, photoName)) {
             final String path = fileUtils.getFilePath();
             user.setPhoto(path + photoName);
@@ -125,13 +126,19 @@ public class UserController {
     }
     
     public String getHttpPath(final UserBO user, final int idSchool) {
-        final String photoName = this.getPhotoName(user.getDocumentNumber(), idSchool, "/");
+        final String photoName = this.getPhotoName(user.getDocumentNumber(),
+                idSchool, user.getDocumentType(), user.getGender(), "/");
         return this.fileUtils.getHttpPath() + photoName;
     }
 
-    private String getPhotoName(final String docNumber, final int idSchool, final String separator) {
+    private String getPhotoName(final String docNumber, final int idSchool,
+            final String documentType, final String gender, final String separator) {
         final StringBuilder builder = new StringBuilder();
         builder.append(idSchool);
+        builder.append(separator);
+        builder.append(documentType);
+        builder.append(separator);
+        builder.append(gender);
         builder.append(separator);
         builder.append(docNumber);
         builder.append(".png");
