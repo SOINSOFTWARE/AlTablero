@@ -25,7 +25,6 @@
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                 <div class="footer">  
                     <input name="submit" type="submit" class="btn bg-olive btn-block" value="Iniciar sesi&oacute;n" />
-                    <p><a href="#">Olvide mi Contrase&ntilde;a</a></p>
                 </div>
             </form>
             <c:if test="${not empty error}">
