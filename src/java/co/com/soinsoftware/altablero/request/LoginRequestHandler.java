@@ -1,5 +1,6 @@
 package co.com.soinsoftware.altablero.request;
 
+import co.com.soinsoftware.altablero.entity.UserBO;
 import co.com.soinsoftware.altablero.utils.AuthenticationUtils;
 import co.com.soinsoftware.altablero.utils.RoleUtils;
 import java.io.IOException;
@@ -62,10 +63,9 @@ public class LoginRequestHandler extends AbstractRequestHandler {
 
     public ModelAndView buildLockScreenModel() {
         ModelAndView model;
-        final String documentNumber
-                = AuthenticationUtils.getDocumentNumberFromAuthentication();
         try {
-            model = roleUtils.createModelWithUserDetails(documentNumber, 0);
+            final UserBO user = this.getLogeduser();
+            model = roleUtils.createModelWithUserDetails(user, 0);
             model.setViewName(LOCKSCREEN_PAGE);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage());
@@ -78,10 +78,9 @@ public class LoginRequestHandler extends AbstractRequestHandler {
     public ModelAndView buildNotFoundModel() {
         ModelAndView model = LoginRequestHandler.buildRedirectLoginModel();
         if (!AuthenticationUtils.isAnonymusAuthentication()) {
-            final String documentNumber
-                    = AuthenticationUtils.getDocumentNumberFromAuthentication();
             try {
-                model = roleUtils.createModelWithUserDetails(documentNumber, 0);
+                final UserBO user = this.getLogeduser();
+                model = roleUtils.createModelWithUserDetails(user, 0);
                 model.setViewName(NOT_FOUND_PAGE);
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());

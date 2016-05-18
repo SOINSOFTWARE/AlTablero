@@ -5,6 +5,7 @@
  */
 package co.com.soinsoftware.altablero.request;
 
+import co.com.soinsoftware.altablero.entity.UserBO;
 import java.io.IOException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,8 @@ public class MainBoardRequestHandler extends AbstractRequestHandler {
     public ModelAndView generalPage() {
         ModelAndView model = null;
         try {
-            model = this.buildModelAndView();
+            final UserBO logedUser = this.getLogeduser();
+            model = this.buildModelAndView(logedUser);
             model.setViewName(GENERAL_PAGE);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage());

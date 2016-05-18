@@ -40,9 +40,8 @@ public class RoleUtils {
     @Autowired
     private UserController userController;
 
-    public ModelAndView createModelWithUserDetails(final String documentNumber,
+    public ModelAndView createModelWithUserDetails(final UserBO user,
             final int idSchool) throws IOException {
-        final UserBO user = this.userController.findUserByDocument(documentNumber);
         if (user == null) {
             throw new IOException("User not found");
         }

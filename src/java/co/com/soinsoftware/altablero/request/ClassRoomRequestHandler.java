@@ -46,9 +46,10 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
             throws IOException {
         ModelAndView model = null;
         try {
-            model = this.buildModelAndView();
+            final UserBO logedUser = this.getLogeduser();
+            model = this.buildModelAndView(logedUser);
             model.setViewName(CLASSROOM_MODEL);
-            this.addClassRoomListToModel(model, year, grade);
+            this.addClassRoomListToModel(model, year, grade, logedUser);
             this.addObjectsToClassRoomPages(model);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
@@ -64,7 +65,8 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
         ModelAndView model = null;
         ClassRoomBO classRoomBO = null;
         try {
-            final int idSchool = this.getIdSchool();
+            final UserBO logedUser = this.getLogeduser();
+            final int idSchool = this.getIdSchool(logedUser);
             classRoomBO = (idClassRoom != null && idClassRoom > 0)
                     ? this.findClassRoom(idSchool, idClassRoom) : null;
             model = this.buildEditPageModel(classRoomBO, false, false, false, false);
@@ -93,19 +95,21 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
             final String name) {
         ModelAndView model = null;
         final int idClassRoomForSave = (idClassRoom == null) ? 0 : idClassRoom;
-        final ClassRoomBO classRoomBO = classRoomController.buildClassRoom(
-                idClassRoomForSave, code, name, this.getIdSchool(), idYear,
-                idGrade, idUser, idTime);
+        ClassRoomBO classRoomBO = null;
         try {
+            final UserBO logedUser = this.getLogeduser();
+            final int idSchool = this.getIdSchool(logedUser);
+            classRoomBO = classRoomController.buildClassRoom(idClassRoomForSave,
+                    code, name, idSchool, idYear, idGrade, idUser, idTime);
             ClassRoomBO savedClassRoom = null;
             boolean saved = false;
             boolean invalidCode = false;
-            if (classRoomController.isValidCode(this.getIdSchool(), idClassRoomForSave, code)) {
+            if (classRoomController.isValidCode(idSchool, idClassRoomForSave, code)) {
                 savedClassRoom = classRoomController.saveClassRoom(classRoomBO);
                 saved = true;
             } else {
                 invalidCode = true;
-                savedClassRoom = this.findClassRoom(this.getIdSchool(), idClassRoomForSave);
+                savedClassRoom = this.findClassRoom(idSchool, idClassRoomForSave);
                 classRoomBO.setClassSet(savedClassRoom.getClassSet());
                 classRoomBO.setYearBO(savedClassRoom.getYearBO());
                 classRoomBO.setStudentSet(savedClassRoom.getStudentSet());
@@ -125,9 +129,10 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
             @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = true)
             final int idClassRoom) {
         ModelAndView model = null;
-        final int idSchool = this.getIdSchool();
         ClassRoomBO classRoomBO = null;
         try {
+            final UserBO logedUser = this.getLogeduser();
+            final int idSchool = this.getIdSchool(logedUser);
             classRoomBO = this.findClassRoom(idSchool, idClassRoom);
             classRoomBO.setEnabled(false);
             final ClassRoomBO savedClassRoom = classRoomController.saveClassRoom(classRoomBO);
@@ -188,8 +193,9 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
             final Integer idClassRoom) {
         ModelAndView model = null;
         try {
-            model = this.buildLinkStudentsToClassRoomPageModel(idGrade, idClassRoom,
-                    false, false);
+            final UserBO logedUser = this.getLogeduser();
+            model = this.buildLinkStudentsToClassRoomPageModel(logedUser, idGrade,
+                    idClassRoom, false, false);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
             model = LoginRequestHandler.buildRedirectLoginModel();
@@ -207,17 +213,19 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
             final String objectStr) {
         ModelAndView model = null;
         try {
+            final UserBO logedUser = this.getLogeduser();
             final List<ClassRoomBO> classRoomList = classRoomController
                     .buildStudentsLinkedToClassRoomList(objectStr);
-            final Set<ClassRoomBO> classRoomSet = classRoomController.saveClassRoomXStudent(classRoomList);
+            final Set<ClassRoomBO> classRoomSet
+                    = classRoomController.saveClassRoomXStudent(classRoomList);
             boolean wasSaved = true;
             boolean hasServerErrors = false;
             if (classRoomSet == null || classRoomSet.size() > classRoomList.size()) {
                 hasServerErrors = true;
                 wasSaved = false;
             }
-            model = this.buildLinkStudentsToClassRoomPageModel(idGrade, idClassRoom,
-                    wasSaved, hasServerErrors);
+            model = this.buildLinkStudentsToClassRoomPageModel(logedUser, idGrade,
+                    idClassRoom, wasSaved, hasServerErrors);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
             model = LoginRequestHandler.buildRedirectLoginModel();
@@ -230,7 +238,8 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
             final boolean hasServerErrors, final boolean invalidCode) {
         ModelAndView model = null;
         try {
-            model = this.buildModelAndView();
+            final UserBO logedUser = this.getLogeduser();
+            model = this.buildModelAndView(logedUser);
             model.setViewName(CLASSROOM_EDIT_MODEL);
             UserBO currentDirector = null;
             if (classRoomBO != null) {
@@ -241,7 +250,7 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
                             this.sortUserSet(classRoomBO.getStudentSet()));
                 }
             }
-            this.addTeacherNotDirectorListToModel(model, currentDirector);
+            this.addTeacherNotDirectorListToModel(model, currentDirector, logedUser);
             this.addObjectsToClassRoomPages(model);
             model.addObject(CURRENT_YEAR_PARAMETER, yearController.findCurrentYear());
             model.addObject(INVALIDCODE_PARAMETER, invalidCode);
@@ -258,33 +267,35 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
     private ModelAndView buildEditClassesPageModel(final Integer idClassRoom,
             final boolean wasSaved, final boolean hasServerErrors)
             throws IOException {
-        ModelAndView model = this.buildModelAndView();
+        final UserBO logedUser = this.getLogeduser();
+        ModelAndView model = this.buildModelAndView(logedUser);
         model.setViewName(CLASSROOM_CLASSES_MODEL);
         this.addGradeListToModel(model);
         final String year = yearController.getCurrentYearString();
-        this.addClassRoomListToModel(model, year, null);
+        this.addClassRoomListToModel(model, year, null, logedUser);
         if (idClassRoom != null && idClassRoom > 0) {
-            this.addClassListToModel(model, idClassRoom, 0, true);
-            this.addTeacherListToModel(model);
+            this.addClassListToModel(model, idClassRoom, 0, true, logedUser);
+            this.addTeacherListToModel(model, logedUser);
         }
         model.addObject(SAVED_PARAMETER, wasSaved);
         model.addObject(HAS_SERVER_ERRORS_PARAMETER, hasServerErrors);
         return model;
     }
 
-    private ModelAndView buildLinkStudentsToClassRoomPageModel(final Integer idGrade,
-            final Integer idClassRoom, final boolean wasSaved, final boolean hasServerErrors)
-            throws IOException {
-        final ModelAndView model = this.buildModelAndView();
+    private ModelAndView buildLinkStudentsToClassRoomPageModel(final UserBO logedUser,
+            final Integer idGrade, final Integer idClassRoom, final boolean wasSaved,
+            final boolean hasServerErrors) throws IOException {
+        final ModelAndView model = this.buildModelAndView(logedUser);
         model.setViewName(CLASSROOM_LINK_MODEL);
         final String year = yearController.getLastYearString();
         model.addObject(YEAR_PARAMETER, year);
         this.addGradeListToModel(model);
-        this.addClassRoomListToModel(model, year, null);
-        this.addStudentsNotLinkedToModel(model, idGrade, idClassRoom);
+        this.addClassRoomListToModel(model, year, null, logedUser);
+        this.addStudentsNotLinkedToModel(model, idGrade, idClassRoom, logedUser);
         final String currentYear = yearController.getCurrentYearString();
+        final int idSchool = this.getIdSchool(logedUser);
         model.addObject(CURRENT_CLASSROOM_LIST_PARAMETER,
-                classRoomController.findClassRooms(currentYear, null, this.getIdSchool()));
+                classRoomController.findClassRooms(currentYear, null, idSchool));
         model.addObject(SAVED_PARAMETER, wasSaved);
         model.addObject(HAS_SERVER_ERRORS_PARAMETER, hasServerErrors);
         return model;

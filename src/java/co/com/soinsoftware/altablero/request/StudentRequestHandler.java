@@ -54,14 +54,15 @@ public class StudentRequestHandler extends AbstractRequestHandler {
             final Integer idClassRoom) {
         ModelAndView model = null;
         try {
-            model = this.buildModelAndView();
+            final UserBO logedUser = this.getLogeduser();
+            model = this.buildModelAndView(logedUser);
             model.setViewName(STUDENT_MODEL);
-            if (this.isStudent()) {
+            if (this.isStudent(logedUser)) {
                 this.buildListPageModelForStudent(model);
-            } else if (this.isGuardian() && !this.isTeacher()) {
+            } else if (this.isGuardian(logedUser) && !this.isTeacher(logedUser)) {
                 this.buildListPageModelForGuardian(model);
             } else {
-                this.buildListPageModelForNonStudents(model, idClassRoom);
+                this.buildListPageModelForNonStudents(logedUser, model, idClassRoom);
             }
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
@@ -69,7 +70,7 @@ public class StudentRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
-    
+
     @RequestMapping(value = STUDENT_EDIT_PAGE, method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView edit(
             @RequestParam(value = USER_ID_REQUEST_PARAM, required = false)
@@ -86,7 +87,7 @@ public class StudentRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
-    
+
     @RequestMapping(value = STUDENT_SAVE_PAGE, method = RequestMethod.POST)
     public ModelAndView save(
             @RequestParam(value = USER_ID_REQUEST_PARAM, required = true)
@@ -151,19 +152,24 @@ public class StudentRequestHandler extends AbstractRequestHandler {
             final Integer idClassRoom) {
         ModelAndView model = null;
         try {
-            final SchoolBO school = this.schoolController.findByIdentifier(this.getIdSchool());
+            final UserBO logedUser = this.getLogeduser();
+            final int idSchool = this.getIdSchool(logedUser);
+            final SchoolBO school = this.schoolController.findByIdentifier(idSchool);
             final Set<UserTypeBO> userTypeSet = new HashSet<>();
             userTypeSet.add(this.userTypeController.findBy(UserTypeBO.getStudentCode()));
             final boolean isValidDocNumber = userController.isValidDocumentNumber(
-                    idUser, docNumber, this.getIdSchool());
-            UserBO user = this.userController.buildUserBO(idUser, docType, docNumber, name,
-                    lastName, bornDate, address, phone1, phone2, gender, file, school, userTypeSet);
-            final UserBO guardian1 = this.buildGuardian(idUserGuardian1, docTypeGuardian1,
-                    docNumberGuardian1, nameGuardian1, lastNameGuardian1, addressGuardian1,
-                    phone1Guardian1, phone2Guardian1, genderGuardian1);
-            final UserBO guardian2 = this.buildGuardian(idUserGuardian2, docTypeGuardian2,
-                    docNumberGuardian2, nameGuardian2, lastNameGuardian2, addressGuardian2,
-                    phone1Guardian2, phone2Guardian2, genderGuardian2);
+                    idUser, docNumber, idSchool);
+            UserBO user = this.userController.buildUserBO(idUser, docType, docNumber,
+                    name, lastName, bornDate, address, phone1, phone2, gender,
+                    file, school, userTypeSet);
+            final UserBO guardian1 = this.buildGuardian(logedUser, idUserGuardian1,
+                    docTypeGuardian1, docNumberGuardian1, nameGuardian1,
+                    lastNameGuardian1, addressGuardian1, phone1Guardian1,
+                    phone2Guardian1, genderGuardian1);
+            final UserBO guardian2 = this.buildGuardian(logedUser, idUserGuardian2,
+                    docTypeGuardian2, docNumberGuardian2, nameGuardian2,
+                    lastNameGuardian2, addressGuardian2, phone1Guardian2,
+                    phone2Guardian2, genderGuardian2);
             user.setGuardian1(guardian1);
             user.setGuardian2(guardian2);
             boolean saved = false;
@@ -188,14 +194,15 @@ public class StudentRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
-    
+
     @RequestMapping(value = STUDENT_DEACTIVATE_PAGE, method = RequestMethod.POST)
     public ModelAndView deactivate(
             @RequestParam(value = USER_ID_REQUEST_PARAM, required = true)
             final Integer idUser) {
         ModelAndView model = null;
         try {
-            UserBO user = this.findUserToBeDeactivated(idUser);
+            final UserBO logedUser = this.getLogeduser();
+            UserBO user = this.findUserToBeDeactivated(logedUser, idUser);
             user.setEnabled(false);
             final UserBO savedUser = this.userController.save(user);
             boolean saved = false;
@@ -213,13 +220,13 @@ public class StudentRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
-    
-    private void buildListPageModelForNonStudents(final ModelAndView model,
-            final Integer idClassRoom) throws IOException {
+
+    private void buildListPageModelForNonStudents(final UserBO logedUser,
+            final ModelAndView model, final Integer idClassRoom) throws IOException {
         final String currentYear = this.yearController.getCurrentYearString();
-        this.addClassRoomListToModel(model, currentYear, 0);
+        this.addClassRoomListToModel(model, currentYear, 0, logedUser);
         this.addGradeListToModel(model);
-        final int idSchool = this.getIdSchool();
+        final int idSchool = this.getIdSchool(logedUser);
         final ClassRoomBO classRoom = (idClassRoom != null && idClassRoom > 0)
                 ? this.findClassRoom(idSchool, idClassRoom) : null;
         if (classRoom != null && classRoom.getStudentSet() != null) {
@@ -228,41 +235,43 @@ public class StudentRequestHandler extends AbstractRequestHandler {
         }
         model.addObject(SHOW_SEARCH_PARAMETER, false);
     }
-    
+
     private void buildListPageModelForStudent(final ModelAndView model) {
         final List<UserBO> userList = new ArrayList<>();
         userList.add(this.getLogeduser());
         model.addObject(STUDENT_LIST_PARAMETER, userList);
         model.addObject(SHOW_SEARCH_PARAMETER, true);
     }
-    
+
     private void buildListPageModelForGuardian(final ModelAndView model)
             throws IOException {
         final UserBO user = this.getLogeduser();
         final List<UserBO> userList = this.userController.findStudentsByGuardian(
-                user.getId());        
+                user.getId());
         model.addObject(STUDENT_LIST_PARAMETER, userList);
         model.addObject(SHOW_SEARCH_PARAMETER, true);
     }
-    
+
     private ModelAndView buildEditPageModel(final UserBO user, final boolean wasSaved,
             final boolean wasDeactivated, final boolean hasServerErrors,
             final boolean invalidDocNumber) {
         ModelAndView model = null;
         try {
-            model = this.buildModelAndView();
+            final UserBO logedUser = this.getLogeduser();
+            final int idSchool = this.getIdSchool(logedUser);
+            model = this.buildModelAndView(logedUser);
             model.setViewName(STUDENT_EDIT_MODEL);
             final String currentYear = yearController.getCurrentYearString();
             final List<ClassRoomBO> classRoomList = this.classRoomController
-                    .findClassRooms(currentYear, 0, this.getIdSchool());
+                    .findClassRooms(currentYear, 0, idSchool);
             if (user != null) {
                 if (user.getPhoto() != null && !user.getPhoto().equals("")) {
-                    user.setPhoto(this.userController.getHttpPath(user, this.getIdSchool()));
+                    user.setPhoto(this.userController.getHttpPath(user, idSchool));
                 }
                 this.addClassListToModel(model, classRoomList, user);
-                final List<PeriodBO> periodList = this.findPeriodListBySchool();
+                final List<PeriodBO> periodList = this.findPeriodListBySchool(logedUser);
                 model.addObject(PERIOD_LIST_PARAMETER, periodList);
-                model.addObject(MAX_EVALUATION_PARAMETER, this.getMaxEvaluation());
+                model.addObject(MAX_EVALUATION_PARAMETER, this.getMaxEvaluation(logedUser));
             }
             model.addObject(USER_PARAMETER, user);
             model.addObject(SAVED_PARAMETER, wasSaved);
@@ -270,7 +279,7 @@ public class StudentRequestHandler extends AbstractRequestHandler {
             model.addObject(HAS_SERVER_ERRORS_PARAMETER, hasServerErrors);
             model.addObject(INVALIDCODE_PARAMETER, invalidDocNumber);
             model.addObject(CLASSROOM_LIST_PARAMETER, classRoomList);
-            this.addClassRoomListToModel(model, currentYear, 0);
+            this.addClassRoomListToModel(model, currentYear, 0, logedUser);
             this.addGradeListToModel(model);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
@@ -278,17 +287,18 @@ public class StudentRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
-    
-    private UserBO buildGuardian(final Integer userId, final String docType,
-            final String docNumber, final String name, final String lastName,
-            final String address, String phone1, String phone2, final String gender)
-            throws IOException {
+
+    private UserBO buildGuardian(final UserBO logedUser, final Integer userId,
+            final String docType, final String docNumber, final String name,
+            final String lastName, final String address, String phone1,
+            String phone2, final String gender) throws IOException {
         final int id = (userId == null) ? 0 : userId;
+        final int idSchool = this.getIdSchool(logedUser);
         phone1 = phone1.replace("(", "").replace(")", "").replace("-", "").replace(" ", "");
         phone2 = phone2.replace("(", "").replace(")", "").replace("-", "").replace(" ", "");
-        final SchoolBO school = this.schoolController.findByIdentifier(this.getIdSchool());
-            final Set<UserTypeBO> userTypeSet = new HashSet<>();
-            userTypeSet.add(this.userTypeController.findBy(UserTypeBO.getGuardianCode()));
+        final SchoolBO school = this.schoolController.findByIdentifier(idSchool);
+        final Set<UserTypeBO> userTypeSet = new HashSet<>();
+        userTypeSet.add(this.userTypeController.findBy(UserTypeBO.getGuardianCode()));
         final UserBO user = new UserBO();
         user.setId(id);
         user.setDocumentType(docType);
@@ -307,7 +317,7 @@ public class StudentRequestHandler extends AbstractRequestHandler {
         user.setEnabled(true);
         return user;
     }
-    
+
     private boolean saveStudentXClassroom(final int idClassRoom, final UserBO user)
             throws IOException {
         boolean saved = true;
@@ -318,29 +328,29 @@ public class StudentRequestHandler extends AbstractRequestHandler {
         classRoom.setStudentSet(studentSet);
         final List<ClassRoomBO> classRoomList = new ArrayList<>();
         classRoomList.add(classRoom);
-        final Set<ClassRoomBO> classRoomSet = 
-                classRoomController.saveClassRoomXStudent(classRoomList);
+        final Set<ClassRoomBO> classRoomSet
+                = classRoomController.saveClassRoomXStudent(classRoomList);
         if (classRoomSet == null || classRoomSet.size() > classRoomList.size()) {
             saved = false;
         }
         return saved;
     }
-    
+
     private void addClassListToModel(final ModelAndView model,
             final List<ClassRoomBO> classRoomList, final UserBO user) {
         final List<ClassBO> classList = new ArrayList<>();
         if (classRoomList != null) {
-            for(final ClassRoomBO classRoom : classRoomList) {
+            for (final ClassRoomBO classRoom : classRoomList) {
                 if (this.isUserInClassRoom(classRoom, user)) {
                     model.addObject(CLASSROOM_PARAMETER, classRoom);
-                    if(classRoom.getClassSet() != null) {
-                        for(final ClassBO classBO : classRoom.getClassSet()) {
+                    if (classRoom.getClassSet() != null) {
+                        for (final ClassBO classBO : classRoom.getClassSet()) {
                             if (classBO.getNoteDefinitionSet() != null) {
-                                for (final NoteDefinitionBO noteDef 
+                                for (final NoteDefinitionBO noteDef
                                         : classBO.getNoteDefinitionSet()) {
                                     if (noteDef.getNoteValueSet() != null) {
                                         NoteValueBO noteValue = null;
-                                        for (final NoteValueBO noteValueInDef 
+                                        for (final NoteValueBO noteValueInDef
                                                 : noteDef.getNoteValueSet()) {
                                             if (noteValueInDef.getIdStudent() == user.getId()) {
                                                 noteValue = noteValueInDef;
@@ -362,11 +372,11 @@ public class StudentRequestHandler extends AbstractRequestHandler {
         }
         model.addObject(CLASS_LIST_PARAMETER, classList);
     }
-    
+
     private boolean isUserInClassRoom(final ClassRoomBO classRoom, final UserBO user) {
         boolean isInClassRoom = false;
         if (classRoom.getStudentSet() != null) {
-            for(final UserBO student : classRoom.getStudentSet()) {
+            for (final UserBO student : classRoom.getStudentSet()) {
                 if (student.equals(user)) {
                     isInClassRoom = true;
                     break;

@@ -44,7 +44,7 @@ import org.springframework.web.servlet.ModelAndView;
 public abstract class AbstractRequestHandler {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractRequestHandler.class);
-    
+
     protected static final String ACTIVITY_LIST_PARAMETER = "activities";
     protected static final String ACTIVITY_VALUE_LIST_PARAMETER = "values";
     protected static final String CLASS_PARAMETER = "classBO";
@@ -70,7 +70,7 @@ public abstract class AbstractRequestHandler {
     protected static final String USER_PARAMETER = "user";
     protected static final String YEAR_PARAMETER = "year";
     protected static final String YEAR_LIST_PARAMETER = "years";
-    
+
     protected static final String ADDRESS_REQUEST_PARAM = "address";
     protected static final String BORN_DATE_REQUEST_PARAM = "bornDate";
     protected static final String CLASS_REQUEST_PARAM = "classBO";
@@ -126,19 +126,19 @@ public abstract class AbstractRequestHandler {
 
     @Autowired
     protected GradeController gradeController;
-    
+
     @Autowired
     protected NoteDefinitionController noteDefController;
-    
+
     @Autowired
     protected NoteValueController noteValueController;
-    
+
     @Autowired
     protected PeriodController periodController;
-    
+
     @Autowired
     protected ReportController reportController;
-    
+
     @Autowired
     protected SchoolController schoolController;
 
@@ -147,19 +147,18 @@ public abstract class AbstractRequestHandler {
 
     @Autowired
     protected UserController userController;
-    
+
     @Autowired
     protected UserTypeController userTypeController;
 
     @Autowired
     protected YearController yearController;
 
-    protected ModelAndView buildModelAndView() throws IOException {
-        final String documentNumber = AuthenticationUtils.getDocumentNumberFromAuthentication();
+    protected ModelAndView buildModelAndView(final UserBO user) throws IOException {
         final ModelAndView model = this.roleUtils.createModelWithUserDetails(
-                documentNumber, this.getIdSchool());
+                user, this.getIdSchool(user));
         boolean isGroupDirector = false;
-        if (documentNumber != null && this.isTeacher() && this.isGroupDirector()) {
+        if (user != null && this.isTeacher(user) && this.isGroupDirector(user)) {
             isGroupDirector = true;
         }
         model.addObject(GROUP_DIRECTOR_PARAMETER, isGroupDirector);
@@ -177,8 +176,7 @@ public abstract class AbstractRequestHandler {
         return user;
     }
 
-    protected int getIdSchool() {
-        final UserBO user = this.getLogeduser();
+    protected int getIdSchool(final UserBO user) {
         final Set<SchoolBO> schoolSet = (user != null) ? user.getSchoolSet() : null;
         int idSchool = 0;
         if (schoolSet != null) {
@@ -188,23 +186,23 @@ public abstract class AbstractRequestHandler {
         }
         return idSchool;
     }
-    
-    protected BigDecimal getMaxEvaluation() {
-        final UserBO user = this.getLogeduser();
+
+    protected BigDecimal getMaxEvaluation(final UserBO user) {
         final Set<SchoolBO> schoolSet = (user != null) ? user.getSchoolSet() : null;
         BigDecimal maxEvaluation = null;
         if (schoolSet != null) {
             for (final SchoolBO school : schoolSet) {
-                for(final NoteValueConfigurationBO noteValue : school.getNote().getNoteValueSet()) {
-                    if (maxEvaluation == null 
-                            || maxEvaluation.doubleValue() < noteValue.getRangeEnd().doubleValue())
-                    maxEvaluation = noteValue.getRangeEnd();
+                for (final NoteValueConfigurationBO noteValue : school.getNote().getNoteValueSet()) {
+                    if (maxEvaluation == null
+                            || maxEvaluation.doubleValue() < noteValue.getRangeEnd().doubleValue()) {
+                        maxEvaluation = noteValue.getRangeEnd();
+                    }
                 }
             }
         }
         return maxEvaluation;
     }
-    
+
     protected void addYearListToModel(final ModelAndView model)
             throws IOException {
         model.addObject(YEAR_LIST_PARAMETER, yearController.findAll());
@@ -221,47 +219,49 @@ public abstract class AbstractRequestHandler {
     }
 
     protected void addTeacherNotDirectorListToModel(final ModelAndView model,
-            final UserBO currentDirector) throws IOException {
-        final int idSchool = this.getIdSchool();
+            final UserBO currentDirector, final UserBO logedUser) throws IOException {
+        final int idSchool = this.getIdSchool(logedUser);
         final List<UserBO> teacherList
                 = userController.findTeachersNotGroupDirector(idSchool, currentDirector);
         model.addObject(TEACHER_LIST_PARAMETER, teacherList);
     }
 
     protected void addClassRoomListToModel(final ModelAndView model, final String year,
-            final Integer grade) throws IOException {
+            final Integer grade, final UserBO user) throws IOException {
         model.addObject(CLASSROOM_LIST_PARAMETER,
-                classRoomController.findClassRooms(year, grade, this.getIdSchool()));
+                classRoomController.findClassRooms(year, grade, this.getIdSchool(user)));
     }
 
     protected void addClassListToModel(final ModelAndView model, final int idClassRoom,
-            final int idTeacher, final boolean addDefaultData)
+            final int idTeacher, final boolean addDefaultData, final UserBO logedUser)
             throws IOException {
-        final List<ClassBO> classList = classController.findClasses(this.getIdSchool(),
-                idClassRoom, idTeacher, addDefaultData);
+        final List<ClassBO> classList = classController.findClasses(
+                this.getIdSchool(logedUser), idClassRoom, idTeacher, addDefaultData);
         model.addObject(CLASS_LIST_PARAMETER, classList);
     }
 
-    protected void addTeacherListToModel(final ModelAndView model) throws IOException {
-        final int idSchool = this.getIdSchool();
+    protected void addTeacherListToModel(final ModelAndView model,
+            final UserBO user) throws IOException {
+        final int idSchool = this.getIdSchool(user);
         final String teacherCode = UserTypeBO.getTeacherCode();
         List<UserBO> teacherList = null;
-        if (this.isTeacher() && !this.isCoordinator()) {
+        if (this.isTeacher(user) && !this.isCoordinator(user)) {
             teacherList = new ArrayList<>();
-            teacherList.add(this.getLogeduser());
+            teacherList.add(user);
         } else {
             teacherList = userController.findUsersByUserType(idSchool, teacherCode);
         }
         model.addObject(TEACHER_LIST_PARAMETER, teacherList);
     }
 
-    protected void addStudentsNotLinkedToModel(final ModelAndView model, final Integer idGrade,
-            final Integer idClassRoom) throws IOException {
-        final int idSchool = this.getIdSchool();
+    protected void addStudentsNotLinkedToModel(final ModelAndView model,
+            final Integer idGrade, final Integer idClassRoom, final UserBO user)
+            throws IOException {
+        final int idSchool = this.getIdSchool(user);
         final List<UserBO> userList = userController.findStudentsNotLinked(idSchool, idGrade, idClassRoom);
         model.addObject(STUDENT_LIST_PARAMETER, userList);
     }
-    
+
     protected UserBO findUserByIdentifier(final Integer idUser) throws IOException {
         UserBO user = null;
         if (idUser != null) {
@@ -269,10 +269,11 @@ public abstract class AbstractRequestHandler {
         }
         return user;
     }
-    
-    protected UserBO findUserToBeDeactivated(final int idUser) throws IOException {
+
+    protected UserBO findUserToBeDeactivated(final UserBO logedUser, final int idUser)
+            throws IOException {
         final SchoolBO school = this.schoolController.findByIdentifier(
-                this.getIdSchool());
+                this.getIdSchool(logedUser));
         final UserBO user = this.findUserByIdentifier(idUser);
         if (user != null && user.getSchoolSet() != null && school != null
                 && user.getSchoolSet().contains(school)) {
@@ -285,23 +286,22 @@ public abstract class AbstractRequestHandler {
         }
         return user;
     }
-    
-    protected List<PeriodBO> findPeriodListBySchool() throws IOException {
-        return periodController.findAll(this.getIdSchool());
+
+    protected List<PeriodBO> findPeriodListBySchool(final UserBO user) throws IOException {
+        return periodController.findAll(this.getIdSchool(user));
     }
-    
+
     protected ClassRoomBO findClassRoom(final int idSchool, final Integer idClassRoom)
             throws IOException {
         return this.classRoomController.findClassRoom(idSchool, idClassRoom);
     }
-    
+
     protected List<UserBO> sortUserSet(final Set<UserBO> userSet) {
         return this.userController.sortUserSet(userSet);
     }
-    
-    protected boolean isTeacher() {
+
+    protected boolean isTeacher(final UserBO user) {
         boolean isTeacher = false;
-        final UserBO user = this.getLogeduser();
         if (user != null && user.getUserTypeSet() != null) {
             for (final UserTypeBO userType : user.getUserTypeSet()) {
                 if (userType.isTeacher()) {
@@ -312,10 +312,9 @@ public abstract class AbstractRequestHandler {
         }
         return isTeacher;
     }
-    
-    protected boolean isCoordinator() {
+
+    protected boolean isCoordinator(final UserBO user) {
         boolean isCoordinator = false;
-        final UserBO user = this.getLogeduser();
         if (user != null && user.getUserTypeSet() != null) {
             for (final UserTypeBO userType : user.getUserTypeSet()) {
                 if (userType.isCoordinator()) {
@@ -326,10 +325,9 @@ public abstract class AbstractRequestHandler {
         }
         return isCoordinator;
     }
-    
-    protected boolean isStudent() {
+
+    protected boolean isStudent(final UserBO user) {
         boolean isStudent = false;
-        final UserBO user = this.getLogeduser();
         if (user != null && user.getUserTypeSet() != null) {
             for (final UserTypeBO userType : user.getUserTypeSet()) {
                 if (userType.isStudent()) {
@@ -340,10 +338,9 @@ public abstract class AbstractRequestHandler {
         }
         return isStudent;
     }
-    
-    protected boolean isGuardian() {
+
+    protected boolean isGuardian(final UserBO user) {
         boolean isGuardian = false;
-        final UserBO user = this.getLogeduser();
         if (user != null && user.getUserTypeSet() != null) {
             for (final UserTypeBO userType : user.getUserTypeSet()) {
                 if (userType.isGuardian()) {
@@ -354,12 +351,12 @@ public abstract class AbstractRequestHandler {
         }
         return isGuardian;
     }
-    
+
     protected ClassRoomBO getGroupDirectorClassRoom(final UserBO user) throws IOException {
         ClassRoomBO groupDirClassRoom = null;
         final String currentYear = yearController.getCurrentYearString();
         final List<ClassRoomBO> classRoomList = this.classRoomController.findClassRooms(
-                currentYear, 0, this.getIdSchool());        
+                currentYear, 0, this.getIdSchool(user));
         for (final ClassRoomBO classRoom : classRoomList) {
             if (classRoom.getUserBO().equals(user)) {
                 groupDirClassRoom = classRoom;
@@ -368,14 +365,13 @@ public abstract class AbstractRequestHandler {
         }
         return groupDirClassRoom;
     }
-    
+
     protected InputStream generateReports(final int idSchool, final int idClassRoom,
             final int idPeriod) throws IOException {
         return this.reportController.generateReports(idSchool, idClassRoom, idPeriod);
     }
-    
-    protected boolean isGroupDirector() throws IOException {
-        final UserBO user = this.getLogeduser();
+
+    protected boolean isGroupDirector(final UserBO user) throws IOException {
         final ClassRoomBO groupDirClassRoom = this.getGroupDirectorClassRoom(user);
         return groupDirClassRoom != null;
     }

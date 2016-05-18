@@ -59,9 +59,10 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
     public ModelAndView list() {
         ModelAndView model = null;
         try {
-            model = this.buildModelAndView();
+            final UserBO logedUser = this.getLogeduser();
+            model = this.buildModelAndView(logedUser);
             model.setViewName(TEACHER_MODEL);
-            this.addTeacherListToModel(model);
+            this.addTeacherListToModel(model, logedUser);
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
             model = LoginRequestHandler.buildRedirectLoginModel();
@@ -74,6 +75,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             final Integer idUser) {
         ModelAndView model = null;
         try {
+            final UserBO logedUser = this.getLogeduser();
             final UserBO user = this.findUserByIdentifier(idUser);
             model = this.buildEditPageModel(user, false, false, false, false);
         } catch (IOException ex) {
@@ -111,14 +113,16 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             final String coordinator) {
         ModelAndView model = null;
         try {
-            final SchoolBO school = this.schoolController.findByIdentifier(this.getIdSchool());
+            final UserBO logedUser = this.getLogeduser();
+            final int idSchool = this.getIdSchool(logedUser);
+            final SchoolBO school = this.schoolController.findByIdentifier(idSchool);
             final Set<UserTypeBO> userTypeSet = new HashSet<>();
             if (coordinator != null) {
                 userTypeSet.add(this.userTypeController.findBy(UserTypeBO.getCoordinatorCode()));
             }
             userTypeSet.add(this.userTypeController.findBy(UserTypeBO.getTeacherCode()));
             final boolean isValidDocNumber = userController.isValidDocumentNumber(
-                    idUser, docNumber, this.getIdSchool());
+                    idUser, docNumber, idSchool);
             UserBO user = this.userController.buildUserBO(idUser, docType, docNumber, name,
                     lastName, bornDate, address, phone1, phone2, gender, file, school, userTypeSet);
             boolean saved = false;
@@ -146,7 +150,8 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             final Integer idUser) {
         ModelAndView model = null;
         try {
-            UserBO user = this.findUserToBeDeactivated(idUser);
+            final UserBO logedUser = this.getLogeduser();
+            UserBO user = this.findUserToBeDeactivated(logedUser, idUser);
             final UserBO savedUser = this.userController.save(user);
             boolean saved = false;
             boolean hasServerErrors = false;
@@ -270,9 +275,10 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
     public ModelAndView report() {
         ModelAndView model = null;
         try {
-            model = this.buildModelAndView();
+            final UserBO logedUser = this.getLogeduser();
+            model = this.buildModelAndView(logedUser);
             model.setViewName(TEACHER_REPORT_MODEL);
-            final List<PeriodBO> periodList = this.findPeriodListBySchool();
+            final List<PeriodBO> periodList = this.findPeriodListBySchool(logedUser);
             final UserBO teacher = this.getLogeduser();
             final ClassRoomBO classRoom = this.getGroupDirectorClassRoom(teacher);
             model.addObject(PERIOD_LIST_PARAMETER, periodList);
@@ -283,7 +289,7 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
         }
         return model;
     }
-    
+
     @RequestMapping(value = TEACHER_REPORT_GENERATE_PAGE, method = RequestMethod.POST)
     public void generateReports(
             @RequestParam(value = CLASSROOM_ID_REQUEST_PARAM, required = false)
@@ -292,7 +298,9 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             final Integer idPeriod,
             HttpServletResponse response) {
         try {
-            InputStream is = this.generateReports(this.getIdSchool(), idClassRoom, idPeriod);
+            final UserBO logedUser = this.getLogeduser();
+            final int idSchool = this.getIdSchool(logedUser);
+            InputStream is = this.generateReports(idSchool, idClassRoom, idPeriod);
             response.setHeader("Content-Disposition", "attachment; filename=boletines.zip");
             IOUtils.copy(is, response.getOutputStream());
             response.flushBuffer();
@@ -306,14 +314,16 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
             final boolean invalidDocNumber) {
         ModelAndView model = null;
         try {
-            model = this.buildModelAndView();
+            final UserBO logedUser = this.getLogeduser();
+            final int idSchool = this.getIdSchool(logedUser);
+            model = this.buildModelAndView(logedUser);
             model.setViewName(TEACHER_EDIT_MODEL);
             if (user != null) {
                 if (user.getPhoto() != null && !user.getPhoto().equals("")) {
-                    user.setPhoto(this.userController.getHttpPath(user, this.getIdSchool()));
+                    user.setPhoto(this.userController.getHttpPath(user, idSchool));
                 }
                 if (user.getId() != null && user.getId() > 0) {
-                    this.addClassListToModel(model, 0, user.getId(), false);
+                    this.addClassListToModel(model, 0, user.getId(), false, logedUser);
                     model.addObject(CLASSROOM_PARAMETER, this.getGroupDirectorClassRoom(user));
                 }
             }
@@ -332,19 +342,21 @@ public class TeacherRequestHandler extends AbstractRequestHandler {
     private ModelAndView buildActivityPageModel(final String viewName,
             final Integer idClass, final Integer idPeriod, final boolean wasSaved,
             final boolean hasServerErrors) throws IOException {
-        ModelAndView model = this.buildModelAndView();
+        final UserBO logedUser = this.getLogeduser();
+        final int idSchool = this.getIdSchool(logedUser);
+        ModelAndView model = this.buildModelAndView(logedUser);
         model.setViewName(viewName);
-        final List<ClassBO> classList = classController.findClasses(
-                this.getIdSchool(), 0, this.getLogeduser().getId(), false);
+        final List<ClassBO> classList = classController.findClasses(idSchool, 0,
+                logedUser.getId(), false);
         final List<ClassRoomBO> classRoomList = this.
                 buildClassRoomListFromClassList(classList);
-        final List<PeriodBO> periodList = this.findPeriodListBySchool();
+        final List<PeriodBO> periodList = this.findPeriodListBySchool(logedUser);
         model.addObject(CLASSROOM_LIST_PARAMETER, classRoomList);
         model.addObject(CLASS_LIST_PARAMETER, classList);
         model.addObject(PERIOD_LIST_PARAMETER, periodList);
         model.addObject(SAVED_PARAMETER, wasSaved);
         model.addObject(HAS_SERVER_ERRORS_PARAMETER, hasServerErrors);
-        model.addObject(MAX_EVALUATION_PARAMETER, this.getMaxEvaluation());
+        model.addObject(MAX_EVALUATION_PARAMETER, this.getMaxEvaluation(logedUser));
         this.addClassToModel(model, classList, idClass);
         this.addPeriodToModel(model, periodList, idPeriod);
         this.addNoteDefinitionToModel(model, idClass, idPeriod);
