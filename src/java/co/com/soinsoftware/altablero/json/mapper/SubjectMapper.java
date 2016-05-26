@@ -11,7 +11,6 @@ import static co.com.soinsoftware.altablero.json.mapper.IJsonMappable.LOGGER;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.stereotype.Service;
@@ -42,12 +41,10 @@ public class SubjectMapper implements IJsonMappable<SubjectBO> {
         Set<SubjectBO> subjectBOSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                Map<String, List<SubjectBO>> subjectMap
-                        = JSON_MAPPER.readValue(objectAsJSON,
-                                new TypeReference<Map<String, List<SubjectBO>>>() {
-                                });
-                if (subjectMap != null && !subjectMap.isEmpty()) {
-                    subjectBOSet = new HashSet(subjectMap.values().iterator().next());
+                final List<SubjectBO> subjectList = JSON_MAPPER.readValue(
+                        objectAsJSON, new TypeReference<List<SubjectBO>>() { });
+                if (subjectList != null && !subjectList.isEmpty()) {
+                    subjectBOSet = new HashSet(subjectList);
                 }
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());

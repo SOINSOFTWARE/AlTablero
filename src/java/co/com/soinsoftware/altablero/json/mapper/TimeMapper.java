@@ -10,7 +10,6 @@ import static co.com.soinsoftware.altablero.json.mapper.IJsonMappable.JSON_MAPPE
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.stereotype.Service;
@@ -41,12 +40,10 @@ public class TimeMapper implements IJsonMappable<TimeBO> {
         Set<TimeBO> timeBOSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                Map<String, List<TimeBO>> timeMap
-                        = JSON_MAPPER.readValue(objectAsJSON,
-                                new TypeReference<Map<String, List<TimeBO>>>() {
-                                });
-                if (timeMap != null && !timeMap.isEmpty()) {
-                    timeBOSet = new HashSet(timeMap.values().iterator().next());
+                final List<TimeBO> timeList = JSON_MAPPER.readValue(
+                        objectAsJSON, new TypeReference<List<TimeBO>>() { });
+                if (timeList != null && !timeList.isEmpty()) {
+                    timeBOSet = new HashSet(timeList);
                 }
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());

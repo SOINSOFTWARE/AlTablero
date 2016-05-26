@@ -11,7 +11,6 @@ import static co.com.soinsoftware.altablero.json.mapper.IJsonMappable.LOGGER;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.stereotype.Service;
@@ -42,12 +41,10 @@ public class PeriodMapper implements IJsonMappable<PeriodBO> {
         Set<PeriodBO> periodSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                Map<String, List<PeriodBO>> periodMap
-                        = JSON_MAPPER.readValue(objectAsJSON,
-                                new TypeReference<Map<String, List<PeriodBO>>>() {
-                                });
-                if (periodMap != null && !periodMap.isEmpty()) {
-                    periodSet = new HashSet(periodMap.values().iterator().next());
+                final List<PeriodBO> periodList = JSON_MAPPER.readValue(
+                        objectAsJSON, new TypeReference<List<PeriodBO>>() { });
+                if (periodList != null && !periodList.isEmpty()) {
+                    periodSet = new HashSet(periodList);
                 }
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage(), ex);

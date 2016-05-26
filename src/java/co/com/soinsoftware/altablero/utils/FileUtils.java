@@ -25,8 +25,10 @@ public class FileUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
     
     private static final String HTTP_PATH = "http://localhost:8080/AlTableroIMG/";
+    //private static final String HTTP_PATH = "http://198.12.153.71:81/AlTableroIMG/";
     
     private static final String PATH = "C:\\apache-tomcat-8.0.14\\webapps\\AlTableroIMG\\";
+    //private static final String PATH = "/usr/local/tomcat8/webapps/AlTableroIMG/";
     
     public boolean savePhotoInServer(final MultipartFile file, final String name) {
         boolean saved = false;

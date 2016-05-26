@@ -9,7 +9,6 @@ import co.com.soinsoftware.altablero.entity.UserBO;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.stereotype.Service;
@@ -40,12 +39,10 @@ public class UserMapper implements IJsonMappable<UserBO> {
         Set<UserBO> userSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                Map<String, List<UserBO>> userMap
-                        = JSON_MAPPER.readValue(objectAsJSON,
-                                new TypeReference<Map<String, List<UserBO>>>() {
-                                });
-                if (userMap != null && !userMap.isEmpty()) {
-                    userSet = new HashSet(userMap.values().iterator().next());
+                final List<UserBO> userList = JSON_MAPPER.readValue(
+                        objectAsJSON, new TypeReference<List<UserBO>>() {});
+                if (userList != null && !userList.isEmpty()) {
+                    userSet = new HashSet(userList);
                 }
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());

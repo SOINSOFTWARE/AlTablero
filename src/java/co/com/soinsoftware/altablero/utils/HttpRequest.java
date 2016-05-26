@@ -35,7 +35,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class HttpRequest implements ResponseHandler<Object>{
     
-    private static final String URL = "http://localhost:1517/schoolmanagement/";
+    private static final String URL = "http://localhost:82/schoolmanagement/";
+    //private static final String URL = "http://198.12.153.71:82/schoolmanagement/";
     private static final String EXCEPTION_MESSAGE = "Unexpected response status: ";
     
     public Object sendGet(String methodAndParams) throws IOException {

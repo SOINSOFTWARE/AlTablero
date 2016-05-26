@@ -9,7 +9,6 @@ import co.com.soinsoftware.altablero.entity.ClassRoomBO;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.stereotype.Service;
@@ -40,12 +39,10 @@ public class ClassRoomMapper implements IJsonMappable<ClassRoomBO> {
         Set<ClassRoomBO> classRoomSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                Map<String, List<ClassRoomBO>> classRoomMap
-                        = JSON_MAPPER.readValue(objectAsJSON,
-                                new TypeReference<Map<String, List<ClassRoomBO>>>() {
-                                });
-                if (classRoomMap != null && !classRoomMap.isEmpty()) {
-                    classRoomSet = new HashSet(classRoomMap.values().iterator().next());
+                final List<ClassRoomBO> classRoomList = JSON_MAPPER.readValue(
+                        objectAsJSON, new TypeReference<List<ClassRoomBO>>() { });
+                if (classRoomList != null && !classRoomList.isEmpty()) {
+                    classRoomSet = new HashSet(classRoomList);
                 }
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());

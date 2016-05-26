@@ -31,9 +31,9 @@
       <authentication-provider>
         <jdbc-user-service data-source-ref="dataSource"
           users-by-username-query=
-            "SELECT us.documentNumber, us.password, us.enabled FROM bzUser us, bzSchoolXUser sxu, bzSchool s WHERE us.documentNumber = ? AND us.id = sxu.idUser AND sxu.enabled = 1 AND sxu.idSchool = s.id AND s.enabled = 1"
+            "SELECT us.documentNumber, us.password, us.enabled FROM bzuser us, bzschoolxuser sxu, bzschool s WHERE us.documentNumber = ? AND us.id = sxu.idUser AND sxu.enabled = 1 AND sxu.idSchool = s.id AND s.enabled = 1"
           authorities-by-username-query=
-            "SELECT documentNumber, ut.code FROM cnUserType ut JOIN bzUserXUserType uxut ON ut.id = uxut.idUserType JOIN bzUser us ON uxut.idUser = us.id WHERE documentNumber=?" />
+            "SELECT documentNumber, ut.code FROM cnusertype ut JOIN bzuserxusertype uxut ON ut.id = uxut.idUserType JOIN bzuser us ON uxut.idUser = us.id WHERE documentNumber=?" />
       </authentication-provider>
     </authentication-manager>
  

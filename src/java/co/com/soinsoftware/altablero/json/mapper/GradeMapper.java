@@ -10,7 +10,6 @@ import static co.com.soinsoftware.altablero.json.mapper.IJsonMappable.JSON_MAPPE
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.stereotype.Service;
@@ -41,12 +40,10 @@ public class GradeMapper implements IJsonMappable<GradeBO> {
         Set<GradeBO> gradeBOSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                Map<String, List<GradeBO>> gradeMap
-                        = JSON_MAPPER.readValue(objectAsJSON,
-                                new TypeReference<Map<String, List<GradeBO>>>() {
-                                });
-                if (gradeMap != null && !gradeMap.isEmpty()) {
-                    gradeBOSet = new HashSet(gradeMap.values().iterator().next());
+                final List<GradeBO> gradeList = JSON_MAPPER.readValue(
+                        objectAsJSON, new TypeReference<List<GradeBO>>() { });
+                if (gradeList != null && !gradeList.isEmpty()) {
+                    gradeBOSet = new HashSet(gradeList);
                 }
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());

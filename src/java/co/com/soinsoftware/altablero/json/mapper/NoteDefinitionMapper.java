@@ -11,7 +11,6 @@ import static co.com.soinsoftware.altablero.json.mapper.IJsonMappable.LOGGER;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.stereotype.Service;
@@ -42,12 +41,10 @@ public class NoteDefinitionMapper implements IJsonMappable<NoteDefinitionBO> {
         Set<NoteDefinitionBO> noteDefSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                final Map<String, List<NoteDefinitionBO>> noteDefMap
-                        = JSON_MAPPER.readValue(objectAsJSON,
-                                new TypeReference<Map<String, List<NoteDefinitionBO>>>() {
-                                });
-                if (noteDefMap != null && !noteDefMap.isEmpty()) {
-                    noteDefSet = new HashSet(noteDefMap.values().iterator().next());
+                final List<NoteDefinitionBO> noteDefList = JSON_MAPPER.readValue(
+                        objectAsJSON, new TypeReference<List<NoteDefinitionBO>>() { });
+                if (noteDefList != null && !noteDefList.isEmpty()) {
+                    noteDefSet = new HashSet(noteDefList);
                 }
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());

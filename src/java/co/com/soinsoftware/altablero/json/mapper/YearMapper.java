@@ -10,7 +10,6 @@ import static co.com.soinsoftware.altablero.json.mapper.IJsonMappable.JSON_MAPPE
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.stereotype.Service;
@@ -41,12 +40,10 @@ public class YearMapper implements IJsonMappable<YearBO> {
         Set<YearBO> yearBOSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                Map<String, List<YearBO>> yearMap
-                        = JSON_MAPPER.readValue(objectAsJSON,
-                                new TypeReference<Map<String, List<YearBO>>>() {
-                                });
+                final List<YearBO> yearMap = JSON_MAPPER.readValue(
+                        objectAsJSON, new TypeReference<List<YearBO>>() { });
                 if (yearMap != null && !yearMap.isEmpty()) {
-                    yearBOSet = new HashSet(yearMap.values().iterator().next());
+                    yearBOSet = new HashSet(yearMap);
                 }
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage(), ex);

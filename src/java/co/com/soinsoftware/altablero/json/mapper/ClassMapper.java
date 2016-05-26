@@ -40,12 +40,10 @@ public class ClassMapper implements IJsonMappable<ClassBO> {
         Set<ClassBO> classBOSet = null;
         if (objectAsJSON != null && !objectAsJSON.equals("")) {
             try {
-                Map<String, List<ClassBO>> classMap
-                        = JSON_MAPPER.readValue(objectAsJSON,
-                                new TypeReference<Map<String, List<ClassBO>>>() {
-                                });
-                if (classMap != null && !classMap.isEmpty()) {
-                    classBOSet = new HashSet(classMap.values().iterator().next());
+                final List<ClassBO> classList = JSON_MAPPER.readValue(
+                        objectAsJSON, new TypeReference<List<ClassBO>>() { });
+                if (classList != null && !classList.isEmpty()) {
+                    classBOSet = new HashSet(classList);
                 }
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());
