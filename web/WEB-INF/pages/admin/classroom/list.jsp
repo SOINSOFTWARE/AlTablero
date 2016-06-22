@@ -26,7 +26,8 @@
                             <div class="box box-tools">
                                 <div class="box-body">
                                     <form id="frmSearch" name="frmSearch" method="POST"
-                                          action="<c:url value='/admin/cursos?${_csrf.parameterName}=${_csrf.token}' />">
+                                          action="<c:url value='/admin/cursos' />">
+                                        <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
                                        <table style="width: 100%">
                                             <tr>
                                                 <td style="width: 20%;"></td>
@@ -85,7 +86,8 @@
                                                     <td style="vertical-align: middle;">${classroom.userBO.name} ${classroom.userBO.lastName}</td>
                                                     <td style="vertical-align: top;" align="center">
                                                         <form id="frmEdit${classroom.id}" name="frmEdit${classroom.id}" method="POST"
-                                                              action="<c:url value='/admin/cursos/edicion?${_csrf.parameterName}=${_csrf.token}' />">
+                                                              action="<c:url value='/admin/cursos/edicion' />">
+                                                            <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
                                                             <input id="classroomId" name="classroomId" type="hidden" value="${classroom.id}" />
                                                             <a href="#" id="edit-link${classroom.id}" class="btn btn-social-icon btn-dropbox">
                                                                 <i class="fa fa-edit"></i>
@@ -114,10 +116,13 @@
             } );
             
             <c:forEach items="${classrooms}" var="classroom">
-                $( "#edit-link${classroom.id}" ).click(function( event ) {
-                    showLoadingImage();
-                    $("#frmEdit${classroom.id}").submit();
-                    event.preventDefault();
+                $( "#tblClassRoom" ).on(
+                    "click",
+                    "#edit-link${classroom.id}",
+                    function( event ) {
+                        showLoadingImage();
+                        $("#frmEdit${classroom.id}").submit();
+                        event.preventDefault();
                 });
             </c:forEach>
         </script>

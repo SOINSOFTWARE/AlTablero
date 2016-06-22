@@ -79,7 +79,8 @@
                                                     <input id="userId" name="userId" type="hidden" value="${user.id}" />
                                                 </form>
                                                 <form id="frmSave" name="frmSave" method="POST"  enctype="multipart/form-data"
-                                                      action="<c:url value='/admin/estudiantes/edicion/guardar?${_csrf.parameterName}=${_csrf.token}' />" >
+                                                      action="<c:url value='/admin/estudiantes/edicion/guardar' />" >
+                                                    <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
                                                     <div class="nav-tabs-custom">
                                                         <ul class="nav nav-tabs">
                                                             <li class="active"><a href="#tab_11" data-toggle="tab">Estudiante</a></li>
@@ -362,7 +363,11 @@
             
             $( "#cancel-link" ).click(function( event ) {
                 showLoadingImage();
-                window.location.href = "/AlTablero/admin/estudiantes";
+                var page = "/AlTablero/admin/estudiantes";
+                <c:if test="${not empty param.classroomId}">
+                    page = page + "?classroom=" + ${param.classroomId};
+                </c:if>
+                window.location.href = page;
                 event.preventDefault();
             });
             

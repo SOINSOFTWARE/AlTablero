@@ -75,11 +75,13 @@
                                                     </div>
                                                 </div>
                                                 <form id="frmDeactivate" name="frmDeactivate" method="POST"
-                                                      action="<c:url value='/admin/profesores/edicion/desactivar?${_csrf.parameterName}=${_csrf.token}' />">
+                                                      action="<c:url value='/admin/profesores/edicion/desactivar' />">
+                                                    <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
                                                     <input id="userId" name="userId" type="hidden" value="${user.id}" />
                                                 </form>
                                                 <form id="frmSave" name="frmSave" method="POST"  enctype="multipart/form-data"
-                                                    action="<c:url value='/admin/profesores/edicion/guardar?${_csrf.parameterName}=${_csrf.token}' />" >
+                                                    action="<c:url value='/admin/profesores/edicion/guardar' />" >
+                                                    <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
                                                     <div class="row">
                                                         <div class="col-xs-3">
                                                             <div class="box box-solid box-info">

@@ -31,7 +31,8 @@
                                             <div class="box box-solid">
                                                 <div class="box-body">
                                                     <form id="frmSearch" name="frmSearch" method="POST"
-                                                        action="<c:url value='/admin/profesores/calificar?${_csrf.parameterName}=${_csrf.token}' />">
+                                                        action="<c:url value='/admin/profesores/calificar' />">
+                                                        <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
                                                       <table style="width: 100%">
                                                           <tr>
                                                               <td style="width: 15%;"></td>
@@ -83,7 +84,8 @@
                                                 </div>
                                                 <div class="box-body table-responsive">
                                                     <form id="frmSave" name="frmSave" method="POST"
-                                                          action="<c:url value='/admin/profesores/calificar/guardar?${_csrf.parameterName}=${_csrf.token}' />">
+                                                          action="<c:url value='/admin/profesores/calificar/guardar' />">
+                                                        <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
                                                         <input id="classroomId" name="classroomId" value="${classroom.id}" type="hidden" />
                                                         <input id="classId" name="classId" value="${classBO.id}" type="hidden" />
                                                         <input id="periodId" name="periodId" value="${period.id}" type="hidden" />

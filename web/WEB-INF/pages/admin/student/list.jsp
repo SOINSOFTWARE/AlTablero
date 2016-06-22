@@ -28,7 +28,8 @@
                                 <div class="box box-tools">
                                     <div class="box-body">
                                         <form id="frmSearch" name="frmSearch" method="POST"
-                                              action="<c:url value='/admin/estudiantes?${_csrf.parameterName}=${_csrf.token}' />">
+                                              action="<c:url value='/admin/estudiantes' />">
+                                            <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
                                             <table style="width: 100%">
                                                 <tr>
                                                     <td style="width: 20%;"></td>
@@ -62,6 +63,12 @@
                         <div class="col-xs-12">
                             <div class="box box-primary">
                                 <div class="box-body table-responsive">
+                                    <form id="frmEdit" name="frmEdit" method="POST"
+                                          action="<c:url value='/admin/estudiantes/edicion' />">
+                                        <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
+                                        <input id="classroomId" name="classroomId" type="hidden" value="${param.classroom}" />
+                                        <input id="userId" name="userId" type="hidden" />
+                                    </form>
                                     <table id="tblStudent" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
@@ -78,21 +85,16 @@
                                                     <td style="vertical-align: middle;">${student.lastName}</td>
                                                     <td style="vertical-align: middle;">${student.name}</td>
                                                     <td style="vertical-align: top;" align="center">
-                                                        <form id="frmEdit${student.id}" name="frmEdit${student.id}" method="POST"
-                                                              action="<c:url value='/admin/estudiantes/edicion?${_csrf.parameterName}=${_csrf.token}' />">
-                                                            <input id="classroomId" name="classroomId" type="hidden" value="${param.classroom}" />
-                                                            <input id="userId" name="userId" type="hidden" value="${student.id}" />
-                                                            <a href="#" id="edit-link${student.id}" class="btn btn-social-icon btn-dropbox">
-                                                                <c:choose>
-                                                                    <c:when test="${accessList.contains('ESTCE')}">
-                                                                        <i class="fa fa-edit"></i>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <i class="fa fa-search"></i>
-                                                                    </c:otherwise>    
-                                                                </c:choose>
-                                                            </a>
-                                                        </form>
+                                                        <a href="#" id="edit-link${student.id}" name="edit-link${student.id}" class="btn btn-social-icon btn-dropbox">
+                                                            <c:choose>
+                                                                <c:when test="${accessList.contains('ESTCE')}">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <i class="fa fa-search"></i>
+                                                                </c:otherwise>    
+                                                            </c:choose>
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -145,10 +147,14 @@
             });
             
             <c:forEach items="${students}" var="student">
-                $( "#edit-link${student.id}" ).click(function( event ) {
-                    showLoadingImage();
-                    $("#frmEdit${student.id}").submit();
-                    event.preventDefault();
+                $( "#tblStudent" ).on(
+                    "click",
+                    "#edit-link${student.id}",
+                    function( event ) {
+                        showLoadingImage();
+                        $("#userId").val(${student.id});
+                        $("#frmEdit").submit();
+                        event.preventDefault();
                 });
             </c:forEach>
             

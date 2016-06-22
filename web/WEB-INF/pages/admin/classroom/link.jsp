@@ -27,7 +27,8 @@
                             <div class="box box-tools">
                                 <div class="box-body">
                                     <form id="frmSearch" name="frmSearch" method="POST"
-                                          action="<c:url value='/admin/cursos/asociar?${_csrf.parameterName}=${_csrf.token}' />">
+                                          action="<c:url value='/admin/cursos/asociar' />">
+                                        <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
                                         <table style="width: 100%">
                                             <tr>
                                                 <td style="width: 15%;"></td>
@@ -71,7 +72,8 @@
                                     <%@include file="../include_div_messages.jsp" %>
                                     <h3 class="box-title">Estudiantes no asignados a salones</h3>
                                     <form id="frmSave" name="frmSave" method="POST"
-                                          action="<c:url value='/admin/cursos/asociar/guardar?${_csrf.parameterName}=${_csrf.token}' />">
+                                          action="<c:url value='/admin/cursos/asociar/guardar' />">
+                                        <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
                                         <input id="gradeId" name="gradeId" type="hidden" />
                                         <input id="classroomId" name="classroomId" type="hidden" />
                                         <input id="objectStr" name="objectStr" type="hidden" />
@@ -170,7 +172,7 @@
             });
             
             $('#tblClass').dataTable({
-                "bPaginate": true,
+                "bPaginate": false,
                 "bLengthChange": false,
                 "bFilter": false,
                 "bSort": true,

@@ -9,7 +9,7 @@
         <link href="<c:url value="/res/css/jquery-ui/jquery-ui.min.css" />" rel="stylesheet" type="text/css" />
     </head>
     <body class="skin-blue">
-        <%@include file="../include_body_header.jsp" %>                            
+        <%@include file="../include_body_header.jsp" %>
         <div class="wrapper row-offcanvas row-offcanvas-left">
             <%@include file="../include_body_menu.jsp" %>
             <aside class="right-side">
@@ -45,7 +45,8 @@
                                                     <td style="vertical-align: middle;">${teacher.phone1}</td>
                                                     <td style="vertical-align: top;" align="center">
                                                         <form id="frmEdit${teacher.id}" name="frmEdit${teacher.id}" method="POST"
-                                                              action="<c:url value='/admin/profesores/edicion?${_csrf.parameterName}=${_csrf.token}' />">
+                                                              action="<c:url value='/admin/profesores/edicion' />">
+                                                            <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
                                                             <input id="userId" name="userId" type="hidden" value="${teacher.id}" />
                                                             <a href="#" id="edit-link${teacher.id}" class="btn btn-social-icon btn-dropbox">
                                                                 <c:choose>
@@ -90,10 +91,13 @@
             });
             
             <c:forEach items="${teachers}" var="teacher">
-                $( "#edit-link${teacher.id}" ).click(function( event ) {
-                    showLoadingImage();
-                    $("#frmEdit${teacher.id}").submit();
-                    event.preventDefault();
+                $( "#tblTeacher" ).on(
+                    "click",
+                    "#edit-link${teacher.id}",
+                    function( event ) {
+                        showLoadingImage();
+                        $("#frmEdit${teacher.id}").submit();
+                        event.preventDefault();
                 });
             </c:forEach>
         </script>
