@@ -79,8 +79,7 @@
                                                     <input id="userId" name="userId" type="hidden" value="${user.id}" />
                                                 </form>
                                                 <form id="frmSave" name="frmSave" method="POST"  enctype="multipart/form-data"
-                                                      action="<c:url value='/admin/estudiantes/edicion/guardar' />" >
-                                                    <input id="${_csrf.parameterName}" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
+                                                      action="<c:url value='/admin/estudiantes/edicion/guardar?${_csrf.parameterName}=${_csrf.token}' />" >
                                                     <div class="nav-tabs-custom">
                                                         <ul class="nav nav-tabs">
                                                             <li class="active"><a href="#tab_11" data-toggle="tab">Estudiante</a></li>
